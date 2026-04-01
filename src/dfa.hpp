@@ -52,13 +52,13 @@ enum State {
     STATE_RIGHT_PAREN,  // ')'
     STATE_PLUS,         // '+'
     STATE_MINUS,        // '-'
-    STATE_TIMES,        // '*'
+    STATE_MULTIPLICATION,        // '*'
     STATE_RDIV,         // '/'
     STATE_COMMA,        // ','
     STATE_SEMICOLON,    // ';'
     STATE_PERIOD,       // '.'
-    STATE_LBRACK,       // '['
-    STATE_RBRACK,       // ']'
+    STATE_OPENBRACK,       // '['
+    STATE_CLOSEBRACK,       // ']'
 
     // state khusus   // karakter ga dikenali
     STATE_DEAD,

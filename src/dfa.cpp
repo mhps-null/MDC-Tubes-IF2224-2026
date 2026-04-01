@@ -15,7 +15,7 @@ State DFA::getNextState(State current, char c) {
                 case ')':  return STATE_RIGHT_PAREN;
                 case '+':  return STATE_PLUS;
                 case '-':  return STATE_MINUS;
-                case '*':  return STATE_TIMES;
+                case '*':  return STATE_MULTIPLICATION;
                 case '/':  return STATE_RDIV;
                 case ',':  return STATE_COMMA;
                 case ';':  return STATE_SEMICOLON;
@@ -24,8 +24,8 @@ State DFA::getNextState(State current, char c) {
                 case '<':  return STATE_LESS;
                 case '>':  return STATE_GREATER;
                 case '=':  return STATE_EQUAL_FIRST;
-                case '[':  return STATE_LBRACK;
-                case ']':  return STATE_RBRACK;
+                case '[':  return STATE_OPENBRACK;
+                case ']':  return STATE_CLOSEBRACK;
                 default:   return STATE_DEAD;               // karakter tidak dikenal
             }
 
@@ -126,13 +126,13 @@ State DFA::getNextState(State current, char c) {
         case STATE_RIGHT_PAREN:
         case STATE_PLUS:
         case STATE_MINUS:
-        case STATE_TIMES:
+        case STATE_MULTIPLICATION:
         case STATE_RDIV:
         case STATE_COMMA:
         case STATE_SEMICOLON:
         case STATE_PERIOD:
-        case STATE_LBRACK:
-        case STATE_RBRACK:
+        case STATE_OPENBRACK:
+        case STATE_CLOSEBRACK:
             return STATE_FINAL;
 
         // state error/dead : agar program tidak terus loop
@@ -163,13 +163,13 @@ bool DFA::isAccepting(State state) {
         case STATE_RIGHT_PAREN:
         case STATE_PLUS:
         case STATE_MINUS:
-        case STATE_TIMES:
+        case STATE_MULTIPLICATION:
         case STATE_RDIV:
         case STATE_COMMA:
         case STATE_SEMICOLON:
         case STATE_PERIOD:
-        case STATE_LBRACK:
-        case STATE_RBRACK:
+        case STATE_OPENBRACK:
+        case STATE_CLOSEBRACK:
             return true;
         default:
             return false;
@@ -198,13 +198,13 @@ TokenType DFA::stateToTokenType(State state) {
         case STATE_RIGHT_PAREN:    return TOKEN_RPARENT;
         case STATE_PLUS:           return TOKEN_PLUS;
         case STATE_MINUS:          return TOKEN_MINUS;
-        case STATE_TIMES:          return TOKEN_TIMES;
+        case STATE_MULTIPLICATION:          return TOKEN_TIMES;
         case STATE_RDIV:           return TOKEN_RDIV;
         case STATE_COMMA:          return TOKEN_COMMA;
         case STATE_SEMICOLON:      return TOKEN_SEMICOLON;
         case STATE_PERIOD:         return TOKEN_PERIOD;
-        case STATE_LBRACK:         return TOKEN_LBRACK;
-        case STATE_RBRACK:         return TOKEN_RBRACK;
+        case STATE_OPENBRACK:         return TOKEN_LBRACK;
+        case STATE_CLOSEBRACK:         return TOKEN_RBRACK;
         default:                   return TOKEN_ERROR;
     }
 }

@@ -44,7 +44,7 @@ enum State {
     STATE_NOT_EQUAL,    // '<>' (accepting sebagai neq)
     STATE_GREATER,      // '>' (accepting sebagai gtr)
     STATE_GREATER_EQUAL,// '>=' (accepting sebagai geq)
-    STATE_EQUAL_FIRST,  // '=' pertama (belum accepting, nunggu '=' kedua)
+    STATE_EQUAL_TRANSITION,  // '=' pertama (belum accepting, nunggu '=' kedua)
     STATE_EQUAL,        // '==' (accepting sebagai eql)
 
     // token satu karakter (semua accepting)
@@ -52,17 +52,16 @@ enum State {
     STATE_RIGHT_PAREN,  // ')'
     STATE_PLUS,         // '+'
     STATE_MINUS,        // '-'
-    STATE_TIMES,        // '*'
+    STATE_MULTIPLICATION,        // '*'
     STATE_RDIV,         // '/'
     STATE_COMMA,        // ','
     STATE_SEMICOLON,    // ';'
     STATE_PERIOD,       // '.'
-    STATE_LBRACK,       // '['
-    STATE_RBRACK,       // ']'
+    STATE_OPENBRACK,       // '['
+    STATE_CLOSEBRACK,       // ']'
 
-    // state khusus
-    STATE_ERROR,    // karakter ga dikenali
-    STATE_DEAD      // ga ada transisi valid → trigger emit token
+    STATE_DEAD,
+    STATE_FINAL
 };
 
 // fungsi-fungsi DFA

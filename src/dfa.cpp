@@ -15,7 +15,7 @@ State DFA::getNextState(State current, char c) {
                 case ')':  return STATE_RIGHT_PAREN;
                 case '+':  return STATE_PLUS;
                 case '-':  return STATE_MINUS;
-                case '*':  return STATE_TIMES;
+                case '*':  return STATE_MULTIPLICATION;
                 case '/':  return STATE_RDIV;
                 case ',':  return STATE_COMMA;
                 case ';':  return STATE_SEMICOLON;
@@ -23,32 +23,32 @@ State DFA::getNextState(State current, char c) {
                 case ':':  return STATE_COLON;
                 case '<':  return STATE_LESS;
                 case '>':  return STATE_GREATER;
-                case '=':  return STATE_EQUAL_FIRST;
-                case '[':  return STATE_LBRACK;
-                case ']':  return STATE_RBRACK;
-                default:   return STATE_ERROR;               // karakter tidak dikenal
+                case '=':  return STATE_EQUAL_TRANSITION;
+                case '[':  return STATE_OPENBRACK;
+                case ']':  return STATE_CLOSEBRACK;
+                default:   return STATE_DEAD;               // karakter tidak dikenal
             }
 
         // identifier : loop selama huruf/angka
         case STATE_IDENT:
             if (std::isalnum(c)) return STATE_IDENT;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // integer : loop selama digit, titik lanjut ke real
         case STATE_INT:
             if (std::isdigit(c)) return STATE_INT;
             if (c == '.')        return STATE_REAL_DOT;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // real_dot : belum accepting, nunggu digit setelah titik
         case STATE_REAL_DOT:
             if (std::isdigit(c)) return STATE_REAL;
-            return STATE_DEAD;  // backtrack ke INT, titik jadi period
+            return STATE_FINAL;  // backtrack ke INT, titik jadi period
 
         // real : loop selama digit
         case STATE_REAL:
             if (std::isdigit(c)) return STATE_REAL;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // string : baca semua karakter sampai tutup petik
         case STATE_STRING:
@@ -58,18 +58,24 @@ State DFA::getNextState(State current, char c) {
 
         // end_string : selesai, langsung emit
         case STATE_END_STRING:
-            return STATE_DEAD;
+            if(c == '\''){
+                return STATE_END_STRING;
+            }
+            // else if((std::isalpha(c) || std::isdigit(c)) && c != '\''){
+            //     return STATE_STRING;
+            // }
+            return STATE_FINAL;
 
         // komentar kurawal : baca sampai '}'
         case STATE_COMMENT_CURLY:
             if (c == '}')       return STATE_COMMENT_FINAL;
-            if (c != '\0')      return STATE_COMMENT_CURLY;
+            if (c != '\0')      return STATE_COMMENT_CURLY; 
             return STATE_DEAD;  // EOF sebelum '}' : error
 
         // lparent : kalau diikuti '*' masuk komentar, kalau tidak emit langsung
         case STATE_LEFT_PAREN:
             if (c == '*') return STATE_COMMENT_STAR;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // komentar bintang : baca isi sampai ketemu '*'
         case STATE_COMMENT_STAR:
@@ -86,57 +92,58 @@ State DFA::getNextState(State current, char c) {
 
         // komentar selesai : emit lalu mati
         case STATE_COMMENT_FINAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // colon : kalau diikuti '=' jadi becomes
         case STATE_COLON:
             if (c == '=') return STATE_ASSIGNMENT;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         case STATE_ASSIGNMENT:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // less : bisa lanjut jadi leq atau neq
         case STATE_LESS:
             if (c == '=') return STATE_LESS_EQUAL;
             if (c == '>') return STATE_NOT_EQUAL;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         case STATE_LESS_EQUAL:
         case STATE_NOT_EQUAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // greater : bisa lanjut jadi geq
         case STATE_GREATER:
             if (c == '=') return STATE_GREATER_EQUAL;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         case STATE_GREATER_EQUAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // equal_first : belum accepting, butuh '=' kedua
-        case STATE_EQUAL_FIRST:
+        case STATE_EQUAL_TRANSITION: //Namanya salah
             if (c == '=') return STATE_EQUAL;
-            return STATE_DEAD;  // '=' tunggal tidak valid
+            return STATE_FINAL;  // '=' tunggal tidak valid
 
         case STATE_EQUAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // token satu karakter : langsung mati setelah accepting
         case STATE_RIGHT_PAREN:
         case STATE_PLUS:
         case STATE_MINUS:
-        case STATE_TIMES:
+        case STATE_MULTIPLICATION: //Namanya juga salah
         case STATE_RDIV:
         case STATE_COMMA:
         case STATE_SEMICOLON:
         case STATE_PERIOD:
-        case STATE_LBRACK:
-        case STATE_RBRACK:
-            return STATE_DEAD;
+        case STATE_OPENBRACK: //Namanya salah juga
+        case STATE_CLOSEBRACK:
+            return STATE_FINAL;
 
         // state error/dead : agar program tidak terus loop
-        case STATE_ERROR:
+        case STATE_FINAL:
+            return STATE_FINAL;
         case STATE_DEAD:
         default:
             return STATE_DEAD;
@@ -163,13 +170,13 @@ bool DFA::isAccepting(State state) {
         case STATE_RIGHT_PAREN:
         case STATE_PLUS:
         case STATE_MINUS:
-        case STATE_TIMES:
+        case STATE_MULTIPLICATION:
         case STATE_RDIV:
         case STATE_COMMA:
         case STATE_SEMICOLON:
         case STATE_PERIOD:
-        case STATE_LBRACK:
-        case STATE_RBRACK:
+        case STATE_OPENBRACK:
+        case STATE_CLOSEBRACK:
             return true;
         default:
             return false;
@@ -198,13 +205,13 @@ TokenType DFA::stateToTokenType(State state) {
         case STATE_RIGHT_PAREN:    return TOKEN_RPARENT;
         case STATE_PLUS:           return TOKEN_PLUS;
         case STATE_MINUS:          return TOKEN_MINUS;
-        case STATE_TIMES:          return TOKEN_TIMES;
+        case STATE_MULTIPLICATION:          return TOKEN_TIMES;
         case STATE_RDIV:           return TOKEN_RDIV;
         case STATE_COMMA:          return TOKEN_COMMA;
         case STATE_SEMICOLON:      return TOKEN_SEMICOLON;
         case STATE_PERIOD:         return TOKEN_PERIOD;
-        case STATE_LBRACK:         return TOKEN_LBRACK;
-        case STATE_RBRACK:         return TOKEN_RBRACK;
+        case STATE_OPENBRACK:         return TOKEN_LBRACK;
+        case STATE_CLOSEBRACK:         return TOKEN_RBRACK;
         default:                   return TOKEN_ERROR;
     }
 }

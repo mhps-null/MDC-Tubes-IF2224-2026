@@ -12,6 +12,8 @@ beginsy
 ident (a)
 becomes
 intcon (5)
+period
+ident (c)
 semicolon
 ident (b)
 becomes
@@ -21,10 +23,9 @@ intcon (10)
 semicolon
 ident (writeln)
 lparent
-string ('Result = ')
+string ('''')
 comma
 ident (b)
 rparent
 semicolon
 endsy
-period

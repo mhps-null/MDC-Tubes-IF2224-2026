@@ -47,7 +47,7 @@ std::vector<Token> Lexer::scan() {
         if (c == '\0' && state == STATE_START) {
             break;  // EOF pas lagi di START → selesai
         } else if (c == '\0') {
-            next = STATE_DEAD;  // EOF di tengah token → paksa emit/error
+            next = STATE_FINAL;  // EOF di tengah token → paksa emit/error
         } else {
             next = DFA::getNextState(state, c);
         }
@@ -58,7 +58,7 @@ std::vector<Token> Lexer::scan() {
             else           { col++; }
             pos++;
 
-        } else if (next == STATE_ERROR) {
+        } else if (next == STATE_DEAD) {
             // karakter ga dikenal dari START
             std::cerr << "Lexer error (line " << line << ", col " << col
                       << "): karakter tidak dikenali '" << c << "'" << std::endl;
@@ -67,7 +67,7 @@ std::vector<Token> Lexer::scan() {
             if (c == '\n') { line++; col = 1; }
             else           { col++; }
 
-        } else if (next != STATE_DEAD) {
+        } else if (next != STATE_FINAL) {
             // transisi valid → akumulasi lexeme
             if (state == STATE_START) {
                 tokenStartLine = line;
@@ -93,7 +93,7 @@ std::vector<Token> Lexer::scan() {
             // biar ga bisa mundur ke '(' atau state lain di luar
             // kalau komentar/string ga ditutup → error, bukan backtrack
             if (state == STATE_COMMENT_STAR || state == STATE_COMMENT_CURLY) {
-                lastAccept = STATE_DEAD;
+                lastAccept = STATE_FINAL;
             }
 
         } else {
@@ -104,10 +104,10 @@ std::vector<Token> Lexer::scan() {
                 emitToken(tokens, state, lexeme, tokenStartLine, tokenStartCol);
                 state = STATE_START;
                 lexeme.clear();
-                lastAccept = STATE_DEAD;
+                lastAccept = STATE_FINAL;
                 // pos TIDAK di-advance → karakter ini diproses ulang dari START
 
-            } else if (lastAccept != STATE_DEAD) {
+            } else if (lastAccept != STATE_FINAL) {
                 // backtrack ke accepting state terakhir yang pernah ketemu
                 emitToken(tokens, lastAccept, lastAcceptLexeme,
                           tokenStartLine, tokenStartCol);
@@ -116,7 +116,7 @@ std::vector<Token> Lexer::scan() {
                 col = lastAcceptCol;
                 state = STATE_START;
                 lexeme.clear();
-                lastAccept = STATE_DEAD;
+                lastAccept = STATE_FINAL;
 
             } else {
                 // ga ada accepting state sama sekali → error
@@ -134,7 +134,7 @@ std::vector<Token> Lexer::scan() {
                 }
                 state = STATE_START;
                 lexeme.clear();
-                lastAccept = STATE_DEAD;
+                lastAccept = STATE_FINAL;
             }
         }
     }
@@ -143,7 +143,7 @@ std::vector<Token> Lexer::scan() {
     if (state != STATE_START) {
         if (DFA::isAccepting(state)) {
             emitToken(tokens, state, lexeme, tokenStartLine, tokenStartCol);
-        } else if (lastAccept != STATE_DEAD) {
+        } else if (lastAccept != STATE_FINAL) {
             emitToken(tokens, lastAccept, lastAcceptLexeme,
                       tokenStartLine, tokenStartCol);
         } else if (!lexeme.empty()) {

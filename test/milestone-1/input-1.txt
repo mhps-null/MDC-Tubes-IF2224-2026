@@ -4,7 +4,7 @@ var
   a, b: integer;
 
 begin
-  a := 5;
+  a := 5.c;
   b := a + 10;
-  writeln('Result = ', b);
-end.
+  writeln('''', b);
+end

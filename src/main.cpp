@@ -12,20 +12,55 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <filesystem>
+namespace fs = std::filesystem;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
     // cek argumen dulu
-    if (argc < 2) {
+    if (argc < 2)
+    {
         std::cerr << "Usage: " << argv[0] << " <input.txt> [output.txt]" << std::endl;
         return 1;
     }
 
-    std::string inputPath = argv[1];
-    std::string outputPath = (argc >= 3) ? argv[2] : "";
+    // cari root project (folder yang punya "test")
+    fs::path current = fs::canonical(argv[0]).parent_path();
+
+    while (!fs::exists(current / "test"))
+    {
+        if (current == current.parent_path())
+        {
+            std::cerr << "Error: folder 'test' tidak ditemukan\n";
+            return 1;
+        }
+        current = current.parent_path();
+    }
+
+    fs::path baseDir = current / "test";
+
+    // input
+    fs::path inputPath = argv[1];
+    if (!inputPath.is_absolute())
+    {
+        inputPath = baseDir / inputPath;
+    }
+
+    // output
+    fs::path outputPath;
+    if (argc >= 3)
+    {
+        outputPath = argv[2];
+        if (!outputPath.is_absolute())
+        {
+            outputPath = baseDir / outputPath;
+        }
+    }
 
     // baca file input
     std::string source;
-    if (!readFile(inputPath, source)) {
+    if (!readFile(inputPath.string(), source))
+    {
         std::cerr << "Error: tidak dapat membuka file '" << inputPath << "'" << std::endl;
         return 1;
     }
@@ -36,10 +71,14 @@ int main(int argc, char* argv[]) {
 
     // format output
     std::stringstream output;
-    for (const Token& tok : tokens) {
-        if (tok.type == TOKEN_ERROR) {
+    for (const Token &tok : tokens)
+    {
+        if (tok.type == TOKEN_ERROR)
+        {
             output << "ERROR (" << tok.value << ")" << std::endl;
-        } else {
+        }
+        else
+        {
             output << tokenToString(tok) << std::endl;
         }
     }
@@ -48,8 +87,10 @@ int main(int argc, char* argv[]) {
     std::cout << output.str();
 
     // kalau ada path output, tulis ke file juga
-    if (!outputPath.empty()) {
-        if (!writeFile(outputPath, output.str())) {
+    if (!outputPath.empty())
+    {
+        if (!writeFile(outputPath.string(), output.str()))
+        {
             std::cerr << "Error: tidak dapat menulis ke file '" << outputPath << "'" << std::endl;
             return 1;
         }

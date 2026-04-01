@@ -26,101 +26,101 @@ State DFA::getNextState(State current, char c) {
                 case '=':  return STATE_EQUAL_FIRST;
                 case '[':  return STATE_LBRACK;
                 case ']':  return STATE_RBRACK;
-                default:   return STATE_ERROR;               // karakter tidak dikenal
+                default:   return STATE_DEAD;               // karakter tidak dikenal
             }
 
         // identifier : loop selama huruf/angka
         case STATE_IDENT:
             if (std::isalnum(c)) return STATE_IDENT;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // integer : loop selama digit, titik lanjut ke real
         case STATE_INT:
             if (std::isdigit(c)) return STATE_INT;
             if (c == '.')        return STATE_REAL_DOT;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // real_dot : belum accepting, nunggu digit setelah titik
         case STATE_REAL_DOT:
             if (std::isdigit(c)) return STATE_REAL;
-            return STATE_DEAD;  // backtrack ke INT, titik jadi period
+            return STATE_FINAL;  // backtrack ke INT, titik jadi period
 
         // real : loop selama digit
         case STATE_REAL:
             if (std::isdigit(c)) return STATE_REAL;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // string : baca semua karakter sampai tutup petik
         case STATE_STRING:
             if (c == '\'')                return STATE_END_STRING;
             if (c != '\n' && c != '\0')   return STATE_STRING;
-            return STATE_DEAD;  // newline/null sebelum tutup petik : error
+            return STATE_FINAL;  // newline/null sebelum tutup petik : error
 
         // end_string : selesai, langsung emit
         case STATE_END_STRING:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // komentar kurawal : baca sampai '}'
         case STATE_COMMENT_CURLY:
             if (c == '}')       return STATE_COMMENT_FINAL;
             if (c != '\0')      return STATE_COMMENT_CURLY;
-            return STATE_DEAD;  // EOF sebelum '}' : error
+            return STATE_FINAL;  // EOF sebelum '}' : error
 
         // lparent : kalau diikuti '*' masuk komentar, kalau tidak emit langsung
         case STATE_LEFT_PAREN:
             if (c == '*') return STATE_COMMENT_STAR;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // komentar bintang : baca isi sampai ketemu '*'
         case STATE_COMMENT_STAR:
             if (c == '*')       return STATE_COMMENT_STAR_END;
             if (c != '\0')      return STATE_COMMENT_STAR;
-            return STATE_DEAD;  // EOF sebelum '*' : error
+            return STATE_FINAL;  // EOF sebelum '*' : error
 
         // comment_star_end : ketemu '*', nunggu ')' untuk tutup
         case STATE_COMMENT_STAR_END:
             if (c == ')')       return STATE_COMMENT_FINAL;    // tutup komentar
             if (c == '*')       return STATE_COMMENT_STAR_END; // masih nunggu )
             if (c != '\0')      return STATE_COMMENT_STAR;     // balik baca isi
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // komentar selesai : emit lalu mati
         case STATE_COMMENT_FINAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // colon : kalau diikuti '=' jadi becomes
         case STATE_COLON:
             if (c == '=') return STATE_ASSIGNMENT;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         case STATE_ASSIGNMENT:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // less : bisa lanjut jadi leq atau neq
         case STATE_LESS:
             if (c == '=') return STATE_LESS_EQUAL;
             if (c == '>') return STATE_NOT_EQUAL;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         case STATE_LESS_EQUAL:
         case STATE_NOT_EQUAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // greater : bisa lanjut jadi geq
         case STATE_GREATER:
             if (c == '=') return STATE_GREATER_EQUAL;
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         case STATE_GREATER_EQUAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // equal_first : belum accepting, butuh '=' kedua
         case STATE_EQUAL_FIRST:
             if (c == '=') return STATE_EQUAL;
-            return STATE_DEAD;  // '=' tunggal tidak valid
+            return STATE_FINAL;  // '=' tunggal tidak valid
 
         case STATE_EQUAL:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // token satu karakter : langsung mati setelah accepting
         case STATE_RIGHT_PAREN:
@@ -133,13 +133,13 @@ State DFA::getNextState(State current, char c) {
         case STATE_PERIOD:
         case STATE_LBRACK:
         case STATE_RBRACK:
-            return STATE_DEAD;
+            return STATE_FINAL;
 
         // state error/dead : agar program tidak terus loop
-        case STATE_ERROR:
         case STATE_DEAD:
+        case STATE_FINAL:
         default:
-            return STATE_DEAD;
+            return STATE_FINAL;
     }
 }
 

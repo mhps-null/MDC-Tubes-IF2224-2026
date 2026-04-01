@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         current = current.parent_path();
     }
 
-    fs::path baseDir = current / "test";
+    fs::path baseDir = current;
 
     // input
     fs::path inputPath = argv[1];

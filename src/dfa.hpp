@@ -60,9 +60,9 @@ enum State {
     STATE_LBRACK,       // '['
     STATE_RBRACK,       // ']'
 
-    // state khusus
-    STATE_ERROR,    // karakter ga dikenali
-    STATE_DEAD      // ga ada transisi valid → trigger emit token
+    // state khusus   // karakter ga dikenali
+    STATE_DEAD,
+    STATE_FINAL
 };
 
 // fungsi-fungsi DFA

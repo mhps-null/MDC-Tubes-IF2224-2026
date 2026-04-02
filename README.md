@@ -2,7 +2,7 @@
 
 > Tugas Besar IF2224 Teori Bahasa Formal dan Automata
 
-<p align="center"> <img src="doc/preview_input.png" width="60%"/><img src="doc/preview_output.png" width="60%"/> </p>
+<p align="center"> <img src="doc/preview_input.png" width="20%"/><img src="doc/preview_output.png" width="20%"/> </p>
 
 ## Identitas Kelompok
 

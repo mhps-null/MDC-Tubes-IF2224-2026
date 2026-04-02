@@ -72,6 +72,12 @@ make clean
 
 ### Menjalankan Program Manual
 
+Pindah ke folder tempat hasil kompilasi (`bin/`):
+
+```bash
+cd bin
+```
+
 Format umum (relatif terhadap folder `test/`):
 
 ```bash
@@ -89,6 +95,12 @@ Kompilasi program:
 
 ```bash
 make
+```
+
+Pindah ke folder tempat hasil kompilasi (`bin/`):
+
+```bash
+cd bin
 ```
 
 Jalankan lexer secara manual:
@@ -111,6 +123,12 @@ Kompilasi program:
 
 ```bash
 make
+```
+
+Pindah ke folder tempat hasil kompilasi (`bin/`):
+
+```bash
+cd bin
 ```
 
 Jalankan lexer secara manual:

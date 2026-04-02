@@ -174,8 +174,7 @@ std::vector<Token> Lexer::scan()
     return tokens;
 }
 
-void Lexer::emitToken(std::vector<Token> &tokens, State state,
-                      const std::string &lexeme, int tokenLine, int tokenCol)
+void Lexer::emitToken(std::vector<Token> &tokens, State state, const std::string &lexeme, int tokenLine, int tokenCol)
 {
 
     TokenType type = DFA::stateToTokenType(state);

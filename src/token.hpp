@@ -207,7 +207,7 @@ inline std::string tokenTypeToString(TokenType type)
 inline bool tokenHasValue(TokenType type)
 {
     return type == TOKEN_INTCON || type == TOKEN_REALCON ||
-           type == TOKEN_CHARCON || type == TOKEN_STRING ||
+           type == TOKEN_CHARCON || type == TOKEN_STRING || type == TOKEN_COMMENT ||
            type == TOKEN_IDENT || type == TOKEN_ERROR;
 }
 

@@ -1,48 +1,52 @@
-# Makefile untuk Arion Lexer
-# IF2224 - Teori Bahasa Formal dan Automata
-#
-# Usage:
-#   make          → build lexer
-#   make run      → build dan jalankan dengan test input
-#   make clean    → hapus file hasil build
-
 CXX      = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -g
 SRCDIR   = src
 BUILDDIR = build
 BINDIR   = bin
-TARGET   = $(BINDIR)/lexer
 
-# Daftar source files
+# Detect OS
+ifeq ($(OS),Windows_NT)
+    TARGET = $(BINDIR)/lexer.exe
+    MKDIR  = if not exist $(BUILDDIR) mkdir $(BUILDDIR)
+    MKDIR_BIN = if not exist $(BINDIR) mkdir $(BINDIR)
+    RM     = rmdir /s /q
+    RUN    = $(TARGET)
+else
+    TARGET = $(BINDIR)/lexer
+    MKDIR  = mkdir -p $(BUILDDIR)
+    MKDIR_BIN = mkdir -p $(BINDIR)
+    RM     = rm -rf
+    RUN    = ./$(TARGET)
+endif
+
+# Sources
 SOURCES  = $(SRCDIR)/main.cpp \
            $(SRCDIR)/dfa.cpp \
            $(SRCDIR)/lexer.cpp \
            $(SRCDIR)/utils.cpp
 
-# Object files
 OBJECTS  = $(SOURCES:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 
-# Default target: build lexer
+# Default
 all: $(TARGET)
 
-# Link object files jadi executable
-$(TARGET): $(OBJECTS) | $(BINDIR)
+# Link
+$(TARGET): $(OBJECTS)
+	@$(MKDIR_BIN)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Compile tiap .cpp ke .o
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
+# Compile
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+	@$(MKDIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-# Buat build directory jika belum ada
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
-
-# Jalankan dengan test input
+# Run
 run: $(TARGET)
-	./$(TARGET) test/milestone-1/input-1.txt test/milestone-1/output-1.txt
+	$(RUN) test/milestone-1/input-1.txt test/milestone-1/output-1.txt
 
-# Hapus file hasil build
+# Clean
 clean:
-	rm -rf $(BUILDDIR) $(TARGET)
+	-$(RM) $(BUILDDIR)
+	-$(RM) $(BINDIR)
 
 .PHONY: all run clean

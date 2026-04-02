@@ -28,5 +28,5 @@ comma
 ident (b)
 rparent
 semicolon
-comment
+comment (Kalo gini valid ngga {?)
 endsy

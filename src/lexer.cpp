@@ -238,7 +238,22 @@ void Lexer::emitToken(std::vector<Token> &tokens, State state, const std::string
 
     case STATE_COMMENT_FINAL:
     {
-        tokens.push_back({type, "", tokenLine, tokenCol});
+        std::string content = "";
+
+        if (lexeme.size() >= 4 && lexeme[0] == '(' && lexeme[1] == '*' &&
+            lexeme[lexeme.size() - 2] == '*' && lexeme[lexeme.size() - 1] == ')')
+        {
+            content = lexeme.substr(2, lexeme.size() - 4);
+        }
+        else if (lexeme.size() >= 2 && lexeme[0] == '{' && lexeme[lexeme.size() - 1] == '}')
+        {
+            content = lexeme.substr(1, lexeme.size() - 2);
+        }
+        else if (lexeme.size() >= 2)
+        {
+            content = lexeme.substr(1, lexeme.size() - 2);
+        }
+        tokens.push_back({type, content, tokenLine, tokenCol});
         break;
     }
 

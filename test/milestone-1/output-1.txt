@@ -1,32 +1,32 @@
 programsy
-ident (Hello)
+ident (HitungLuasLingkaran)
+semicolon
+constsy
+ident (pi)
+eql
+realcon (3.14)
 semicolon
 varsy
-ident (a)
-comma
-ident (b)
+ident (jari2)
 colon
 ident (integer)
 semicolon
-beginsy
-ident (a)
-becomes
-intcon (5)
-period
-ident (c)
+ident (luas)
+colon
+ident (real)
 semicolon
-ident (b)
+beginsy
+ident (jari2)
 becomes
-ident (a)
-plus
 intcon (10)
 semicolon
-ident (writeln)
-lparent
-string ('"sdf')
-comma
-ident (b)
-rparent
+ident (luas)
+becomes
+ident (pi)
+times
+ident (jari2)
+times
+ident (jari2)
 semicolon
-comment (Kalo gini valid ngga {?)
 endsy
+period

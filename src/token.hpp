@@ -71,7 +71,7 @@ enum TokenType
     TOKEN_DOWNTOSY, // 50. downto
     TOKEN_THENSY,   // 51. then
 
-    // komentar — dikenali tapi di-skip dari output
+    // komentar
     TOKEN_COMMENT, // 52. { ... } atau (* ... *)
 
     // special

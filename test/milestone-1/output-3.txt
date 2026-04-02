@@ -1,0 +1,36 @@
+programsy
+ident (TotalSum)
+semicolon
+varsy
+ident (i)
+comma
+ident (sum)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (sum)
+becomes
+intcon (0)
+semicolon
+comment ( Memulai perulangan dari 1 sampai 10 )
+forsy
+ident (i)
+becomes
+intcon (1)
+tosy
+intcon (10)
+dosy
+beginsy
+ident (sum)
+becomes
+ident (sum)
+plus
+ident (i)
+semicolon
+comment ( Tambahkan nilai i
+                       ke dalam variabel sum )
+endsy
+semicolon
+endsy
+period

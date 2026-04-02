@@ -1,0 +1,13 @@
+program CekKelulusan;
+var
+  nilaiTubes, nilaiUjian: integer;
+  status: string;
+begin
+  nilaiTubes := 75;
+  nilaiUjian := 80;
+  
+  if (nilaiTubes >= 70) and (nilaiUjian <> 0) then
+    status := 'Lulus'
+  else
+    status := 'Mengulang';
+end.

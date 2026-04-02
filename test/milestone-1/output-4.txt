@@ -1,0 +1,38 @@
+programsy
+ident (Pendataan)
+semicolon
+typesy
+ident (Mahasiswa)
+becomes
+recordsy
+ident (nilai)
+colon
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (10)
+rbrack
+ofsy
+ident (real)
+semicolon
+endsy
+semicolon
+varsy
+ident (mhs)
+colon
+ident (Mahasiswa)
+semicolon
+beginsy
+ident (mhs)
+period
+ident (nilai)
+lbrack
+intcon (1)
+rbrack
+becomes
+realcon (85.5)
+semicolon
+endsy
+period

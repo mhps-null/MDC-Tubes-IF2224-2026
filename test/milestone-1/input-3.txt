@@ -1,0 +1,12 @@
+program TotalSum;
+var
+  i, sum: integer;
+begin
+  sum := 0;
+  { Memulai perulangan dari 1 sampai 10 }
+  for i := 1 to 10 do
+  begin
+    sum := sum + i; (* Tambahkan nilai i
+                       ke dalam variabel sum *)
+  end;
+end.

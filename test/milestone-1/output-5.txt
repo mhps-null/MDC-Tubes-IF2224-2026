@@ -1,0 +1,48 @@
+programsy
+ident (LogikaDanFungsi)
+semicolon
+varsy
+ident (angka)
+colon
+ident (integer)
+semicolon
+ident (ganjil)
+colon
+ident (boolean)
+semicolon
+beginsy
+ident (angka)
+becomes
+intcon (15)
+semicolon
+whilesy
+lparent
+ident (angka)
+gtr
+intcon (0)
+rparent
+dosy
+beginsy
+ident (ganjil)
+becomes
+lparent
+ident (angka)
+imod
+intcon (2)
+eql
+intcon (1)
+rparent
+orsy
+notsy
+ident (false)
+semicolon
+ident (angka)
+becomes
+ident (angka)
+idiv
+intcon (2)
+semicolon
+endsy
+semicolon
+endsy
+period

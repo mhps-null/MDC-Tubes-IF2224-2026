@@ -1,0 +1,46 @@
+programsy
+ident (CekKelulusan)
+semicolon
+varsy
+ident (nilaiTubes)
+comma
+ident (nilaiUjian)
+colon
+ident (integer)
+semicolon
+ident (status)
+colon
+ident (string)
+semicolon
+beginsy
+ident (nilaiTubes)
+becomes
+intcon (75)
+semicolon
+ident (nilaiUjian)
+becomes
+intcon (80)
+semicolon
+ifsy
+lparent
+ident (nilaiTubes)
+geq
+intcon (70)
+rparent
+andsy
+lparent
+ident (nilaiUjian)
+neq
+intcon (0)
+rparent
+thensy
+ident (status)
+becomes
+string ('Lulus')
+elsesy
+ident (status)
+becomes
+string ('Mengulang')
+semicolon
+endsy
+period

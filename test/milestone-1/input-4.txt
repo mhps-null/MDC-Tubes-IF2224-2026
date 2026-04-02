@@ -1,0 +1,10 @@
+program Pendataan;
+type
+  Mahasiswa := record
+    nilai: array [1..10] of real;
+  end;
+var
+  mhs: Mahasiswa;
+begin
+  mhs.nilai[1] := 85.5;
+end.

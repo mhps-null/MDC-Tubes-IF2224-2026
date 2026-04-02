@@ -1,3 +1,4 @@
+SHELL    = cmd.exe 
 CXX      = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -g
 SRCDIR   = src

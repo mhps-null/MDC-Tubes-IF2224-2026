@@ -65,9 +65,9 @@ State DFA::getNextState(State current, char c) {
             if(c == '\''){
                 return STATE_STRING_QUOTE;
             }
-            else if((std::isalpha(c) || std::isdigit(c)) && c != '\''){
-                return STATE_END_STRING;
-            }
+            // else if((std::isalpha(c) || std::isdigit(c)) && c != '\''){
+            //     return STATE_END_STRING;
+            // }
             return STATE_FINAL;
 
         // komentar kurawal : baca sampai '}'

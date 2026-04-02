@@ -55,15 +55,19 @@ State DFA::getNextState(State current, char c) {
             if (c == '\'')                return STATE_END_STRING;
             if (c != '\n' && c != '\0')   return STATE_STRING;
             return STATE_DEAD;  // newline/null sebelum tutup petik : error
+        case STATE_STRING_QUOTE:
+            if (c == '\'')                return STATE_END_STRING;
+            if (c != '\n' && c != '\0')   return STATE_STRING;
+            return STATE_DEAD;  // newline/null sebelum tutup petik : error
 
         // end_string : selesai, langsung emit
         case STATE_END_STRING:
             if(c == '\''){
+                return STATE_STRING_QUOTE;
+            }
+            else if((std::isalpha(c) || std::isdigit(c)) && c != '\''){
                 return STATE_END_STRING;
             }
-            // else if((std::isalpha(c) || std::isdigit(c)) && c != '\''){
-            //     return STATE_STRING;
-            // }
             return STATE_FINAL;
 
         // komentar kurawal : baca sampai '}'

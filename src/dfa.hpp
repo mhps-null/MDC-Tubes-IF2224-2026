@@ -61,7 +61,8 @@ enum State {
     STATE_CLOSEBRACK,       // ']'
 
     STATE_DEAD,
-    STATE_FINAL
+    STATE_FINAL,
+    STATE_STRING_QUOTE
 };
 
 // fungsi-fungsi DFA

@@ -188,13 +188,29 @@ void Lexer::emitToken(std::vector<Token>& tokens, State state,
             if (lexeme.size() >= 2) {
                 content = lexeme.substr(1, lexeme.size() - 2);
             }
+           std::string evaluatedContent = "";
+            for (size_t i = 0; i < content.size(); ++i) {
+                if (content[i] == '\'' && i + 1 < content.size() && content[i+1] == '\'') {
+                    evaluatedContent += '\'';
+                    i++; // skip petik kedua
+                } else {
+                    evaluatedContent += content[i];
+                }
+            }
 
-            if (content.size() == 1) {
-                // satu karakter → charcon
-                tokens.push_back({TOKEN_CHARCON, lexeme, tokenLine, tokenCol});
+            // BUAT LEXEME BARU: gabungkan petik luar dengan isi yang sudah dievaluasi
+            // Contoh: jika evaluatedContent adalah ' maka finalLexeme menjadi '''
+            std::string finalLexeme = "'" + evaluatedContent + "'";
+
+            // CEK menggunakan evaluatedContent.size() bukan content.size()
+            // Catatan: Jika Anda WAJIB menjadikannya TOKEN_STRING (dan bukan CHARCON) 
+            // meskipun panjangnya 1, Anda bisa mengubah TOKEN_CHARCON di bawah menjadi TOKEN_STRING.
+            if (evaluatedContent.size() == 1) {
+                // satu karakter → charcon (atau ubah ke TOKEN_STRING sesuai kebutuhan spesifikasi Anda)
+                tokens.push_back({TOKEN_STRING, finalLexeme, tokenLine, tokenCol});
             } else {
                 // lebih dari satu karakter → string
-                tokens.push_back({TOKEN_STRING, lexeme, tokenLine, tokenCol});
+                tokens.push_back({TOKEN_STRING, finalLexeme, tokenLine, tokenCol});
             }
             break;
         }

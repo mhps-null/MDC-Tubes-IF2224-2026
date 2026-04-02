@@ -6,5 +6,5 @@ var
 begin
   a := 5.c;
   b := a + 10;
-  writeln('"sdf', b);
+  writeln('"sdf', b); {tes ajah}
 end

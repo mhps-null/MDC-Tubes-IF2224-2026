@@ -28,4 +28,5 @@ comma
 ident (b)
 rparent
 semicolon
+comment
 endsy

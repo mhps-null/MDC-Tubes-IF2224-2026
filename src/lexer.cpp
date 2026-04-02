@@ -238,6 +238,7 @@ void Lexer::emitToken(std::vector<Token> &tokens, State state, const std::string
 
     case STATE_COMMENT_FINAL:
     {
+        tokens.push_back({type, "", tokenLine, tokenCol});
         break;
     }
 

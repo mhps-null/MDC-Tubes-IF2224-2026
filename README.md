@@ -1,5 +1,6 @@
 # MDC-Tubes-IF2224-2026
-Tugas Besar IF2224 Teori Bahasa Formal dan Automata.
+
+> Tugas Besar IF2224 Teori Bahasa Formal dan Automata
 
 ## Identitas Kelompok
 
@@ -8,28 +9,146 @@ Tugas Besar IF2224 Teori Bahasa Formal dan Automata.
 - Vara Azzara Ramli Pulukadang - 13524091
 - Nathan Adhika Santosa - 13524041
 
+---
+
 ## Deskripsi Program
 
-Program ini adalah implementasi lexer berbasis DFA untuk bahasa pemrograman Arion. Lexer membaca file kode sumber, memindai karakter per karakter, lalu menghasilkan daftar token sesuai spesifikasi bahasa Arion.
+Program ini merupakan implementasi lexer berbasis DFA untuk bahasa pemrograman Arion. Lexer membaca berkas kode sumber, melakukan pemindaian karakter demi karakter, lalu menghasilkan daftar token sesuai spesifikasi bahasa Arion.
 
-Token yang dikenali meliputi literal (integer, real, karakter, string), operator aritmatika dan relasional, keyword, identifier, delimiter, serta komentar. Total ada 52 jenis token. Komentar dikenali tapi tidak ditampilkan di output.
+Token yang dikenali meliputi literal (integer, real, karakter, string), operator aritmatika dan relasional, keyword, identifier, delimiter, serta komentar. Secara keseluruhan, terdapat 52 jenis token. Komentar tetap dikenali, tetapi tidak ditampilkan pada keluaran.
 
-Cara kerja program:
-1. Baca file input dari argumen command line.
-2. Jalankan lexical analysis menggunakan kelas `Lexer`.
-3. Cetak token ke terminal.
-4. Kalau path output diberikan, tulis juga ke file.
+Alur kerja program:
+1. Membaca berkas masukan dari argumen command line.
+2. Menjalankan proses analisis leksikal menggunakan kelas `Lexer`.
+3. Menampilkan token ke terminal.
+4. Jika argumen berkas keluaran diberikan, hasil juga ditulis ke berkas.
 
-## Requirements
+---
 
-- Compiler C++ yang mendukung C++17, misalnya `g++`
-- `make` untuk build
-- Shell yang mendukung perintah Unix (`mkdir -p`, `rm -rf`)
+## Prasyarat
 
-Untuk pengguna Windows, disarankan pakai WSL atau Git Bash karena Makefile menggunakan sintaks Unix.
+### Prasyarat Utama
+
+- Compiler C++ dengan dukungan standar C++17 (contoh: GCC, Clang, atau MinGW-w64)
+- GNU Make
+
+### Lingkungan Eksekusi yang Direkomendasikan
+
+- Linux (native)
+- Windows Subsystem for Linux (WSL)
+- Git Bash pada Windows
+
+PowerShell tetap dapat digunakan. Namun, saat menjalankan executable secara manual, gunakan format perintah Windows (contoh: `.\lexer.exe ...`).
+
+### Verifikasi Instalasi
+
+Gunakan perintah berikut untuk memastikan dependency utama telah tersedia:
+
+```bash
+g++ --version
+make --version
+```
+
+---
 
 ## Cara Instalasi dan Penggunaan Program
 
+### Quick Start
+
+Kompilasi program:
+
+```bash
+make
+```
+
+Jalankan pengujian bawaan (kompilasi dan eksekusi otomatis):
+
+```bash
+make run
+```
+
+Bersihkan hasil kompilasi:
+
+```bash
+make clean
+```
+
+### Menjalankan Program Manual
+
+Format umum:
+
+```bash
+<executable> <path_input> [path_output]
+```
+
+`path_output` bersifat opsional.
+
+### Windows (PowerShell / Git Bash / WSL)
+
+Kompilasi program:
+
+```bash
+make
+```
+
+Jalankan lexer secara manual:
+
+```bash
+./lexer.exe test/milestone-1/input-1.txt [test/milestone-1/output-1.txt]
+```
+
+Untuk PowerShell, disarankan menggunakan format path Windows:
+
+```powershell
+.\lexer.exe test\milestone-1\input-1.txt test\milestone-1\output-1.txt
+```
+
+Jalankan pengujian bawaan:
+
+```bash
+make run
+```
+
+Bersihkan hasil kompilasi:
+
+```bash
+make clean
+```
+
+### Linux
+
+Kompilasi program:
+
+```bash
+make
+```
+
+Jalankan lexer secara manual:
+
+```bash
+./lexer test/milestone-1/input-1.txt [test/milestone-1/output-1.txt]
+```
+
+Jalankan pengujian bawaan:
+
+```bash
+make run
+```
+
+Bersihkan hasil kompilasi:
+
+```bash
+make clean
+```
+
+### Catatan Path Test Default
+
+Perintah `make run` akan membaca masukan dan menulis keluaran pada berkas berikut:
+
+- Input: `test/milestone-1/input-1.txt`
+- Output: `test/milestone-1/output-1.txt`
+
+---
 
 ## Pembagian Tugas
 

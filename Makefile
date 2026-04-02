@@ -1,4 +1,3 @@
-SHELL    = cmd.exe 
 CXX      = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -g
 SRCDIR   = src
@@ -7,6 +6,7 @@ BINDIR   = bin
 
 # Detect OS
 ifeq ($(OS),Windows_NT)
+    SHELL  = cmd.exe
     TARGET = $(BINDIR)/lexer.exe
     MKDIR  = if not exist $(BUILDDIR) mkdir $(BUILDDIR)
     MKDIR_BIN = if not exist $(BINDIR) mkdir $(BINDIR)
@@ -43,7 +43,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 
 # Run
 run: $(TARGET)
-	$(RUN) test/milestone-1/input-1.txt test/milestone-1/output-1.txt
+	$(RUN) milestone-1/input-1.txt milestone-1/output-1.txt
 
 # Clean
 clean:

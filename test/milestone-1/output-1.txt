@@ -23,7 +23,7 @@ intcon (10)
 semicolon
 ident (writeln)
 lparent
-string (''sdf'dfsdf')
+string ('"sdf')
 comma
 ident (b)
 rparent

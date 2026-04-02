@@ -1,5 +1,8 @@
 # MDC-Tubes-IF2224-2026
-Tugas Besar IF2224 Teori Bahasa Formal dan Automata.
+
+> Tugas Besar IF2224 Teori Bahasa Formal dan Automata
+
+<p align="center"> <img src="doc/preview_input.png" width="60%"/><img src="doc/preview_output.png" width="60%"/> </p>
 
 ## Identitas Kelompok
 
@@ -15,6 +18,7 @@ Program ini adalah implementasi lexer berbasis DFA untuk bahasa pemrograman Ario
 Token yang dikenali meliputi literal (integer, real, karakter, string), operator aritmatika dan relasional, keyword, identifier, delimiter, serta komentar. Total ada 52 jenis token. Komentar dikenali tapi tidak ditampilkan di output.
 
 Cara kerja program:
+
 1. Baca file input dari argumen command line.
 2. Jalankan lexical analysis menggunakan kelas `Lexer`.
 3. Cetak token ke terminal.
@@ -30,12 +34,11 @@ Untuk pengguna Windows, disarankan pakai WSL atau Git Bash karena Makefile mengg
 
 ## Cara Instalasi dan Penggunaan Program
 
-
 ## Pembagian Tugas
 
-| Nama | Tugas |
-|------|-------|
-| Ariel Cornelius Sitorus | ... |
-| Muhammad Haris Putra Sulastianto | ... |
-| Vara Azzara Ramli Pulukadang | ... |
-| Nathan Adhika Santosa | ... |
+| Nama                             | Tugas |
+| -------------------------------- | ----- |
+| Ariel Cornelius Sitorus          | ...   |
+| Muhammad Haris Putra Sulastianto | ...   |
+| Vara Azzara Ramli Pulukadang     | ...   |
+| Nathan Adhika Santosa            | ...   |

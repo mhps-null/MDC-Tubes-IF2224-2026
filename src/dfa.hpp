@@ -52,13 +52,20 @@ enum State
 
 namespace DFA
 {
-    // kasih state berikutnya berdasarkan state sekarang dan karakter yang dibaca
-    // kalau ga ada transisi valid, return STATE_DEAD
+    /**
+     * Menentukan state berikutnya berdasarkan state saat ini dan karakter input.
+     * Mengikuti aturan transisi DFA, dan mengembalikan STATE_DEAD jika tidak valid.
+     */
     State getNextState(State current, char c);
 
-    // cek apakah state ini accepting (artinya token bisa di-emit di sini)
+    /**
+     * Mengecek apakah suatu state adalah accepting state
+     * (artinya lexeme bisa dijadikan token di state ini).
+     */
     bool isAccepting(State state);
 
-    // konversi state ke tipe token yang sesuai
+    /**
+     * Mengonversi state DFA menjadi TokenType yang sesuai.
+     */
     TokenType stateToTokenType(State state);
 }

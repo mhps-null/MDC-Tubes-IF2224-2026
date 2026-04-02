@@ -1,12 +1,3 @@
-// main.cpp
-// Entry point buat Arion Lexer.
-//
-// Cara pakai:
-//   ./lexer <input.txt> [output.txt]
-//
-// Kalau output.txt ga dikasih, output cuma ke terminal.
-// Kalau dikasih, output ke terminal DAN ke file.
-
 #include "lexer.hpp"
 #include "utils.hpp"
 #include <iostream>
@@ -17,14 +8,12 @@ namespace fs = std::filesystem;
 
 int main(int argc, char *argv[])
 {
-    // cek argumen dulu
     if (argc < 2)
     {
         std::cerr << "Usage: " << argv[0] << " <input.txt> [output.txt]" << std::endl;
         return 1;
     }
 
-    // cari root project (folder yang punya "test")
     fs::path current = fs::canonical(argv[0]).parent_path();
 
     while (!fs::exists(current / "test"))
@@ -57,7 +46,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    // baca file input
     std::string source;
     if (!readFile(inputPath.string(), source))
     {
@@ -65,11 +53,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // jalankan lexer
     Lexer lexer(source);
     std::vector<Token> tokens = lexer.scan();
 
-    // format output
     std::stringstream output;
     for (const Token &tok : tokens)
     {
@@ -83,10 +69,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    // cetak ke terminal
     std::cout << output.str();
 
-    // kalau ada path output, tulis ke file juga
     if (!outputPath.empty())
     {
         if (!writeFile(outputPath.string(), output.str()))

@@ -1,72 +1,63 @@
-// utils.cpp
-// Implementasi utilitas: keyword table, file I/O, sama helper lainnya.
-// Keyword table memetakan reserved word Arion ke TokenType yang sesuai.
-
 #include "utils.hpp"
 #include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <map>
 
-// konversi string ke lowercase
-std::string toLower(const std::string& str) {
+std::string toLower(const std::string &str)
+{
     std::string result = str;
     std::transform(result.begin(), result.end(), result.begin(), ::tolower);
     return result;
 }
 
-// tabel keyword Arion
-// semua disimpan lowercase buat matching case-insensitive
-// termasuk operator kata kayak NOT, AND, OR, MOD, div
 static const std::map<std::string, TokenType> keywordTable = {
-    // operator kata
-    {"not",       TOKEN_NOTSY},
-    {"div",       TOKEN_IDIV},
-    {"mod",       TOKEN_IMOD},
-    {"and",       TOKEN_ANDSY},
-    {"or",        TOKEN_ORSY},
+    {"not", TOKEN_NOTSY},
+    {"div", TOKEN_IDIV},
+    {"mod", TOKEN_IMOD},
+    {"and", TOKEN_ANDSY},
+    {"or", TOKEN_ORSY},
 
-    // keyword deklarasi
-    {"const",     TOKEN_CONSTSY},
-    {"type",      TOKEN_TYPESY},
-    {"var",       TOKEN_VARSY},
-    {"function",  TOKEN_FUNCTIONSY},
+    {"const", TOKEN_CONSTSY},
+    {"type", TOKEN_TYPESY},
+    {"var", TOKEN_VARSY},
+    {"function", TOKEN_FUNCTIONSY},
     {"procedure", TOKEN_PROCEDURESY},
-    {"array",     TOKEN_ARRAYSY},
-    {"record",    TOKEN_RECORDSY},
-    {"program",   TOKEN_PROGRAMSY},
+    {"array", TOKEN_ARRAYSY},
+    {"record", TOKEN_RECORDSY},
+    {"program", TOKEN_PROGRAMSY},
 
-    // keyword kontrol
-    {"begin",     TOKEN_BEGINSY},
-    {"if",        TOKEN_IFSY},
-    {"case",      TOKEN_CASESY},
-    {"repeat",    TOKEN_REPEATSY},
-    {"while",     TOKEN_WHILESY},
-    {"for",       TOKEN_FORSY},
-    {"end",       TOKEN_ENDSY},
-    {"else",      TOKEN_ELSESY},
-    {"until",     TOKEN_UNTILSY},
-    {"of",        TOKEN_OFSY},
-    {"do",        TOKEN_DOSY},
-    {"to",        TOKEN_TOSY},
-    {"downto",    TOKEN_DOWNTOSY},
-    {"then",      TOKEN_THENSY}
-};
+    {"begin", TOKEN_BEGINSY},
+    {"if", TOKEN_IFSY},
+    {"case", TOKEN_CASESY},
+    {"repeat", TOKEN_REPEATSY},
+    {"while", TOKEN_WHILESY},
+    {"for", TOKEN_FORSY},
+    {"end", TOKEN_ENDSY},
+    {"else", TOKEN_ELSESY},
+    {"until", TOKEN_UNTILSY},
+    {"of", TOKEN_OFSY},
+    {"do", TOKEN_DOSY},
+    {"to", TOKEN_TOSY},
+    {"downto", TOKEN_DOWNTOSY},
+    {"then", TOKEN_THENSY}};
 
-// lookup keyword: lowercase dulu baru cari di tabel
-TokenType lookupKeyword(const std::string& identifier) {
+TokenType lookupKeyword(const std::string &identifier)
+{
     std::string lower = toLower(identifier);
     auto it = keywordTable.find(lower);
-    if (it != keywordTable.end()) {
+    if (it != keywordTable.end())
+    {
         return it->second;
     }
     return TOKEN_IDENT;
 }
 
-// baca seluruh isi file ke string
-bool readFile(const std::string& path, std::string& content) {
+bool readFile(const std::string &path, std::string &content)
+{
     std::ifstream file(path);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         return false;
     }
     std::stringstream buffer;
@@ -76,10 +67,11 @@ bool readFile(const std::string& path, std::string& content) {
     return true;
 }
 
-// tulis string ke file
-bool writeFile(const std::string& path, const std::string& content) {
+bool writeFile(const std::string &path, const std::string &content)
+{
     std::ofstream file(path);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         return false;
     }
     file << content;

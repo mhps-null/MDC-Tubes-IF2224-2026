@@ -10,7 +10,8 @@ CXX      = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -g
 SRCDIR   = src
 BUILDDIR = build
-TARGET   = lexer
+BINDIR   = bin
+TARGET   = $(BINDIR)/lexer
 
 # Daftar source files
 SOURCES  = $(SRCDIR)/main.cpp \
@@ -25,7 +26,7 @@ OBJECTS  = $(SOURCES:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 all: $(TARGET)
 
 # Link object files jadi executable
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) | $(BINDIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compile tiap .cpp ke .o

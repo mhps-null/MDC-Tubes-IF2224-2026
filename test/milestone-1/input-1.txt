@@ -5,6 +5,8 @@ var
   jari2: integer;
   luas: real;
 begin
+  .23.e-+/1.e-+/1;
+  @abc;
   jari2 := 10;
   luas := pi * jari2 * jari2;
 end.  

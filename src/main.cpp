@@ -59,9 +59,9 @@ int main(int argc, char *argv[])
     std::stringstream output;
     for (const Token &tok : tokens)
     {
-        if (tok.type == TOKEN_ERROR)
+        if (tok.type == TOKEN_UNKNOWN)
         {
-            output << "ERROR (" << tok.value << ")" << std::endl;
+            output << "UNKNOWN (" << tok.value << ")" << std::endl;
         }
         else
         {

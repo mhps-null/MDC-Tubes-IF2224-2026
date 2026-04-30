@@ -63,9 +63,7 @@ State DFA::getNextState(State current, char c)
             return STATE_INT;
         if (c == '.')
             return STATE_REAL_DOT;
-        if(c == ';')
-            return STATE_FINAL; 
-        return STATE_DEAD;
+        return STATE_FINAL;
 
     case STATE_REAL_DOT:
         if (std::isdigit(c))

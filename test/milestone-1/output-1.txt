@@ -16,6 +16,10 @@ colon
 ident (real)
 semicolon
 beginsy
+UNKNOWN (.23.e-+/1.e-+/1)
+semicolon
+UNKNOWN (@abc)
+semicolon
 ident (jari2)
 becomes
 intcon (10)

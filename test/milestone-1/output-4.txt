@@ -9,11 +9,7 @@ ident (nilai)
 colon
 arraysy
 lbrack
-intcon (1)
-period
-period
-intcon (10)
-rbrack
+UNKNOWN (1..10])
 ofsy
 ident (real)
 semicolon
@@ -26,11 +22,7 @@ ident (Mahasiswa)
 semicolon
 beginsy
 ident (mhs)
-period
-ident (nilai)
-lbrack
-intcon (1)
-rbrack
+UNKNOWN (.nilai[1])
 becomes
 realcon (85.5)
 semicolon

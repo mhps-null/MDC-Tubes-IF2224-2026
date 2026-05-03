@@ -52,22 +52,65 @@ std::vector<Token> Lexer::scan()
             }
             pos++;
         }
-        else if (next == STATE_DEAD)
-        {
-            std::cerr << "Lexer error (line " << line << ", col " << col
-                      << "): karakter tidak dikenali '" << c << "'" << std::endl;
-            tokens.push_back({TOKEN_ERROR, std::string(1, c), line, col});
-            pos++;
-            if (c == '\n')
-            {
-                line++;
-                col = 1;
+            else if (next == STATE_DEAD){
+                std::string unknownLexeme;
+                int errLine = tokenStartLine;
+                int errCol  = tokenStartCol;
+
+                unknownLexeme = lexeme;
+                if (c != '\0')
+                {
+                    unknownLexeme += c;
+                    pos++;
+
+                    if (c == '\n')
+                    {
+                        line++;
+                        col = 1;
+                    }
+                    else
+                    {
+                        col++;
+                    }
+                }
+
+                while (pos < source.size() &&
+                    !std::isspace((unsigned char)source[pos]) &&
+                    source[pos] != ';')
+                {
+                    char bad = source[pos];
+                    unknownLexeme += bad;
+
+                    pos++;
+
+                    if (bad == '\n')
+                    {
+                        line++;
+                        col = 1;
+                    }
+                    else
+                    {
+                        col++;
+                    }
+                }
+
+                std::cerr << "Lexer error (line "
+                        << errLine << ", col " << errCol
+                        << "): token tidak valid '"
+                        << unknownLexeme << "'"
+                        << std::endl;
+
+                tokens.push_back({
+                    TOKEN_UNKNOWN,
+                    unknownLexeme,
+                    errLine,
+                    errCol
+                });
+
+                state = STATE_START;
+                lexeme.clear();
+                lastAccept = STATE_DEAD;
             }
-            else
-            {
-                col++;
-            }
-        }
         else if (next != STATE_FINAL)
         {
             if (state == STATE_START)
@@ -129,7 +172,7 @@ std::vector<Token> Lexer::scan()
                 std::cerr << "Lexer error (line " << tokenStartLine
                           << ", col " << tokenStartCol
                           << "): token tidak valid '" << errLexeme << "'" << std::endl;
-                tokens.push_back({TOKEN_ERROR, errLexeme, tokenStartLine, tokenStartCol});
+                tokens.push_back({TOKEN_UNKNOWN, errLexeme, tokenStartLine, tokenStartCol});
 
                 if (lexeme.empty())
                 {
@@ -167,7 +210,7 @@ std::vector<Token> Lexer::scan()
             std::cerr << "Lexer error (line " << tokenStartLine
                       << ", col " << tokenStartCol
                       << "): unexpected end of file, token '" << lexeme << "'" << std::endl;
-            tokens.push_back({TOKEN_ERROR, lexeme, tokenStartLine, tokenStartCol});
+            tokens.push_back({TOKEN_UNKNOWN, lexeme, tokenStartLine, tokenStartCol});
         }
     }
 
@@ -220,7 +263,7 @@ void Lexer::emitToken(std::vector<Token> &tokens, State state, const std::string
 
         if (evaluatedContent.size() == 1)
         {
-            tokens.push_back({TOKEN_STRING, finalLexeme, tokenLine, tokenCol});
+            tokens.push_back({TOKEN_CHARCON, finalLexeme, tokenLine, tokenCol});
         }
         else
         {

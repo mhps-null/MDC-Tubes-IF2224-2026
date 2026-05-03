@@ -75,7 +75,7 @@ enum TokenType
     TOKEN_COMMENT, // 52. { ... } atau (* ... *)
 
     // special
-    TOKEN_ERROR, // token ga dikenali
+    TOKEN_UNKNOWN, // token ga dikenali
     TOKEN_EOF    // end of file
 };
 
@@ -195,8 +195,8 @@ inline std::string tokenTypeToString(TokenType type)
         return "thensy";
     case TOKEN_COMMENT:
         return "comment";
-    case TOKEN_ERROR:
-        return "ERROR";
+    case TOKEN_UNKNOWN:
+        return "UNKNOWN";
     case TOKEN_EOF:
         return "EOF";
     default:
@@ -208,7 +208,7 @@ inline bool tokenHasValue(TokenType type)
 {
     return type == TOKEN_INTCON || type == TOKEN_REALCON ||
            type == TOKEN_CHARCON || type == TOKEN_STRING || type == TOKEN_COMMENT ||
-           type == TOKEN_IDENT || type == TOKEN_ERROR;
+           type == TOKEN_IDENT || type == TOKEN_UNKNOWN;
 }
 
 inline std::string tokenToString(const Token &tok)

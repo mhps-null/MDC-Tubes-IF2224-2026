@@ -1,8 +1,11 @@
 #include "lexer.hpp"
 #include "utils.hpp"
+#include "parser.hpp"
+#include "parsetree.hpp"
 #include <iostream>
 #include <string>
-#include <sstream>
+// #include <sstream>
+#include <fstream>
 #include <filesystem>
 namespace fs = std::filesystem;
 
@@ -56,30 +59,50 @@ int main(int argc, char *argv[])
     Lexer lexer(source);
     std::vector<Token> tokens = lexer.scan();
 
-    std::stringstream output;
-    for (const Token &tok : tokens)
-    {
-        if (tok.type == TOKEN_UNKNOWN)
-        {
-            output << "UNKNOWN (" << tok.value << ")" << std::endl;
-        }
-        else
-        {
-            output << tokenToString(tok) << std::endl;
-        }
-    }
+    initParser(tokens);
+    auto root = parse();
 
-    std::cout << output.str();
+    printTree(root, std::cout);
 
     if (!outputPath.empty())
     {
-        if (!writeFile(outputPath.string(), output.str()))
+        fs::create_directories(outputPath.parent_path());
+        std::ofstream outFile(outputPath.string());
+        if (!outFile.is_open())
         {
             std::cerr << "Error: tidak dapat menulis ke file '" << outputPath << "'" << std::endl;
             return 1;
         }
-        std::cout << "\nOutput berhasil ditulis ke " << outputPath << std::endl;
+        printTree(root, outFile);
+        std::cerr << "\nParse tree berhasil ditulis ke " << outputPath << std::endl;
     }
 
-    return 0;
+    return hadError() ? 1 : 0;
+
+    // std::stringstream output;
+    // for (const Token &tok : tokens)
+    // {
+    //     if (tok.type == TOKEN_UNKNOWN)
+    //     {
+    //         output << "UNKNOWN (" << tok.value << ")" << std::endl;
+    //     }
+    //     else
+    //     {
+    //         output << tokenToString(tok) << std::endl;
+    //     }
+    // }
+
+    // std::cout << output.str();
+
+    // if (!outputPath.empty())
+    // {
+    //     if (!writeFile(outputPath.string(), output.str()))
+    //     {
+    //         std::cerr << "Error: tidak dapat menulis ke file '" << outputPath << "'" << std::endl;
+    //         return 1;
+    //     }
+    //     std::cout << "\nOutput berhasil ditulis ke " << outputPath << std::endl;
+    // }
+
+    // return 0;
 }

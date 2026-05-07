@@ -645,6 +645,7 @@ static std::shared_ptr<ParseNode> parseIndexList()
     else
     {
         syntaxError("index");
+        node->children.push_back(makeErrorNode("index"));
     }
 
     while (check(TOKEN_COMMA))
@@ -660,6 +661,7 @@ static std::shared_ptr<ParseNode> parseIndexList()
         else
         {
             syntaxError("index");
+            node->children.push_back(makeErrorNode("index"));
         }
     }
 

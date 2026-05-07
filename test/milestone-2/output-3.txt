@@ -1,37 +1,62 @@
 === TOKENS ===
 programsy
-ident (TotalSum)
+ident (ArrayRecordTest)
 semicolon
-varsy
-ident (i)
-comma
-ident (sum)
+typesy
+ident (Kendaraan)
+eql
+recordsy
+ident (jenis)
+colon
+ident (string)
+semicolon
+ident (tahun)
 colon
 ident (integer)
 semicolon
-beginsy
-ident (sum)
-becomes
-intcon (0)
-semicolon
-comment ( Memulai perulangan dari 1 sampai 10 )
-forsy
-ident (i)
-becomes
-intcon (1)
-tosy
-intcon (10)
-dosy
-beginsy
-ident (sum)
-becomes
-ident (sum)
-plus
-ident (i)
-semicolon
-comment ( Tambahkan nilai i
-                       ke dalam variabel sum )
 endsy
+semicolon
+varsy
+ident (matriks)
+colon
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (5)
+rbrack
+ofsy
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (5)
+rbrack
+ofsy
+ident (integer)
+semicolon
+ident (data)
+colon
+ident (Kendaraan)
+semicolon
+beginsy
+ident (matriks)
+lbrack
+intcon (1)
+rbrack
+lbrack
+intcon (2)
+rbrack
+becomes
+intcon (10)
+semicolon
+ident (data)
+period
+ident (jenis)
+becomes
+string ('Mobil')
 semicolon
 endsy
 period
@@ -40,66 +65,120 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(TotalSum)
+│   ├── ident(ArrayRecordTest)
 │   └── semicolon
 ├── <declaration-part>
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Kendaraan)
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(jenis)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(string)
+│   │   │       │   ├── semicolon
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(tahun)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
+│   │   └── semicolon
 │   └── <var-declaration>
 │       ├── varsy
 │       ├── <identifier-list>
-│       │   ├── ident(i)
-│       │   ├── comma
-│       │   └── ident(sum)
+│       │   └── ident(matriks)
 │       ├── colon
 │       ├── <type>
-│       │   └── ident(integer)
+│       │   └── <array-type>
+│       │       ├── arraysy
+│       │       ├── lbrack
+│       │       ├── <range>
+│       │       │   ├── <expression>
+│       │       │   │   └── <simple-expression>
+│       │       │   │       └── <term>
+│       │       │   │           └── <factor>
+│       │       │   │               └── intcon(1)
+│       │       │   ├── period
+│       │       │   ├── period
+│       │       │   └── <expression>
+│       │       │       └── <simple-expression>
+│       │       │           └── <term>
+│       │       │               └── <factor>
+│       │       │                   └── intcon(5)
+│       │       ├── rbrack
+│       │       ├── ofsy
+│       │       └── <type>
+│       │           └── <array-type>
+│       │               ├── arraysy
+│       │               ├── lbrack
+│       │               ├── <range>
+│       │               │   ├── <expression>
+│       │               │   │   └── <simple-expression>
+│       │               │   │       └── <term>
+│       │               │   │           └── <factor>
+│       │               │   │               └── intcon(1)
+│       │               │   ├── period
+│       │               │   ├── period
+│       │               │   └── <expression>
+│       │               │       └── <simple-expression>
+│       │               │           └── <term>
+│       │               │               └── <factor>
+│       │               │                   └── intcon(5)
+│       │               ├── rbrack
+│       │               ├── ofsy
+│       │               └── <type>
+│       │                   └── ident(integer)
+│       ├── semicolon
+│       ├── <identifier-list>
+│       │   └── ident(data)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(Kendaraan)
 │       └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
 │   │   ├── <assignment-statement>
 │   │   │   ├── <variable>
-│   │   │   │   └── ident(sum)
+│   │   │   │   ├── ident(matriks)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(1)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── lbrack
+│   │   │   │       ├── <index-list>
+│   │   │   │       │   └── intcon(2)
+│   │   │   │       └── rbrack
 │   │   │   ├── becomes
 │   │   │   └── <expression>
 │   │   │       └── <simple-expression>
 │   │   │           └── <term>
 │   │   │               └── <factor>
-│   │   │                   └── intcon(0)
+│   │   │                   └── intcon(10)
 │   │   ├── semicolon
-│   │   └── <for-statement>
-│   │       ├── forsy
-│   │       ├── ident(i)
+│   │   └── <assignment-statement>
+│   │       ├── <variable>
+│   │       │   ├── ident(data)
+│   │       │   └── <component-variable>
+│   │       │       ├── period
+│   │       │       └── ident(jenis)
 │   │       ├── becomes
 │   │       ├── <expression>
 │   │       │   └── <simple-expression>
 │   │       │       └── <term>
 │   │       │           └── <factor>
-│   │       │               └── intcon(1)
-│   │       ├── tosy
-│   │       ├── <expression>
-│   │       │   └── <simple-expression>
-│   │       │       └── <term>
-│   │       │           └── <factor>
-│   │       │               └── intcon(10)
-│   │       ├── dosy
-│   │       ├── <compound-statement>
-│   │       │   ├── beginsy
-│   │       │   ├── <statement-list>
-│   │       │   │   └── <assignment-statement>
-│   │       │   │       ├── <variable>
-│   │       │   │       │   └── ident(sum)
-│   │       │   │       ├── becomes
-│   │       │   │       ├── <expression>
-│   │       │   │       │   └── <simple-expression>
-│   │       │   │       │       ├── <term>
-│   │       │   │       │       │   └── <factor>
-│   │       │   │       │       │       └── ident(sum)
-│   │       │   │       │       ├── plus
-│   │       │   │       │       └── <term>
-│   │       │   │       │           └── <factor>
-│   │       │   │       │               └── ident(i)
-│   │       │   │       └── semicolon
-│   │       │   └── endsy
+│   │       │               └── string('Mobil')
 │   │       └── semicolon
 │   └── endsy
 └── period

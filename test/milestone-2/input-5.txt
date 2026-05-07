@@ -1,12 +1,13 @@
-program LogikaDanFungsi;
-var
-  angka: integer;
-  ganjil: boolean;
+program ErrorHandlingTest;
+
+const
+    pi == 3.14
+
+type
+    Warna == (Merah, Kuning Hijau);
+
 begin
-  angka := 15;
-  while (angka > 0) do
-  begin
-    ganjil := (angka mod 2 == 1) or not false;
-    angka := angka div 2;
-  end;
+    @invalidToken;
+
+    x := * 5;
 end.

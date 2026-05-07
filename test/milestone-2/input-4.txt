@@ -1,10 +1,9 @@
-program Pendataan;
-type
-  Mahasiswa == record
-    nilai: array [1..10] of real;
-  end;
-var
-  mhs: Mahasiswa;
+program ProcedureTest;
+
+procedure Cetak(x : integer; y : real);
 begin
-  mhs.nilai[1] := 85.5;
+end;
+
+begin
+    Cetak(10, 3.14);
 end.

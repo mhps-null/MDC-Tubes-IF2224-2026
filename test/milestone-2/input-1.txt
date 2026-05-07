@@ -1,31 +1,8 @@
-program Milestone2Valid;
-
-type
-    Warna == (Merah, Kuning, Hijau);
-    Kendaraan == record
-        jenis : string;
-        tahun : integer;
-    end;
+program AssignmentTest;
 
 var
-    pi : real;
-    matriks : array [1..5] of array [1..5] of integer;
-    titik : Kendaraan;
-    skala : array [0..10] of real;
-procedure ResetData;
-begin
-    pi := 3.14; { Realcon }
-end;
-
+    a : integer;
 
 begin
-    matriks[1][2] := 10;          
-    titik.jenis := 'Mobil';      
-    ResetData;                 
-    ResetData();               
-    Tampilkan(pi);                
-    if (pi > 3.0) then
-    begin
-        pi := pi * 1.5;
-    end;
+    a := 5 + 10;
 end.

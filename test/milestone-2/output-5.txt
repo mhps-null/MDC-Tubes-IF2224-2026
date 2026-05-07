@@ -1,49 +1,28 @@
 === TOKENS ===
 programsy
-ident (LogikaDanFungsi)
+ident (ErrorHandlingTest)
 semicolon
-varsy
-ident (angka)
-colon
-ident (integer)
-semicolon
-ident (ganjil)
-colon
-ident (boolean)
-semicolon
-beginsy
-ident (angka)
-becomes
-intcon (15)
-semicolon
-whilesy
-lparent
-ident (angka)
-gtr
-intcon (0)
-rparent
-dosy
-beginsy
-ident (ganjil)
-becomes
-lparent
-ident (angka)
-imod
-intcon (2)
+constsy
+ident (pi)
 eql
-intcon (1)
+realcon (3.14)
+typesy
+ident (Warna)
+eql
+lparent
+ident (Merah)
+comma
+ident (Kuning)
+ident (Hijau)
 rparent
-orsy
-notsy
-ident (false)
 semicolon
-ident (angka)
+beginsy
+UNKNOWN (@invalidToken)
+semicolon
+ident (x)
 becomes
-ident (angka)
-idiv
-intcon (2)
-semicolon
-endsy
+times
+intcon (5)
 semicolon
 endsy
 period
@@ -52,102 +31,56 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(LogikaDanFungsi)
+│   ├── ident(ErrorHandlingTest)
 │   └── semicolon
 ├── <declaration-part>
-│   └── <var-declaration>
-│       ├── varsy
-│       ├── <identifier-list>
-│       │   └── ident(angka)
-│       ├── colon
+│   ├── <const-declaration>
+│   │   ├── constsy
+│   │   ├── ident(pi)
+│   │   ├── eql
+│   │   ├── <constant>
+│   │   │   └── realcon(3.14)
+│   │   └── ERROR(unexpected:typesy, expected:semicolon)
+│   └── <type-declaration>
+│       ├── typesy
+│       ├── ident(Warna)
+│       ├── eql
 │       ├── <type>
-│       │   └── ident(integer)
-│       ├── semicolon
-│       ├── <identifier-list>
-│       │   └── ident(ganjil)
-│       ├── colon
+│       │   └── <enumerated>
+│       │       ├── lparent
+│       │       ├── ident(Merah)
+│       │       ├── comma
+│       │       ├── ident(Kuning)
+│       │       └── ERROR(unexpected:ident (Hijau), expected:rparent)
+│       ├── ERROR(unexpected:ident (Hijau), expected:semicolon)
+│       ├── ident(Hijau)
+│       ├── ERROR(unexpected:rparent, expected:eql)
 │       ├── <type>
-│       │   └── ident(boolean)
-│       └── semicolon
+│       │   └── ERROR(unexpected:rparent, expected:type)
+│       └── ERROR(unexpected:rparent, expected:semicolon)
 ├── <compound-statement>
-│   ├── beginsy
+│   ├── ERROR(unexpected:rparent, expected:beginsy)
 │   ├── <statement-list>
-│   │   ├── <assignment-statement>
-│   │   │   ├── <variable>
-│   │   │   │   └── ident(angka)
-│   │   │   ├── becomes
-│   │   │   └── <expression>
-│   │   │       └── <simple-expression>
-│   │   │           └── <term>
-│   │   │               └── <factor>
-│   │   │                   └── intcon(15)
+│   │   ├── ERROR(unexpected:rparent)
 │   │   ├── semicolon
-│   │   └── <while-statement>
-│   │       ├── whilesy
-│   │       ├── <expression>
-│   │       │   └── <simple-expression>
-│   │       │       └── <term>
-│   │       │           └── <factor>
-│   │       │               ├── lparent
-│   │       │               ├── <expression>
-│   │       │               │   ├── <simple-expression>
-│   │       │               │   │   └── <term>
-│   │       │               │   │       └── <factor>
-│   │       │               │   │           └── ident(angka)
-│   │       │               │   ├── gtr
-│   │       │               │   └── <simple-expression>
-│   │       │               │       └── <term>
-│   │       │               │           └── <factor>
-│   │       │               │               └── intcon(0)
-│   │       │               └── rparent
-│   │       ├── dosy
-│   │       ├── <compound-statement>
-│   │       │   ├── beginsy
-│   │       │   ├── <statement-list>
-│   │       │   │   ├── <assignment-statement>
-│   │       │   │   │   ├── <variable>
-│   │       │   │   │   │   └── ident(ganjil)
-│   │       │   │   │   ├── becomes
-│   │       │   │   │   └── <expression>
-│   │       │   │   │       └── <simple-expression>
-│   │       │   │   │           ├── <term>
-│   │       │   │   │           │   └── <factor>
-│   │       │   │   │           │       ├── lparent
-│   │       │   │   │           │       ├── <expression>
-│   │       │   │   │           │       │   ├── <simple-expression>
-│   │       │   │   │           │       │   │   └── <term>
-│   │       │   │   │           │       │   │       ├── <factor>
-│   │       │   │   │           │       │   │       │   └── ident(angka)
-│   │       │   │   │           │       │   │       ├── imod
-│   │       │   │   │           │       │   │       └── <factor>
-│   │       │   │   │           │       │   │           └── intcon(2)
-│   │       │   │   │           │       │   ├── eql
-│   │       │   │   │           │       │   └── <simple-expression>
-│   │       │   │   │           │       │       └── <term>
-│   │       │   │   │           │       │           └── <factor>
-│   │       │   │   │           │       │               └── intcon(1)
-│   │       │   │   │           │       └── rparent
-│   │       │   │   │           ├── orsy
-│   │       │   │   │           └── <term>
-│   │       │   │   │               └── <factor>
-│   │       │   │   │                   ├── notsy
-│   │       │   │   │                   └── <factor>
-│   │       │   │   │                       └── ident(false)
-│   │       │   │   ├── semicolon
-│   │       │   │   └── <assignment-statement>
-│   │       │   │       ├── <variable>
-│   │       │   │       │   └── ident(angka)
-│   │       │   │       ├── becomes
-│   │       │   │       ├── <expression>
-│   │       │   │       │   └── <simple-expression>
-│   │       │   │       │       └── <term>
-│   │       │   │       │           ├── <factor>
-│   │       │   │       │           │   └── ident(angka)
-│   │       │   │       │           ├── idiv
-│   │       │   │       │           └── <factor>
-│   │       │   │       │               └── intcon(2)
-│   │       │   │       └── semicolon
-│   │       │   └── endsy
-│   │       └── semicolon
-│   └── endsy
+│   │   └── <compound-statement>
+│   │       ├── beginsy
+│   │       ├── <statement-list>
+│   │       │   ├── ERROR(unexpected:UNKNOWN (@invalidToken))
+│   │       │   ├── semicolon
+│   │       │   └── <assignment-statement>
+│   │       │       ├── <variable>
+│   │       │       │   └── ident(x)
+│   │       │       ├── becomes
+│   │       │       ├── <expression>
+│   │       │       │   └── <simple-expression>
+│   │       │       │       └── <term>
+│   │       │       │           ├── <factor>
+│   │       │       │           │   └── ERROR(unexpected:times, expected:factor)
+│   │       │       │           ├── times
+│   │       │       │           └── <factor>
+│   │       │       │               └── intcon(5)
+│   │       │       └── semicolon
+│   │       └── endsy
+│   └── ERROR(unexpected:period, expected:endsy)
 └── period

@@ -1,12 +1,16 @@
-program TotalSum;
+program ArrayRecordTest;
+
+type
+    Kendaraan == record
+        jenis : string;
+        tahun : integer;
+    end;
+
 var
-  i, sum: integer;
+    matriks : array [1..5] of array [1..5] of integer;
+    data : Kendaraan;
+
 begin
-  sum := 0;
-  { Memulai perulangan dari 1 sampai 10 }
-  for i := 1 to 10 do
-  begin
-    sum := sum + i; (* Tambahkan nilai i
-                       ke dalam variabel sum *)
-  end;
+    matriks[1][2] := 10;
+    data.jenis := 'Mobil';
 end.

@@ -1,0 +1,114 @@
+=== TOKENS ===
+programsy
+ident (Pendataan)
+semicolon
+typesy
+ident (Mahasiswa)
+eql
+recordsy
+ident (nilai)
+colon
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (10)
+rbrack
+ofsy
+ident (real)
+semicolon
+endsy
+semicolon
+varsy
+ident (mhs)
+colon
+ident (Mahasiswa)
+semicolon
+beginsy
+ident (mhs)
+period
+ident (nilai)
+lbrack
+intcon (1)
+rbrack
+becomes
+realcon (85.5)
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(Pendataan)
+│   └── semicolon
+├── <declaration-part>
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Mahasiswa)
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(nilai)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── <array-type>
+│   │   │       │   │           ├── arraysy
+│   │   │       │   │           ├── lbrack
+│   │   │       │   │           ├── <range>
+│   │   │       │   │           │   ├── <expression>
+│   │   │       │   │           │   │   └── <simple-expression>
+│   │   │       │   │           │   │       └── <term>
+│   │   │       │   │           │   │           └── <factor>
+│   │   │       │   │           │   │               └── intcon(1)
+│   │   │       │   │           │   ├── period
+│   │   │       │   │           │   ├── period
+│   │   │       │   │           │   └── <expression>
+│   │   │       │   │           │       └── <simple-expression>
+│   │   │       │   │           │           └── <term>
+│   │   │       │   │           │               └── <factor>
+│   │   │       │   │           │                   └── intcon(10)
+│   │   │       │   │           ├── rbrack
+│   │   │       │   │           ├── ofsy
+│   │   │       │   │           └── <type>
+│   │   │       │   │               └── ident(real)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
+│   │   └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(mhs)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(Mahasiswa)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   └── <assignment-statement>
+│   │       ├── <variable>
+│   │       │   ├── ident(mhs)
+│   │       │   ├── <component-variable>
+│   │       │   │   ├── period
+│   │       │   │   └── ident(nilai)
+│   │       │   └── <component-variable>
+│   │       │       ├── lbrack
+│   │       │       ├── <index-list>
+│   │       │       │   └── intcon(1)
+│   │       │       └── rbrack
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── realcon(85.5)
+│   │       └── semicolon
+│   └── endsy
+└── period

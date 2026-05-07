@@ -1,0 +1,105 @@
+=== TOKENS ===
+programsy
+ident (TotalSum)
+semicolon
+varsy
+ident (i)
+comma
+ident (sum)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (sum)
+becomes
+intcon (0)
+semicolon
+comment ( Memulai perulangan dari 1 sampai 10 )
+forsy
+ident (i)
+becomes
+intcon (1)
+tosy
+intcon (10)
+dosy
+beginsy
+ident (sum)
+becomes
+ident (sum)
+plus
+ident (i)
+semicolon
+comment ( Tambahkan nilai i
+                       ke dalam variabel sum )
+endsy
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(TotalSum)
+│   └── semicolon
+├── <declaration-part>
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   ├── ident(i)
+│       │   ├── comma
+│       │   └── ident(sum)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(sum)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(0)
+│   │   ├── semicolon
+│   │   └── <for-statement>
+│   │       ├── forsy
+│   │       ├── ident(i)
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── intcon(1)
+│   │       ├── tosy
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── intcon(10)
+│   │       ├── dosy
+│   │       ├── <compound-statement>
+│   │       │   ├── beginsy
+│   │       │   ├── <statement-list>
+│   │       │   │   └── <assignment-statement>
+│   │       │   │       ├── <variable>
+│   │       │   │       │   └── ident(sum)
+│   │       │   │       ├── becomes
+│   │       │   │       ├── <expression>
+│   │       │   │       │   └── <simple-expression>
+│   │       │   │       │       ├── <term>
+│   │       │   │       │       │   └── <factor>
+│   │       │   │       │       │       └── ident(sum)
+│   │       │   │       │       ├── plus
+│   │       │   │       │       └── <term>
+│   │       │   │       │           └── <factor>
+│   │       │   │       │               └── ident(i)
+│   │       │   │       └── semicolon
+│   │       │   └── endsy
+│   │       └── semicolon
+│   └── endsy
+└── period

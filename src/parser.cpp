@@ -483,6 +483,27 @@ static bool isStatementStart(TokenType t)
 static std::shared_ptr<ParseNode> parseStatementList()
 {
     auto node = std::make_shared<ParseNode>("<statement-list>");
+
+    while (!isStatementStart(current().type) &&
+           !check(TOKEN_ENDSY) &&
+           !check(TOKEN_EOF))
+    {
+        syntaxError("statement");
+
+        auto errNode = std::make_shared<ParseNode>(
+            "ERROR(unexpected:" + tokenToString(current()) + ")");
+
+        node->children.push_back(errNode);
+
+        consume();
+
+        if (check(TOKEN_SEMICOLON))
+        {
+            node->children.push_back(consume());
+            break;
+        }
+    }
+
     node->children.push_back(parseStatement());
     while (check(TOKEN_SEMICOLON))
     {
@@ -505,7 +526,17 @@ static std::shared_ptr<ParseNode> parseStatementList()
 // kalau tidak cocok apa-apa, anggap empty statement
 static std::shared_ptr<ParseNode> parseStatement()
 {
-    if (check(TOKEN_IDENT))
+    if (check(TOKEN_UNKNOWN))
+    {
+        syntaxError("valid statement");
+
+        auto err = std::make_shared<ParseNode>("ERROR(unexpected:" + tokenToString(current()) + ")");
+
+        consume();
+
+        return err;
+    }
+    else if (check(TOKEN_IDENT))
     {
         auto identNode = consume();
         auto variableNode = parseVariable(identNode);

@@ -24,6 +24,8 @@ endif
 SOURCES  = $(SRCDIR)/main.cpp \
            $(SRCDIR)/dfa.cpp \
            $(SRCDIR)/lexer.cpp \
+           $(SRCDIR)/parser.cpp \
+           $(SRCDIR)/parsetree.cpp \
            $(SRCDIR)/utils.cpp
 
 OBJECTS  = $(SOURCES:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)

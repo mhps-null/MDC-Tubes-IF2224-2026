@@ -492,9 +492,14 @@ static std::shared_ptr<ParseNode> parseCompoundStatement()
 // token awal yang valid untuk statement
 static bool isStatementStart(TokenType t)
 {
-    return t == TOKEN_IDENT || t == TOKEN_IFSY || t == TOKEN_CASESY ||
-           t == TOKEN_WHILESY || t == TOKEN_REPEATSY || t == TOKEN_FORSY ||
-           t == TOKEN_BEGINSY;
+    return t == TOKEN_IDENT ||
+           t == TOKEN_IFSY ||
+           t == TOKEN_CASESY ||
+           t == TOKEN_WHILESY ||
+           t == TOKEN_REPEATSY ||
+           t == TOKEN_FORSY ||
+           t == TOKEN_BEGINSY ||
+           t == TOKEN_SEMICOLON;
 }
 
 // trailing semicolon nempel ke statement terakhir

@@ -334,12 +334,24 @@ static std::shared_ptr<ParseNode> parseRecordType()
 static std::shared_ptr<ParseNode> parseFieldList()
 {
     auto node = std::make_shared<ParseNode>("<field-list>");
+
     node->children.push_back(parseFieldPart());
-    while (check(TOKEN_SEMICOLON) && peekAt(1).type == TOKEN_IDENT)
+
+    while (check(TOKEN_SEMICOLON))
     {
-        node->children.push_back(consume());
+
+        auto semi = consume();
+
+        if (check(TOKEN_ENDSY))
+        {
+            node->children.push_back(semi);
+            break;
+        }
+
+        node->children.push_back(semi);
         node->children.push_back(parseFieldPart());
     }
+
     return node;
 }
 

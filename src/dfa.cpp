@@ -75,9 +75,7 @@ State DFA::getNextState(State current, char c)
     case STATE_REAL:
         if (std::isdigit(c))
             return STATE_REAL;
-        if(c == ';')
-            return STATE_FINAL; 
-        return STATE_DEAD;
+        return STATE_FINAL;
 
     case STATE_STRING:
         if (c == '\'')
@@ -107,8 +105,6 @@ State DFA::getNextState(State current, char c)
         return STATE_DEAD;
 
     case STATE_LEFT_PAREN:
-        if(c == ';')
-            return STATE_FINAL; 
         if (c == '*')
             return STATE_COMMENT_STAR;
         return STATE_FINAL;
@@ -138,8 +134,6 @@ State DFA::getNextState(State current, char c)
         return STATE_FINAL;
 
     case STATE_ASSIGNMENT:
-        if(!std::isalnum(c) && !std::isspace(c) && !std::isalpha(c) && c != ';')
-            return STATE_DEAD;
         return STATE_FINAL;
 
     case STATE_LESS:
@@ -150,24 +144,17 @@ State DFA::getNextState(State current, char c)
         return STATE_FINAL;
 
     case STATE_LESS_EQUAL:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
         return STATE_FINAL;
+
     case STATE_NOT_EQUAL:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
         return STATE_FINAL;
 
     case STATE_GREATER:
         if (c == '=')
             return STATE_GREATER_EQUAL;
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
         return STATE_FINAL;
 
     case STATE_GREATER_EQUAL:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
         return STATE_FINAL;
 
     case STATE_EQUAL_TRANSITION:

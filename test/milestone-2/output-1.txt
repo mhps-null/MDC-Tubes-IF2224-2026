@@ -1,38 +1,126 @@
 === TOKENS ===
 programsy
-ident (HitungLuasLingkaran)
+ident (Milestone2Valid)
 semicolon
-constsy
-ident (pi)
+typesy
+ident (Warna)
 eql
-realcon (3.14)
+lparent
+ident (Merah)
+comma
+ident (Kuning)
+comma
+ident (Hijau)
+rparent
 semicolon
-varsy
-ident (jari2)
+ident (Kendaraan)
+eql
+recordsy
+ident (jenis)
+colon
+ident (string)
+semicolon
+ident (tahun)
 colon
 ident (integer)
 semicolon
-ident (luas)
+endsy
+semicolon
+varsy
+ident (pi)
 colon
 ident (real)
 semicolon
-beginsy
+ident (matriks)
+colon
+arraysy
+lbrack
+intcon (1)
 period
-UNKNOWN (23.e-+/1.e-+/1)
+period
+intcon (5)
+rbrack
+ofsy
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (5)
+rbrack
+ofsy
+ident (integer)
 semicolon
-UNKNOWN (@abc)
+ident (titik)
+colon
+ident (Kendaraan)
 semicolon
-ident (jari2)
+ident (skala)
+colon
+arraysy
+lbrack
+intcon (0)
+period
+period
+intcon (10)
+rbrack
+ofsy
+ident (real)
+semicolon
+proceduresy
+ident (ResetData)
+semicolon
+beginsy
+ident (pi)
+becomes
+realcon (3.14)
+semicolon
+comment ( Realcon )
+endsy
+semicolon
+beginsy
+ident (matriks)
+lbrack
+intcon (1)
+rbrack
+lbrack
+intcon (2)
+rbrack
 becomes
 intcon (10)
 semicolon
-ident (luas)
+ident (titik)
+period
+ident (jenis)
+becomes
+string ('Mobil')
+semicolon
+ident (ResetData)
+semicolon
+ident (ResetData)
+lparent
+rparent
+semicolon
+ident (Tampilkan)
+lparent
+ident (pi)
+rparent
+semicolon
+ifsy
+lparent
+ident (pi)
+gtr
+realcon (3.0)
+rparent
+thensy
+beginsy
+ident (pi)
 becomes
 ident (pi)
 times
-ident (jari2)
-times
-ident (jari2)
+realcon (1.5)
+semicolon
+endsy
 semicolon
 endsy
 period
@@ -41,41 +129,166 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(HitungLuasLingkaran)
+│   ├── ident(Milestone2Valid)
 │   └── semicolon
 ├── <declaration-part>
-│   ├── <const-declaration>
-│   │   ├── constsy
-│   │   ├── ident(pi)
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Warna)
 │   │   ├── eql
-│   │   ├── <constant>
-│   │   │   └── realcon(3.14)
+│   │   ├── <type>
+│   │   │   └── <enumerated>
+│   │   │       ├── lparent
+│   │   │       ├── ident(Merah)
+│   │   │       ├── comma
+│   │   │       ├── ident(Kuning)
+│   │   │       ├── comma
+│   │   │       ├── ident(Hijau)
+│   │   │       └── rparent
+│   │   ├── semicolon
+│   │   ├── ident(Kendaraan)
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(jenis)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(string)
+│   │   │       │   ├── semicolon
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(tahun)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
 │   │   └── semicolon
-│   └── <var-declaration>
-│       ├── varsy
-│       ├── <identifier-list>
-│       │   └── ident(jari2)
-│       ├── colon
-│       ├── <type>
-│       │   └── ident(integer)
-│       ├── semicolon
-│       ├── <identifier-list>
-│       │   └── ident(luas)
-│       ├── colon
-│       ├── <type>
-│       │   └── ident(real)
-│       └── semicolon
+│   ├── <var-declaration>
+│   │   ├── varsy
+│   │   ├── <identifier-list>
+│   │   │   └── ident(pi)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── ident(real)
+│   │   ├── semicolon
+│   │   ├── <identifier-list>
+│   │   │   └── ident(matriks)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── <array-type>
+│   │   │       ├── arraysy
+│   │   │       ├── lbrack
+│   │   │       ├── <range>
+│   │   │       │   ├── <expression>
+│   │   │       │   │   └── <simple-expression>
+│   │   │       │   │       └── <term>
+│   │   │       │   │           └── <factor>
+│   │   │       │   │               └── intcon(1)
+│   │   │       │   ├── period
+│   │   │       │   ├── period
+│   │   │       │   └── <expression>
+│   │   │       │       └── <simple-expression>
+│   │   │       │           └── <term>
+│   │   │       │               └── <factor>
+│   │   │       │                   └── intcon(5)
+│   │   │       ├── rbrack
+│   │   │       ├── ofsy
+│   │   │       └── <type>
+│   │   │           └── <array-type>
+│   │   │               ├── arraysy
+│   │   │               ├── lbrack
+│   │   │               ├── <range>
+│   │   │               │   ├── <expression>
+│   │   │               │   │   └── <simple-expression>
+│   │   │               │   │       └── <term>
+│   │   │               │   │           └── <factor>
+│   │   │               │   │               └── intcon(1)
+│   │   │               │   ├── period
+│   │   │               │   ├── period
+│   │   │               │   └── <expression>
+│   │   │               │       └── <simple-expression>
+│   │   │               │           └── <term>
+│   │   │               │               └── <factor>
+│   │   │               │                   └── intcon(5)
+│   │   │               ├── rbrack
+│   │   │               ├── ofsy
+│   │   │               └── <type>
+│   │   │                   └── ident(integer)
+│   │   ├── semicolon
+│   │   ├── <identifier-list>
+│   │   │   └── ident(titik)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── ident(Kendaraan)
+│   │   ├── semicolon
+│   │   ├── <identifier-list>
+│   │   │   └── ident(skala)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── <array-type>
+│   │   │       ├── arraysy
+│   │   │       ├── lbrack
+│   │   │       ├── <range>
+│   │   │       │   ├── <expression>
+│   │   │       │   │   └── <simple-expression>
+│   │   │       │   │       └── <term>
+│   │   │       │   │           └── <factor>
+│   │   │       │   │               └── intcon(0)
+│   │   │       │   ├── period
+│   │   │       │   ├── period
+│   │   │       │   └── <expression>
+│   │   │       │       └── <simple-expression>
+│   │   │       │           └── <term>
+│   │   │       │               └── <factor>
+│   │   │       │                   └── intcon(10)
+│   │   │       ├── rbrack
+│   │   │       ├── ofsy
+│   │   │       └── <type>
+│   │   │           └── ident(real)
+│   │   └── semicolon
+│   └── <subprogram-declaration>
+│       └── <procedure-declaration>
+│           ├── proceduresy
+│           ├── ident(ResetData)
+│           ├── semicolon
+│           ├── <block>
+│           │   ├── <declaration-part>
+│           │   └── <compound-statement>
+│           │       ├── beginsy
+│           │       ├── <statement-list>
+│           │       │   └── <assignment-statement>
+│           │       │       ├── <variable>
+│           │       │       │   └── ident(pi)
+│           │       │       ├── becomes
+│           │       │       ├── <expression>
+│           │       │       │   └── <simple-expression>
+│           │       │       │       └── <term>
+│           │       │       │           └── <factor>
+│           │       │       │               └── realcon(3.14)
+│           │       │       └── semicolon
+│           │       └── endsy
+│           └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
-│   │   ├── ERROR(unexpected:period)
-│   │   ├── ERROR(unexpected:UNKNOWN (23.e-+/1.e-+/1))
-│   │   ├── semicolon
-│   │   ├── ERROR(unexpected:UNKNOWN (@abc))
-│   │   ├── semicolon
 │   │   ├── <assignment-statement>
 │   │   │   ├── <variable>
-│   │   │   │   └── ident(jari2)
+│   │   │   │   ├── ident(matriks)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(1)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── lbrack
+│   │   │   │       ├── <index-list>
+│   │   │   │       │   └── intcon(2)
+│   │   │   │       └── rbrack
 │   │   │   ├── becomes
 │   │   │   └── <expression>
 │   │   │       └── <simple-expression>
@@ -83,21 +296,74 @@ period
 │   │   │               └── <factor>
 │   │   │                   └── intcon(10)
 │   │   ├── semicolon
-│   │   └── <assignment-statement>
-│   │       ├── <variable>
-│   │       │   └── ident(luas)
-│   │       ├── becomes
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(titik)
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(jenis)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── string('Mobil')
+│   │   ├── semicolon
+│   │   ├── <procedure/function-call>
+│   │   │   └── ident(ResetData)
+│   │   ├── semicolon
+│   │   ├── <procedure/function-call>
+│   │   │   ├── ident(ResetData)
+│   │   │   ├── lparent
+│   │   │   └── rparent
+│   │   ├── semicolon
+│   │   ├── <procedure/function-call>
+│   │   │   ├── ident(Tampilkan)
+│   │   │   ├── lparent
+│   │   │   ├── <parameter-list>
+│   │   │   │   └── <expression>
+│   │   │   │       └── <simple-expression>
+│   │   │   │           └── <term>
+│   │   │   │               └── <factor>
+│   │   │   │                   └── ident(pi)
+│   │   │   └── rparent
+│   │   ├── semicolon
+│   │   └── <if-statement>
+│   │       ├── ifsy
 │   │       ├── <expression>
 │   │       │   └── <simple-expression>
 │   │       │       └── <term>
-│   │       │           ├── <factor>
-│   │       │           │   └── ident(pi)
-│   │       │           ├── times
-│   │       │           ├── <factor>
-│   │       │           │   └── ident(jari2)
-│   │       │           ├── times
 │   │       │           └── <factor>
-│   │       │               └── ident(jari2)
+│   │       │               ├── lparent
+│   │       │               ├── <expression>
+│   │       │               │   ├── <simple-expression>
+│   │       │               │   │   └── <term>
+│   │       │               │   │       └── <factor>
+│   │       │               │   │           └── ident(pi)
+│   │       │               │   ├── gtr
+│   │       │               │   └── <simple-expression>
+│   │       │               │       └── <term>
+│   │       │               │           └── <factor>
+│   │       │               │               └── realcon(3.0)
+│   │       │               └── rparent
+│   │       ├── thensy
+│   │       ├── <compound-statement>
+│   │       │   ├── beginsy
+│   │       │   ├── <statement-list>
+│   │       │   │   └── <assignment-statement>
+│   │       │   │       ├── <variable>
+│   │       │   │       │   └── ident(pi)
+│   │       │   │       ├── becomes
+│   │       │   │       ├── <expression>
+│   │       │   │       │   └── <simple-expression>
+│   │       │   │       │       └── <term>
+│   │       │   │       │           ├── <factor>
+│   │       │   │       │           │   └── ident(pi)
+│   │       │   │       │           ├── times
+│   │       │   │       │           └── <factor>
+│   │       │   │       │               └── realcon(1.5)
+│   │       │   │       └── semicolon
+│   │       │   └── endsy
 │   │       └── semicolon
 │   └── endsy
 └── period

@@ -1,12 +1,31 @@
-program HitungLuasLingkaran;
-const
-  pi == 3.14;
+program Milestone2Valid;
+
+type
+    Warna == (Merah, Kuning, Hijau);
+    Kendaraan == record
+        jenis : string;
+        tahun : integer;
+    end;
+
 var
-  jari2: integer;
-  luas: real;
+    pi : real;
+    matriks : array [1..5] of array [1..5] of integer;
+    titik : Kendaraan;
+    skala : array [0..10] of real;
+procedure ResetData;
 begin
-  .23.e-+/1.e-+/1;
-  @abc;
-  jari2 := 10;
-  luas := pi * jari2 * jari2;
-end.  
+    pi := 3.14; { Realcon }
+end;
+
+
+begin
+    matriks[1][2] := 10;          
+    titik.jenis := 'Mobil';      
+    ResetData;                 
+    ResetData();               
+    Tampilkan(pi);                
+    if (pi > 3.0) then
+    begin
+        pi := pi * 1.5;
+    end;
+end.

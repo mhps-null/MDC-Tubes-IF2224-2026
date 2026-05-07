@@ -660,7 +660,10 @@ static std::shared_ptr<ParseNode> parseProcFuncCall(std::shared_ptr<ParseNode> i
     if (check(TOKEN_LPARENT))
     {
         node->children.push_back(consume());
-        node->children.push_back(parseParameterList());
+
+        if (!check(TOKEN_RPARENT))
+            node->children.push_back(parseParameterList());
+
         node->children.push_back(expect(TOKEN_RPARENT));
     }
     return node;

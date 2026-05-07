@@ -222,7 +222,12 @@ static std::shared_ptr<ParseNode> parseConstant()
         if (check(TOKEN_IDENT) || check(TOKEN_INTCON) || check(TOKEN_REALCON))
             node->children.push_back(consume());
         else
+        {
             syntaxError("constant value (ident|intcon|realcon|charcon|string)");
+            node->children.push_back(
+                makeErrorNode("constant")
+            );
+        }
     }
     return node;
 }
@@ -308,6 +313,9 @@ static std::shared_ptr<ParseNode> parseArrayType()
     else
     {
         syntaxError("range or ident for array index");
+        node->children.push_back(
+            makeErrorNode("array-index")
+        );
     }
 
     node->children.push_back(expect(TOKEN_RBRACK));

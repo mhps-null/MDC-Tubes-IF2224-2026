@@ -68,7 +68,7 @@ State DFA::getNextState(State current, char c)
     case STATE_REAL_DOT:
         if (std::isdigit(c))
             return STATE_REAL;
-        if(c == ';')
+        if(c == '.')
             return STATE_FINAL; 
         return STATE_DEAD;
 
@@ -176,35 +176,14 @@ State DFA::getNextState(State current, char c)
         return STATE_FINAL;
 
     case STATE_EQUAL:
-        if(!std::isalnum(c) && !std::isspace(c) && !std::isalpha(c) && c != ';')
-            return STATE_DEAD;
-        return STATE_FINAL;
-
     case STATE_RIGHT_PAREN:
     case STATE_PLUS:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
-        return STATE_FINAL;
     case STATE_MINUS:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
-        return STATE_FINAL;
     case STATE_MULTIPLICATION:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
-        return STATE_FINAL;
     case STATE_RDIV:
-        if(!std::isalnum(c) && !std::isspace(c) && c != ';')
-            return STATE_DEAD;
-        return STATE_FINAL;
     case STATE_COMMA:
     case STATE_SEMICOLON:
     case STATE_PERIOD:
-        if (std::isalnum((unsigned char)c))
-            return STATE_DEAD;
-        if (!std::isspace((unsigned char)c) && c != ';')
-            return STATE_DEAD;
-        return STATE_FINAL;
     case STATE_OPENBRACK:
     case STATE_CLOSEBRACK:
         return STATE_FINAL;

@@ -1,0 +1,12 @@
+program LogikaDanFungsi;
+var
+  angka: integer;
+  ganjil: boolean;
+begin
+  angka := 15;
+  while (angka > 0) do
+  begin
+    ganjil := (angka mod 2 == 1) or not false;
+    angka := angka div 2;
+  end;
+end.

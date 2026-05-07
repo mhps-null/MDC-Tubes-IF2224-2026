@@ -1,0 +1,103 @@
+=== TOKENS ===
+programsy
+ident (HitungLuasLingkaran)
+semicolon
+constsy
+ident (pi)
+eql
+realcon (3.14)
+semicolon
+varsy
+ident (jari2)
+colon
+ident (integer)
+semicolon
+ident (luas)
+colon
+ident (real)
+semicolon
+beginsy
+period
+UNKNOWN (23.e-+/1.e-+/1)
+semicolon
+UNKNOWN (@abc)
+semicolon
+ident (jari2)
+becomes
+intcon (10)
+semicolon
+ident (luas)
+becomes
+ident (pi)
+times
+ident (jari2)
+times
+ident (jari2)
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(HitungLuasLingkaran)
+│   └── semicolon
+├── <declaration-part>
+│   ├── <const-declaration>
+│   │   ├── constsy
+│   │   ├── ident(pi)
+│   │   ├── eql
+│   │   ├── <constant>
+│   │   │   └── realcon(3.14)
+│   │   └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(jari2)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <identifier-list>
+│       │   └── ident(luas)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(real)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── ERROR(unexpected:period)
+│   │   ├── ERROR(unexpected:UNKNOWN (23.e-+/1.e-+/1))
+│   │   ├── semicolon
+│   │   ├── ERROR(unexpected:UNKNOWN (@abc))
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(jari2)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(10)
+│   │   ├── semicolon
+│   │   └── <assignment-statement>
+│   │       ├── <variable>
+│   │       │   └── ident(luas)
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           ├── <factor>
+│   │       │           │   └── ident(pi)
+│   │       │           ├── times
+│   │       │           ├── <factor>
+│   │       │           │   └── ident(jari2)
+│   │       │           ├── times
+│   │       │           └── <factor>
+│   │       │               └── ident(jari2)
+│   │       └── semicolon
+│   └── endsy
+└── period

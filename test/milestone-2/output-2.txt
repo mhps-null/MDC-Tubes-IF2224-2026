@@ -1,0 +1,149 @@
+=== TOKENS ===
+programsy
+ident (CekKelulusan)
+semicolon
+varsy
+ident (nilaiTubes)
+comma
+ident (nilaiUjian)
+colon
+ident (integer)
+semicolon
+ident (status)
+colon
+ident (string)
+semicolon
+beginsy
+ident (nilaiTubes)
+becomes
+intcon (75)
+semicolon
+ident (nilaiUjian)
+becomes
+intcon (80)
+semicolon
+ifsy
+lparent
+ident (nilaiTubes)
+geq
+intcon (70)
+rparent
+andsy
+lparent
+ident (nilaiUjian)
+neq
+intcon (0)
+rparent
+thensy
+ident (status)
+becomes
+string ('Lulus')
+elsesy
+ident (status)
+becomes
+string ('Mengulang')
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(CekKelulusan)
+│   └── semicolon
+├── <declaration-part>
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   ├── ident(nilaiTubes)
+│       │   ├── comma
+│       │   └── ident(nilaiUjian)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <identifier-list>
+│       │   └── ident(status)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(string)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(nilaiTubes)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(75)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(nilaiUjian)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(80)
+│   │   ├── semicolon
+│   │   └── <if-statement>
+│   │       ├── ifsy
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           ├── <factor>
+│   │       │           │   ├── lparent
+│   │       │           │   ├── <expression>
+│   │       │           │   │   ├── <simple-expression>
+│   │       │           │   │   │   └── <term>
+│   │       │           │   │   │       └── <factor>
+│   │       │           │   │   │           └── ident(nilaiTubes)
+│   │       │           │   │   ├── geq
+│   │       │           │   │   └── <simple-expression>
+│   │       │           │   │       └── <term>
+│   │       │           │   │           └── <factor>
+│   │       │           │   │               └── intcon(70)
+│   │       │           │   └── rparent
+│   │       │           ├── andsy
+│   │       │           └── <factor>
+│   │       │               ├── lparent
+│   │       │               ├── <expression>
+│   │       │               │   ├── <simple-expression>
+│   │       │               │   │   └── <term>
+│   │       │               │   │       └── <factor>
+│   │       │               │   │           └── ident(nilaiUjian)
+│   │       │               │   ├── neq
+│   │       │               │   └── <simple-expression>
+│   │       │               │       └── <term>
+│   │       │               │           └── <factor>
+│   │       │               │               └── intcon(0)
+│   │       │               └── rparent
+│   │       ├── thensy
+│   │       ├── <assignment-statement>
+│   │       │   ├── <variable>
+│   │       │   │   └── ident(status)
+│   │       │   ├── becomes
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── string('Lulus')
+│   │       ├── elsesy
+│   │       ├── <assignment-statement>
+│   │       │   ├── <variable>
+│   │       │   │   └── ident(status)
+│   │       │   ├── becomes
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── string('Mengulang')
+│   │       └── semicolon
+│   └── endsy
+└── period

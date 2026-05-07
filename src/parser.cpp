@@ -105,6 +105,24 @@ static void syntaxError(const std::string &expected)
               << "', expected " << expected << "\n";
 }
 
+static std::shared_ptr<ParseNode> makeErrorNode(
+    const std::string &expected)
+{
+    return std::make_shared<ParseNode>(
+        "ERROR(unexpected:" +
+        tokenToString(current()) +
+        ", expected:" + expected + ")"
+    );
+}
+
+static std::shared_ptr<ParseNode> makeUnexpectedNode()
+{
+    return std::make_shared<ParseNode>(
+        "ERROR(unexpected:" +
+        tokenToString(current()) + ")"
+    );
+}
+
 // pastikan token sesuai harapan
 static std::shared_ptr<ParseNode> expect(TokenType t)
 {
@@ -112,7 +130,7 @@ static std::shared_ptr<ParseNode> expect(TokenType t)
     if (!check(t))
     {
         syntaxError(tokenTypeToString(t));
-        return std::make_shared<ParseNode>("ERROR(expected:" + tokenTypeToString(t) + ")");
+        return makeErrorNode(tokenTypeToString(t));
     }
     return consume();
 }
@@ -261,7 +279,7 @@ static std::shared_ptr<ParseNode> parseType()
     else
     {
         syntaxError("type (ident|array|enumerated|record|range)");
-        node->children.push_back(std::make_shared<ParseNode>("ERROR"));
+        node->children.push_back(makeErrorNode("type"));
     }
     return node;
 }
@@ -490,8 +508,7 @@ static std::shared_ptr<ParseNode> parseStatementList()
     {
         syntaxError("statement");
 
-        auto errNode = std::make_shared<ParseNode>(
-            "ERROR(unexpected:" + tokenToString(current()) + ")");
+        auto errNode = makeUnexpectedNode();
 
         node->children.push_back(errNode);
 
@@ -530,7 +547,7 @@ static std::shared_ptr<ParseNode> parseStatement()
     {
         syntaxError("valid statement");
 
-        auto err = std::make_shared<ParseNode>("ERROR(unexpected:" + tokenToString(current()) + ")");
+        auto err = makeUnexpectedNode();
 
         consume();
 
@@ -847,7 +864,7 @@ static std::shared_ptr<ParseNode> parseFactor()
     {
         // token tidak valid untuk factor
         syntaxError("factor (ident|intcon|realcon|charcon|string|(expr)|not|func-call)");
-        node->children.push_back(std::make_shared<ParseNode>("ERROR"));
+        node->children.push_back(makeErrorNode("factor"));
     }
     return node;
 }

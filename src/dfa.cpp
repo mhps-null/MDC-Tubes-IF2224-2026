@@ -9,7 +9,7 @@ State DFA::getNextState(State current, char c)
     case STATE_START:
         if (std::isspace(c))
             return STATE_START; // whitespace : skip
-        if (std::isalpha(c))
+        if (std::isalpha(c) || c == '_')
             return STATE_IDENT; // huruf : mulai identifier
         if (std::isdigit(c))
             return STATE_INT; // angka : mulai integer
@@ -54,7 +54,7 @@ State DFA::getNextState(State current, char c)
         }
 
     case STATE_IDENT:
-        if (std::isalnum(c))
+        if (std::isalpha(c) || c == '_')
             return STATE_IDENT;
         return STATE_FINAL;
 

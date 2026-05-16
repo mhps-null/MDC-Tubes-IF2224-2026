@@ -26,7 +26,8 @@ SOURCES  = $(SRCDIR)/main.cpp \
            $(SRCDIR)/lexer.cpp \
            $(SRCDIR)/parser.cpp \
            $(SRCDIR)/parsetree.cpp \
-           $(SRCDIR)/utils.cpp
+           $(SRCDIR)/utils.cpp \
+           $(SRCDIR)/ast.cpp
 
 OBJECTS  = $(SOURCES:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 

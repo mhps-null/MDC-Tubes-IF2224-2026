@@ -1,3 +1,4 @@
+=== TOKENS ===
 programsy
 ident (HitungLuasLingkaran)
 semicolon
@@ -7,7 +8,7 @@ eql
 realcon (3.14)
 semicolon
 varsy
-ident (jari2)
+ident (jari_jari)
 colon
 ident (integer)
 semicolon
@@ -16,11 +17,7 @@ colon
 ident (real)
 semicolon
 beginsy
-UNKNOWN (.23.e-+/1.e-+/1)
-semicolon
-UNKNOWN (@abc)
-semicolon
-ident (jari2)
+ident (jari_jari)
 becomes
 intcon (10)
 semicolon
@@ -28,9 +25,90 @@ ident (luas)
 becomes
 ident (pi)
 times
-ident (jari2)
+ident (jari_jari)
 times
-ident (jari2)
+ident (jari_jari)
 semicolon
 endsy
 period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(HitungLuasLingkaran)
+│   └── semicolon
+├── <declaration-part>
+│   ├── <const-declaration>
+│   │   ├── constsy
+│   │   ├── ident(pi)
+│   │   ├── eql
+│   │   ├── <constant>
+│   │   │   └── realcon(3.14)
+│   │   └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(jari_jari)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <identifier-list>
+│       │   └── ident(luas)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(real)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(jari_jari)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(10)
+│   │   ├── semicolon
+│   │   └── <assignment-statement>
+│   │       ├── <variable>
+│   │       │   └── ident(luas)
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           ├── <factor>
+│   │       │           │   └── ident(pi)
+│   │       │           ├── times
+│   │       │           ├── <factor>
+│   │       │           │   └── ident(jari_jari)
+│   │       │           ├── times
+│   │       │           └── <factor>
+│   │       │               └── ident(jari_jari)
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'HitungLuasLingkaran')
+  |
+  +-- Declarations
+  |     |
+  |     +-- VarDecl(name: 'jari_jari', type: 'integer')
+  |     |
+  |     \-- VarDecl(name: 'luas', type: 'real')
+  |
+  \-- Block
+        |
+        +-- Assign(target: Var('jari_jari'),
+        |          value: Num(10))
+        |
+        \-- Assign(target: Var('luas'),
+                   value: BinOp(op: 'times',
+                         left: BinOp(op: 'times',
+                                     left: Var('pi'),
+                                     right: Var('jari_jari')),
+                         right: Var('jari_jari')))

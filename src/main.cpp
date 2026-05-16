@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "parser.hpp"
 #include "parsetree.hpp"
+#include "ast.hpp"
 
 #include <iostream>
 #include <string>
@@ -112,6 +113,13 @@ int main(int argc, char *argv[])
     printTree(root, std::cout);
 
     // =========================
+    // TEST BUILD & PRINT AST
+    // =========================
+    std::cout << "\n=== ABSTRACT SYNTAX TREE (RAW) ===\n";
+    auto astRoot = buildAST(root);
+    printAST(astRoot);
+
+    // =========================
     // WRITE OUTPUT FILE
     // =========================
     if (!outputPath.empty())
@@ -132,6 +140,9 @@ int main(int argc, char *argv[])
 
         outFile << "=== PARSE TREE ===\n";
         printTree(root, outFile);
+
+        outFile << "\n=== ABSTRACT SYNTAX TREE (RAW) ===\n";
+        printAST(astRoot, outFile);
 
         outFile.close();
 

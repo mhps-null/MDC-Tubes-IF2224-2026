@@ -1,0 +1,172 @@
+=== TOKENS ===
+programsy
+ident (Hello)
+semicolon
+varsy
+ident (a)
+comma
+ident (b)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (a)
+becomes
+intcon (5)
+semicolon
+ident (b)
+becomes
+ident (a)
+plus
+intcon (10)
+semicolon
+ident (writeln)
+lparent
+string ('Result = ')
+comma
+ident (b)
+rparent
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(Hello)
+│   └── semicolon
+├── <declaration-part>
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   ├── ident(a)
+│       │   ├── comma
+│       │   └── ident(b)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(a)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(5)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(b)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           ├── <term>
+│   │   │           │   └── <factor>
+│   │   │           │       └── ident(a)
+│   │   │           ├── plus
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(10)
+│   │   ├── semicolon
+│   │   └── <procedure/function-call>
+│   │       ├── ident(writeln)
+│   │       ├── lparent
+│   │       ├── <parameter-list>
+│   │       │   ├── <expression>
+│   │       │   │   └── <simple-expression>
+│   │       │   │       └── <term>
+│   │       │   │           └── <factor>
+│   │       │   │               └── string('Result = ')
+│   │       │   ├── comma
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── ident(b)
+│   │       ├── rparent
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== DECORATED AST ===
+Program -> tab_index:37, lev:0
+├── Declarations
+│   └── VarDecls
+│       ├── VarDecl(a) -> tab_index:38, type:integer, ref:0, lev:0
+│       └── VarDecl(b) -> tab_index:39, type:integer, ref:0, lev:0
+└── Compound -> block_index:1, lev:1
+    └── Statements
+        ├── Assign -> type:void
+        │   ├── Var(a) -> tab_index:38, type:integer, lev:0
+        │   └── Int(5) -> type:integer
+        ├── Assign -> type:void
+        │   ├── Var(b) -> tab_index:39, type:integer, lev:0
+        │   └── BinOp(plus) -> type:integer
+        │       ├── Var(a) -> tab_index:38, type:integer, lev:0
+        │       └── Int(10) -> type:integer
+        └── Call(writeln) -> tab_index:36, lev:1
+            ├── String('Result = ') -> type:string
+            └── Var(b) -> tab_index:39, type:integer, lev:0
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj         type      ref  nrm  lev  adr  link  init
+---------------------------------------------------------------
+  0  <none>                  sentinel    none        0    1    0    0     0  yes
+  1  and                     reserved    none        0    1    0    0     0  yes
+  2  array                   reserved    none        0    1    0    0     0  yes
+  3  begin                   reserved    none        0    1    0    0     0  yes
+  4  case                    reserved    none        0    1    0    0     0  yes
+  5  const                   reserved    none        0    1    0    0     0  yes
+  6  div                     reserved    none        0    1    0    0     0  yes
+  7  downto                  reserved    none        0    1    0    0     0  yes
+  8  do                      reserved    none        0    1    0    0     0  yes
+  9  else                    reserved    none        0    1    0    0     0  yes
+ 10  end                     reserved    none        0    1    0    0     0  yes
+ 11  for                     reserved    none        0    1    0    0     0  yes
+ 12  function                reserved    none        0    1    0    0     0  yes
+ 13  if                      reserved    none        0    1    0    0     0  yes
+ 14  mod                     reserved    none        0    1    0    0     0  yes
+ 15  not                     reserved    none        0    1    0    0     0  yes
+ 16  of                      reserved    none        0    1    0    0     0  yes
+ 17  or                      reserved    none        0    1    0    0     0  yes
+ 18  procedure               reserved    none        0    1    0    0     0  yes
+ 19  program                 reserved    none        0    1    0    0     0  yes
+ 20  record                  reserved    none        0    1    0    0     0  yes
+ 21  repeat                  reserved    none        0    1    0    0     0  yes
+ 22  then                    reserved    none        0    1    0    0     0  yes
+ 23  to                      reserved    none        0    1    0    0     0  yes
+ 24  type                    reserved    none        0    1    0    0     0  yes
+ 25  until                   reserved    none        0    1    0    0     0  yes
+ 26  var                     reserved    none        0    1    0    0     0  yes
+ 27  while                   reserved    none        0    1    0    0     0  yes
+ 28  real                    type        real        0    1    0    0     0  yes
+ 29  integer                 type        integer     0    1    0    0    28  yes
+ 30  char                    type        char        0    1    0    0    29  yes
+ 31  boolean                 type        boolean     0    1    0    0    30  yes
+ 32  string                  type        string      0    1    0    0    31  yes
+ 33  true                    constant    boolean     0    1    0    1    32  yes
+ 34  false                   constant    boolean     0    1    0    0    33  yes
+ 35  readln                  procedure   void        0    1    0    0    34  yes
+ 36  writeln                 procedure   void        0    1    0    0    35  yes
+ 37  hello                   program     none        0    1    0    0    36  yes
+ 38  a                       variable    integer     0    1    0    0    37  yes
+ 39  b                       variable    integer     0    1    0    1    38  yes
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    39     0     0     2
+  1     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.

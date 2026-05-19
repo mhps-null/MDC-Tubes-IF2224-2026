@@ -514,40 +514,41 @@ static bool isStatementStart(TokenType t)
 static std::shared_ptr<ParseNode> parseStatementList()
 {
     auto node = std::make_shared<ParseNode>("<statement-list>");
-
     while (!isStatementStart(current().type) &&
            !check(TOKEN_ENDSY) &&
            !check(TOKEN_EOF))
     {
         syntaxError("statement");
-
         auto errNode = makeUnexpectedNode();
-
         node->children.push_back(errNode);
-
         consume();
-
         if (check(TOKEN_SEMICOLON))
         {
             node->children.push_back(consume());
             break;
         }
     }
-
     node->children.push_back(parseStatement());
-    while (check(TOKEN_SEMICOLON))
+    while (check(TOKEN_SEMICOLON) || isStatementStart(current().type))
     {
-        auto semNode = consume();
-        if (isStatementStart(current().type))
+        if (check(TOKEN_SEMICOLON))
         {
-            node->children.push_back(semNode);
-            node->children.push_back(parseStatement());
+            auto semNode = consume();
+            if (isStatementStart(current().type))
+            {
+                node->children.push_back(semNode);
+                node->children.push_back(parseStatement());
+            }
+            else
+            {
+                if (!node->children.empty())
+                    node->children.back()->children.push_back(semNode);
+                break;
+            }
         }
         else
         {
-            if (!node->children.empty())
-                node->children.back()->children.push_back(semNode);
-            break;
+            node->children.push_back(parseStatement());
         }
     }
     return node;
@@ -753,7 +754,8 @@ static std::shared_ptr<ParseNode> parseWhileStatement()
     node->children.push_back(expect(TOKEN_WHILESY));
     node->children.push_back(parseExpression());
     node->children.push_back(expect(TOKEN_DOSY));
-    node->children.push_back(parseStatement());
+    node->children.push_back(parseCompoundStatement());
+    node->children.push_back(expect(TOKEN_SEMICOLON));
     return node;
 }
 
@@ -780,7 +782,8 @@ static std::shared_ptr<ParseNode> parseForStatement()
         node->children.push_back(expect(TOKEN_DOWNTOSY));
     node->children.push_back(parseExpression());
     node->children.push_back(expect(TOKEN_DOSY));
-    node->children.push_back(parseStatement());
+    node->children.push_back(parseCompoundStatement());
+    node->children.push_back(expect(TOKEN_SEMICOLON));
     return node;
 }
 

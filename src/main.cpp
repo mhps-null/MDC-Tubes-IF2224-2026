@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "parser.hpp"
 #include "parsetree.hpp"
+#include "ast.hpp"
 #include "semantic.hpp"
 
 #include <iostream>
@@ -113,6 +114,13 @@ int main(int argc, char *argv[])
     printTree(root, std::cout);
 
     // =========================
+    // TEST BUILD & PRINT AST
+    // =========================
+    std::cout << "\n=== ABSTRACT SYNTAX TREE (RAW) ===\n";
+    auto astRoot = buildAST(root);
+    printAST(astRoot);
+
+    // =========================
     // SEMANTIC ANALYSIS
     // =========================
     SemanticResult semanticResult = analyzeSemantics(root);
@@ -141,6 +149,9 @@ int main(int argc, char *argv[])
 
         outFile << "=== PARSE TREE ===\n";
         printTree(root, outFile);
+
+        outFile << "\n=== ABSTRACT SYNTAX TREE (RAW) ===\n";
+        printAST(astRoot, outFile);
 
         outFile << "\n";
         printSemanticResult(semanticResult, outFile);

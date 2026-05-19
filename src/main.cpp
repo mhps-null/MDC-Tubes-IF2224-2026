@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "parser.hpp"
 #include "parsetree.hpp"
+#include "semantic.hpp"
 
 #include <iostream>
 #include <string>
@@ -112,6 +113,14 @@ int main(int argc, char *argv[])
     printTree(root, std::cout);
 
     // =========================
+    // SEMANTIC ANALYSIS
+    // =========================
+    SemanticResult semanticResult = analyzeSemantics(root);
+
+    std::cout << "\n";
+    printSemanticResult(semanticResult, std::cout);
+
+    // =========================
     // WRITE OUTPUT FILE
     // =========================
     if (!outputPath.empty())
@@ -132,6 +141,9 @@ int main(int argc, char *argv[])
 
         outFile << "=== PARSE TREE ===\n";
         printTree(root, outFile);
+
+        outFile << "\n";
+        printSemanticResult(semanticResult, outFile);
 
         outFile.close();
 

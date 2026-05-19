@@ -25,6 +25,7 @@ SOURCES  = $(SRCDIR)/main.cpp \
            $(SRCDIR)/dfa.cpp \
            $(SRCDIR)/lexer.cpp \
            $(SRCDIR)/parser.cpp \
+           $(SRCDIR)/semantic.cpp \
            $(SRCDIR)/parsetree.cpp \
            $(SRCDIR)/utils.cpp \
            $(SRCDIR)/ast.cpp

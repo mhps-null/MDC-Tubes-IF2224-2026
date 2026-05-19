@@ -3,6 +3,7 @@
 #include "parser.hpp"
 #include "parsetree.hpp"
 #include "ast.hpp"
+#include "semantic.hpp"
 
 #include <iostream>
 #include <string>
@@ -120,6 +121,14 @@ int main(int argc, char *argv[])
     printAST(astRoot);
 
     // =========================
+    // SEMANTIC ANALYSIS
+    // =========================
+    SemanticResult semanticResult = analyzeSemantics(root);
+
+    std::cout << "\n";
+    printSemanticResult(semanticResult, std::cout);
+
+    // =========================
     // WRITE OUTPUT FILE
     // =========================
     if (!outputPath.empty())
@@ -143,6 +152,9 @@ int main(int argc, char *argv[])
 
         outFile << "\n=== ABSTRACT SYNTAX TREE (RAW) ===\n";
         printAST(astRoot, outFile);
+
+        outFile << "\n";
+        printSemanticResult(semanticResult, outFile);
 
         outFile.close();
 

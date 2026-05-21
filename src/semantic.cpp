@@ -451,6 +451,7 @@ private:
         std::string name = ParseTreeView::value(node->children[0]->children.size() > 1
                                                     ? node->children[0]->children[1]
                                                     : nullptr);
+        ast->label = "ProgramNode(name: '" + (name.empty() ? "NamaProgram" : name) + "')";
         int idx = declare(name.empty() ? "<program>" : name, "program", primitive(TypeKind::Void), true);
         ast->annotations = {"tab_index:" + std::to_string(idx), "lev:0"};
 
@@ -474,11 +475,20 @@ private:
         for (const auto &child : node->children)
         {
             if (ParseTreeView::node(child, "<const-declaration>"))
-                ast->children.push_back(visitConstDeclaration(child));
+            {
+                auto c = visitConstDeclaration(child);
+                ast->children.insert(ast->children.end(), c->children.begin(), c->children.end());
+            }
             else if (ParseTreeView::node(child, "<type-declaration>"))
-                ast->children.push_back(visitTypeDeclaration(child));
+            {
+                auto t = visitTypeDeclaration(child);
+                ast->children.insert(ast->children.end(), t->children.begin(), t->children.end());
+            }
             else if (ParseTreeView::node(child, "<var-declaration>"))
-                ast->children.push_back(visitVarDeclaration(child));
+            {
+                auto v = visitVarDeclaration(child);
+                ast->children.insert(ast->children.end(), v->children.begin(), v->children.end());
+            }
             else if (ParseTreeView::node(child, "<subprogram-declaration>"))
                 ast->children.push_back(visitSubprogramDeclaration(child));
         }
@@ -628,19 +638,23 @@ private:
         if (node && node->children.size() >= 2)
         {
             ast->children.push_back(visitDeclarationPart(node->children[0]));
-            ast->children.push_back(visitCompoundStatement(node->children[1]));
+            auto compound = visitCompoundStatement(node->children[1]);
+            ast->children.insert(ast->children.end(), compound->children.begin(), compound->children.end());
         }
         return ast;
     }
 
     std::shared_ptr<SemanticNode> visitCompoundStatement(const std::shared_ptr<ParseNode> &node)
     {
-        auto ast = makeNode("Compound");
+        auto ast = makeNode("Block");
         if (!node)
             return ast;
         for (const auto &child : node->children)
             if (ParseTreeView::node(child, "<statement-list>"))
-                ast->children.push_back(visitStatementList(child));
+            {
+                auto stmts = visitStatementList(child);
+                ast->children.insert(ast->children.end(), stmts->children.begin(), stmts->children.end());
+            }
         return ast;
     }
 
@@ -697,6 +711,18 @@ private:
 
         if (target.tabIndex > 0)
             symbols.markInitialized(target.tabIndex);
+
+        if (startsWith(target.node->label, "Var(") && target.node->label.back() == ')')
+            target.node->label = "target '" + target.node->label.substr(4, target.node->label.length() - 5) + "'";
+        else
+            target.node->label = "target " + target.node->label;
+
+        if (startsWith(value.node->label, "Int(") && value.node->label.back() == ')')
+            value.node->label = "value " + value.node->label.substr(4, value.node->label.length() - 5);
+        else if (startsWith(value.node->label, "Var(") && value.node->label.back() == ')')
+            value.node->label = "value '" + value.node->label.substr(4, value.node->label.length() - 5) + "'";
+        else
+            value.node->label = "value " + value.node->label;
 
         auto ast = makeNode("Assign");
         ast->annotations.push_back("type:void");
@@ -803,7 +829,8 @@ private:
     std::shared_ptr<SemanticNode> visitRepeat(const std::shared_ptr<ParseNode> &node)
     {
         auto ast = makeNode("Repeat");
-        ast->children.push_back(visitStatementList(node->children[1]));
+        auto stmts = visitStatementList(node->children[1]);
+        ast->children.insert(ast->children.end(), stmts->children.begin(), stmts->children.end());
         ExprInfo cond = expressionInfo(node->children[3]);
         requireBoolean(cond, "repeat condition");
         ast->children.push_back(cond.node);

@@ -54,7 +54,7 @@ State DFA::getNextState(State current, char c)
         }
 
     case STATE_IDENT:
-        if (std::isalpha(c) || c == '_')
+        if (std::isalnum(c) || c == '_')
             return STATE_IDENT;
         return STATE_FINAL;
 

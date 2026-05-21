@@ -527,22 +527,43 @@ private:
     std::shared_ptr<SemanticNode> visitVarDeclaration(const std::shared_ptr<ParseNode> &node)
     {
         auto ast = makeNode("VarDecls");
+
         for (size_t i = 1; i + 2 < node->children.size(); i += 4)
         {
             std::vector<std::string> names = identifierList(node->children[i]);
             TypeInfo type = resolveType(node->children[i + 2], "");
+
             for (const auto &name : names)
             {
                 int idx = declare(name, "variable", type, false);
-                result.tab[idx].adr = nextAddress;
-                nextAddress += symbols.sizeOf(type);
-                result.btab[symbols.currentBlock()].vsze += symbols.sizeOf(type);
 
                 auto var = makeNode("VarDecl(" + name + ")");
+
+                if (idx == 0)
+                {
+                    var->annotations = {
+                        "tab_index:0",
+                        "type:" + type.name,
+                        "ref:" + std::to_string(type.ref),
+                        "lev:" + std::to_string(symbols.lexicalLevel()),
+                        "error:redeclaration"
+                    };
+
+                    ast->children.push_back(var);
+                    continue;
+                }
+
+                int size = symbols.sizeOf(type);
+
+                result.tab[idx].adr = nextAddress;
+                nextAddress += size;
+                result.btab[symbols.currentBlock()].vsze += size;
+
                 var->annotations = typeAnnotations(idx, type);
                 ast->children.push_back(var);
             }
         }
+
         return ast;
     }
 
@@ -829,8 +850,11 @@ private:
     int declare(const std::string &name, const std::string &obj, const TypeInfo &type,
                 bool initialized, std::vector<std::string> params = {})
     {
-        if (symbols.lookupCurrent(name))
+        if (symbols.lookupCurrent(name)){
             error("redeclaration in same scope: " + name);
+            return 0;
+        }
+        
         return symbols.declare(name, obj, type, initialized, params);
     }
 

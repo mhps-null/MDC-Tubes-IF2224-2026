@@ -1,31 +1,19 @@
 === TOKENS ===
 programsy
-ident (Hello)
+ident (IfErrorTest)
 semicolon
 varsy
-ident (a)
-comma
-ident (b)
+ident (x)
 colon
 ident (integer)
 semicolon
 beginsy
-ident (a)
+ifsy
+ident (x)
+thensy
+ident (x)
 becomes
-intcon (5)
-semicolon
-ident (b)
-becomes
-ident (a)
-plus
-intcon (10)
-semicolon
-ident (writeln)
-lparent
-string ('Result = ')
-comma
-ident (b)
-rparent
+intcon (1)
 semicolon
 endsy
 period
@@ -34,15 +22,13 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(Hello)
+│   ├── ident(IfErrorTest)
 │   └── semicolon
 ├── <declaration-part>
 │   └── <var-declaration>
 │       ├── varsy
 │       ├── <identifier-list>
-│       │   ├── ident(a)
-│       │   ├── comma
-│       │   └── ident(b)
+│       │   └── ident(x)
 │       ├── colon
 │       ├── <type>
 │       │   └── ident(integer)
@@ -50,91 +36,55 @@ period
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
-│   │   ├── <assignment-statement>
-│   │   │   ├── <variable>
-│   │   │   │   └── ident(a)
-│   │   │   ├── becomes
-│   │   │   └── <expression>
-│   │   │       └── <simple-expression>
-│   │   │           └── <term>
-│   │   │               └── <factor>
-│   │   │                   └── intcon(5)
-│   │   ├── semicolon
-│   │   ├── <assignment-statement>
-│   │   │   ├── <variable>
-│   │   │   │   └── ident(b)
-│   │   │   ├── becomes
-│   │   │   └── <expression>
-│   │   │       └── <simple-expression>
-│   │   │           ├── <term>
-│   │   │           │   └── <factor>
-│   │   │           │       └── ident(a)
-│   │   │           ├── plus
-│   │   │           └── <term>
-│   │   │               └── <factor>
-│   │   │                   └── intcon(10)
-│   │   ├── semicolon
-│   │   └── <procedure/function-call>
-│   │       ├── ident(writeln)
-│   │       ├── lparent
-│   │       ├── <parameter-list>
-│   │       │   ├── <expression>
-│   │       │   │   └── <simple-expression>
-│   │       │   │       └── <term>
-│   │       │   │           └── <factor>
-│   │       │   │               └── string('Result = ')
-│   │       │   ├── comma
+│   │   └── <if-statement>
+│   │       ├── ifsy
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── ident(x)
+│   │       ├── thensy
+│   │       ├── <assignment-statement>
+│   │       │   ├── <variable>
+│   │       │   │   └── ident(x)
+│   │       │   ├── becomes
 │   │       │   └── <expression>
 │   │       │       └── <simple-expression>
 │   │       │           └── <term>
 │   │       │               └── <factor>
-│   │       │                   └── ident(b)
-│   │       ├── rparent
+│   │       │                   └── intcon(1)
 │   │       └── semicolon
 │   └── endsy
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'Hello')
+ProgramNode(name: 'IfErrorTest')
   |
   +-- Declarations
   |     |
-  |     +-- VarDecl(name: 'a', type: 'integer')
-  |     |
-  |     \-- VarDecl(name: 'b', type: 'integer')
+  |     \-- VarDecl(name: 'x', type: 'integer')
   |
   \-- Block
         |
-        +-- Assign(target: Var('a'),
-        |          value: Num(5))
-        |
-        +-- Assign(target: Var('b'),
-        |          value: BinOp(op: 'plus',
-        |                left: Var('a'),
-        |                right: Num(10)))
-        |
-        \-- ProcedureCall(name: 'writeln',
-                          args: [String(''Result = ''), Var('b')])
+        \-- If(cond: Var('x'))
+              |
+              \-- TrueBranch
+                    |
+                    \-- Assign(target: Var('x'),
+                               value: Num(1))
 
 === DECORATED AST ===
 Program -> tab_index:37, lev:0
 ├── Declarations
 │   └── VarDecls
-│       ├── VarDecl(a) -> tab_index:38, type:integer, ref:0, lev:0
-│       └── VarDecl(b) -> tab_index:39, type:integer, ref:0, lev:0
+│       └── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
 └── Compound -> block_index:1, lev:1
     └── Statements
-        ├── Assign -> type:void
-        │   ├── Var(a) -> tab_index:38, type:integer, lev:0
-        │   └── Int(5) -> type:integer
-        ├── Assign -> type:void
-        │   ├── Var(b) -> tab_index:39, type:integer, lev:0
-        │   └── BinOp(plus) -> type:integer
-        │       ├── Var(a) -> tab_index:38, type:integer, lev:0
-        │       └── Int(10) -> type:integer
-        └── Call(writeln) -> tab_index:36, lev:1
-            ├── String('Result = ') -> type:string, len:11
-            └── Var(b) -> tab_index:39, type:integer, lev:0
+        └── If
+            ├── Var(x) -> tab_index:38, type:integer, lev:0, warning:possibly_uninitialized
+            └── Assign -> type:void
+                ├── Var(x) -> tab_index:38, type:integer, lev:0
+                └── Int(1) -> type:integer
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
@@ -176,14 +126,13 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
  36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  hello                   program         void          0    1    0    0    36   yes  
- 38  a                       variable        integer       0    1    0    0    37   yes  
- 39  b                       variable        integer       0    1    0    1    38   yes  
+ 37  iferrortest             program         void          0    1    0    0    36   yes  
+ 38  x                       variable        integer       0    1    0    0    37   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    39     0     0     2
+  0    38     0     0     1
   1     0     0     0     0
 
 === SYMBOL TABLE: atab ===
@@ -191,4 +140,4 @@ idx  xtyp       etyp       eref  low  high  elsz  size
 ------------------------------------------------------
 
 === SEMANTIC DIAGNOSTICS ===
-No semantic errors.
+Semantic error: if condition must be boolean, got integer

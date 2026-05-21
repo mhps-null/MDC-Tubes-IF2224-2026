@@ -1,0 +1,201 @@
+=== TOKENS ===
+programsy
+ident (ScopeValid)
+semicolon
+varsy
+ident (x)
+colon
+ident (integer)
+semicolon
+proceduresy
+ident (Test)
+semicolon
+varsy
+ident (y)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (y)
+becomes
+ident (x)
+plus
+intcon (1)
+semicolon
+endsy
+semicolon
+beginsy
+ident (x)
+becomes
+intcon (10)
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(ScopeValid)
+│   └── semicolon
+├── <declaration-part>
+│   ├── <var-declaration>
+│   │   ├── varsy
+│   │   ├── <identifier-list>
+│   │   │   └── ident(x)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── ident(integer)
+│   │   └── semicolon
+│   └── <subprogram-declaration>
+│       └── <procedure-declaration>
+│           ├── proceduresy
+│           ├── ident(Test)
+│           ├── semicolon
+│           ├── <block>
+│           │   ├── <declaration-part>
+│           │   │   └── <var-declaration>
+│           │   │       ├── varsy
+│           │   │       ├── <identifier-list>
+│           │   │       │   └── ident(y)
+│           │   │       ├── colon
+│           │   │       ├── <type>
+│           │   │       │   └── ident(integer)
+│           │   │       └── semicolon
+│           │   └── <compound-statement>
+│           │       ├── beginsy
+│           │       ├── <statement-list>
+│           │       │   └── <assignment-statement>
+│           │       │       ├── <variable>
+│           │       │       │   └── ident(y)
+│           │       │       ├── becomes
+│           │       │       ├── <expression>
+│           │       │       │   └── <simple-expression>
+│           │       │       │       ├── <term>
+│           │       │       │       │   └── <factor>
+│           │       │       │       │       └── ident(x)
+│           │       │       │       ├── plus
+│           │       │       │       └── <term>
+│           │       │       │           └── <factor>
+│           │       │       │               └── intcon(1)
+│           │       │       └── semicolon
+│           │       └── endsy
+│           └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   └── <assignment-statement>
+│   │       ├── <variable>
+│   │       │   └── ident(x)
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── intcon(10)
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'ScopeValid')
+  |
+  +-- Declarations
+  |     |
+  |     +-- VarDecl(name: 'x', type: 'integer')
+  |     |
+  |     \-- ProcedureDecl(name: 'Test')
+  |           |
+  |           \-- Body
+  |                 |
+  |                 \-- Assign(target: Var('y'),
+  |                            value: BinOp(op: 'plus',
+  |                                  left: Var('x'),
+  |                                  right: Num(1)))
+  |
+  \-- Block
+        |
+        \-- Assign(target: Var('x'),
+                   value: Num(10))
+
+=== DECORATED AST ===
+Program -> tab_index:37, lev:0
+├── Declarations
+│   ├── VarDecls
+│   │   └── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
+│   └── ProcedureDecl(Test) -> tab_index:39, block_index:1, lev:0, type:void
+│       └── Block -> block_index:1, lev:1
+│           ├── Declarations
+│           │   └── VarDecls
+│           │       └── VarDecl(y) -> tab_index:40, type:integer, ref:0, lev:1
+│           └── Compound
+│               └── Statements
+│                   └── Assign -> type:void
+│                       ├── Var(y) -> tab_index:40, type:integer, lev:1
+│                       └── BinOp(plus) -> type:integer
+│                           ├── Var(x) -> tab_index:38, type:integer, lev:0, warning:possibly_uninitialized
+│                           └── Int(1) -> type:integer
+└── Compound -> block_index:2, lev:1
+    └── Statements
+        └── Assign -> type:void
+            ├── Var(x) -> tab_index:38, type:integer, lev:0
+            └── Int(10) -> type:integer
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
+----------------------------------------------------------------------------
+  0  <none>                  sentinel        none          0    1    0    0     0   yes  
+  1  and                     reserved        unknown       0    1    0    0     0   yes  
+  2  array                   reserved        unknown       0    1    0    0     1   yes  
+  3  begin                   reserved        unknown       0    1    0    0     2   yes  
+  4  case                    reserved        unknown       0    1    0    0     3   yes  
+  5  const                   reserved        unknown       0    1    0    0     4   yes  
+  6  div                     reserved        unknown       0    1    0    0     5   yes  
+  7  downto                  reserved        unknown       0    1    0    0     6   yes  
+  8  do                      reserved        unknown       0    1    0    0     7   yes  
+  9  else                    reserved        unknown       0    1    0    0     8   yes  
+ 10  end                     reserved        unknown       0    1    0    0     9   yes  
+ 11  for                     reserved        unknown       0    1    0    0    10   yes  
+ 12  function                reserved        unknown       0    1    0    0    11   yes  
+ 13  if                      reserved        unknown       0    1    0    0    12   yes  
+ 14  mod                     reserved        unknown       0    1    0    0    13   yes  
+ 15  not                     reserved        unknown       0    1    0    0    14   yes  
+ 16  of                      reserved        unknown       0    1    0    0    15   yes  
+ 17  or                      reserved        unknown       0    1    0    0    16   yes  
+ 18  procedure               reserved        unknown       0    1    0    0    17   yes  
+ 19  program                 reserved        unknown       0    1    0    0    18   yes  
+ 20  record                  reserved        unknown       0    1    0    0    19   yes  
+ 21  repeat                  reserved        unknown       0    1    0    0    20   yes  
+ 22  then                    reserved        unknown       0    1    0    0    21   yes  
+ 23  to                      reserved        unknown       0    1    0    0    22   yes  
+ 24  type                    reserved        unknown       0    1    0    0    23   yes  
+ 25  until                   reserved        unknown       0    1    0    0    24   yes  
+ 26  var                     reserved        unknown       0    1    0    0    25   yes  
+ 27  while                   reserved        unknown       0    1    0    0    26   yes  
+ 28  real                    type            real          0    1    0    0    27   yes  
+ 29  integer                 type            integer       0    1    0    0    28   yes  
+ 30  char                    type            char          0    1    0    0    29   yes  
+ 31  boolean                 type            boolean       0    1    0    0    30   yes  
+ 32  string                  type            string        0    1    0    0    31   yes  
+ 33  true                    constant        boolean       0    1    0    1    32   yes  
+ 34  false                   constant        boolean       0    1    0    0    33   yes  
+ 35  readln                  procedure       void          0    1    0    0    34   yes  
+ 36  writeln                 procedure       void          0    1    0    0    35   yes  
+ 37  scopevalid              program         void          0    1    0    0    36   yes  
+ 38  x                       variable        integer       0    1    0    0    37   yes  
+ 39  test                    procedure       void          1    1    0    0    38   yes  
+ 40  y                       variable        integer       0    1    1    1     0   yes  
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    39     0     0     1
+  1    40     0     0     1
+  2     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.

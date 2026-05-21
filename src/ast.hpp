@@ -26,6 +26,7 @@ struct StringNode : public ExprNode {
 
 struct VarNode : public ExprNode {
     std::string name;
+    std::vector<std::string> selectors;
     explicit VarNode(const std::string& name) : name(name) {}
 };
 
@@ -86,6 +87,24 @@ struct IfNode : public StmtNode {
         : condition(cond), true_branch(tb), false_branch(fb) {}
 };
 
+struct RepeatNode : public StmtNode {
+    std::shared_ptr<BlockNode> body;
+    std::shared_ptr<ExprNode> condition;
+    RepeatNode(std::shared_ptr<BlockNode> b, std::shared_ptr<ExprNode> cond)
+        : body(b), condition(cond) {}
+};
+
+struct CaseBranchNode : public ASTNode {
+    std::vector<std::shared_ptr<ExprNode>> labels;
+    std::shared_ptr<StmtNode> statement;
+};
+
+struct CaseNode : public StmtNode {
+    std::shared_ptr<ExprNode> selector;
+    std::vector<std::shared_ptr<CaseBranchNode>> branches;
+    explicit CaseNode(std::shared_ptr<ExprNode> sel) : selector(sel) {}
+};
+
 struct ProcCallNode : public StmtNode {
     std::string name;
     std::vector<std::shared_ptr<ExprNode>> args;
@@ -98,6 +117,20 @@ struct VarDeclNode : public ASTNode {
     std::string name;
     std::string type;
     VarDeclNode(const std::string& n, const std::string& t)
+        : name(n), type(t) {}
+};
+
+struct ConstDeclNode : public ASTNode {
+    std::string name;
+    std::shared_ptr<ExprNode> value;
+    ConstDeclNode(const std::string& n, std::shared_ptr<ExprNode> v)
+        : name(n), value(v) {}
+};
+
+struct TypeDeclNode : public ASTNode {
+    std::string name;
+    std::string type;
+    TypeDeclNode(const std::string& n, const std::string& t)
         : name(n), type(t) {}
 };
 

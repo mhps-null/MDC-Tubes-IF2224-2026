@@ -1,4 +1,5 @@
 #include "ast.hpp"
+#include <functional>
 #include <iostream>
 
 static std::string extractValue(const std::string& label) {
@@ -26,6 +27,9 @@ static std::vector<std::string> splitLines(const std::string& str) {
 static std::shared_ptr<ExprNode> buildSimpleExpression(std::shared_ptr<ParseNode> node);
 static std::shared_ptr<ExprNode> buildTerm(std::shared_ptr<ParseNode> node);
 static std::shared_ptr<ExprNode> buildFactor(std::shared_ptr<ParseNode> node);
+static std::shared_ptr<ExprNode> buildConstant(std::shared_ptr<ParseNode> node);
+static std::string buildTypeText(std::shared_ptr<ParseNode> node);
+static std::shared_ptr<VarNode> buildVariable(std::shared_ptr<ParseNode> node);
 
 std::shared_ptr<ASTNode> buildAST(std::shared_ptr<ParseNode> root) {
     if (!root) return nullptr;
@@ -80,7 +84,19 @@ std::shared_ptr<ProgramNode> buildProgram(std::shared_ptr<ParseNode> node) {
         
         auto declPart = node->children[1];
         for (auto& decl : declPart->children) {
-            if (decl->label == "<var-declaration>") {
+            if (decl->label == "<const-declaration>") {
+                for (size_t i = 1; i + 2 < decl->children.size(); i += 4) {
+                    auto name = extractValue(decl->children[i]->label);
+                    prog->declarations.push_back(std::make_shared<ConstDeclNode>(name, buildConstant(decl->children[i + 2])));
+                }
+            }
+            else if (decl->label == "<type-declaration>") {
+                for (size_t i = 1; i + 2 < decl->children.size(); i += 4) {
+                    auto name = extractValue(decl->children[i]->label);
+                    prog->declarations.push_back(std::make_shared<TypeDeclNode>(name, buildTypeText(decl->children[i + 2])));
+                }
+            }
+            else if (decl->label == "<var-declaration>") {
                 for (size_t i = 1; i < decl->children.size(); i++) {
                     if (decl->children[i]->label == "<identifier-list>") {
                         auto idList = decl->children[i];
@@ -95,7 +111,7 @@ std::shared_ptr<ProgramNode> buildProgram(std::shared_ptr<ParseNode> node) {
                         if (i + 2 < decl->children.size() && decl->children[i+2]->label == "<type>") {
                             auto typeNode = decl->children[i+2];
                             if (!typeNode->children.empty()) {
-                                typeName = extractValue(typeNode->children[0]->label);
+                                typeName = buildTypeText(typeNode);
                             }
                         }
                         
@@ -151,7 +167,6 @@ std::shared_ptr<ProgramNode> buildProgram(std::shared_ptr<ParseNode> node) {
                     }
                 }
             }
-            // Abaikan <const-declaration> secara total
         }
         
         prog->main_block = buildBlock(node->children[2]);
@@ -186,8 +201,7 @@ std::shared_ptr<StmtNode> buildStatement(std::shared_ptr<ParseNode> node) {
 
     if (actualStmt->label == "<assignment-statement>") {
         if (actualStmt->children.size() >= 3) {
-            auto varName = extractValue(actualStmt->children[0]->children[0]->label);
-            auto target = std::make_shared<VarNode>(varName);
+            auto target = buildVariable(actualStmt->children[0]);
             auto value = buildExpression(actualStmt->children[2]);
             return std::make_shared<AssignNode>(target, value);
         }
@@ -254,10 +268,58 @@ std::shared_ptr<StmtNode> buildStatement(std::shared_ptr<ParseNode> node) {
             return std::make_shared<IfNode>(cond, trueBlock, falseBlock);
         }
     }
+    else if (actualStmt->label == "<repeat-statement>") {
+        if (actualStmt->children.size() >= 4) {
+            auto body = std::make_shared<BlockNode>();
+            auto stmtList = actualStmt->children[1];
+            if (stmtList && stmtList->label == "<statement-list>") {
+                for (auto& child : stmtList->children) {
+                    auto stmt = buildStatement(child);
+                    if (stmt) body->statements.push_back(stmt);
+                }
+            }
+            return std::make_shared<RepeatNode>(body, buildExpression(actualStmt->children[3]));
+        }
+    }
+    else if (actualStmt->label == "<case-statement>") {
+        if (actualStmt->children.size() >= 4) {
+            auto node = std::make_shared<CaseNode>(buildExpression(actualStmt->children[1]));
+            std::function<void(std::shared_ptr<ParseNode>)> collectBranches = [&](std::shared_ptr<ParseNode> caseBlock) {
+                if (!caseBlock || caseBlock->label != "<case-block>") return;
+                auto branch = std::make_shared<CaseBranchNode>();
+                for (auto& child : caseBlock->children) {
+                    if (child->label == "<constant>") branch->labels.push_back(buildConstant(child));
+                    else if (child->label == "<case-block>") collectBranches(child);
+                    else {
+                        auto stmt = buildStatement(child);
+                        if (stmt) branch->statement = stmt;
+                    }
+                }
+                if (!branch->labels.empty() || branch->statement) node->branches.push_back(branch);
+            };
+            collectBranches(actualStmt->children[3]);
+            return node;
+        }
+    }
     else if (actualStmt->label == "<compound-statement>") {
         return buildBlock(actualStmt);
     }
     return nullptr;
+}
+
+static std::shared_ptr<VarNode> buildVariable(std::shared_ptr<ParseNode> node) {
+    if (!node || node->children.empty()) return std::make_shared<VarNode>("unknown_var");
+    auto var = std::make_shared<VarNode>(extractValue(node->children[0]->label));
+    for (size_t i = 1; i < node->children.size(); ++i) {
+        auto comp = node->children[i];
+        if (!comp || comp->label != "<component-variable>" || comp->children.empty()) continue;
+        if (comp->children[0]->label == "period" && comp->children.size() > 1) {
+            var->selectors.push_back("." + extractValue(comp->children[1]->label));
+        } else if (comp->children[0]->label == "lbrack") {
+            var->selectors.push_back("[]");
+        }
+    }
+    return var;
 }
 
 std::shared_ptr<ExprNode> buildExpression(std::shared_ptr<ParseNode> node) {
@@ -322,6 +384,9 @@ static std::shared_ptr<ExprNode> buildFactor(std::shared_ptr<ParseNode> node) {
     if (child->label.find("ident(") == 0) {
         return std::make_shared<VarNode>(extractValue(child->label));
     }
+    else if (child->label == "<variable>") {
+        return buildVariable(child);
+    }
     else if (child->label.find("intcon(") == 0 || child->label.find("realcon(") == 0) {
         return std::make_shared<NumberNode>(std::stod(extractValue(child->label)));
     }
@@ -356,13 +421,55 @@ static std::shared_ptr<ExprNode> buildFactor(std::shared_ptr<ParseNode> node) {
     return std::make_shared<VarNode>("unknown_factor");
 }
 
+static std::shared_ptr<ExprNode> buildConstant(std::shared_ptr<ParseNode> node) {
+    if (!node) return nullptr;
+    if (node->label == "<constant>") {
+        if (node->children.size() == 2) {
+            return std::make_shared<UnaryOpNode>(node->children[0]->label, buildConstant(node->children[1]));
+        }
+        if (!node->children.empty()) return buildConstant(node->children.back());
+    }
+    if (node->label.find("intcon(") == 0 || node->label.find("realcon(") == 0) {
+        return std::make_shared<NumberNode>(std::stod(extractValue(node->label)));
+    }
+    if (node->label.find("string(") == 0 || node->label.find("charcon(") == 0) {
+        return std::make_shared<StringNode>(extractValue(node->label));
+    }
+    if (node->label.find("ident(") == 0) {
+        return std::make_shared<VarNode>(extractValue(node->label));
+    }
+    if (node->label == "<expression>") return buildExpression(node);
+    return nullptr;
+}
+
+static std::string buildTypeText(std::shared_ptr<ParseNode> node) {
+    if (!node) return "unknown";
+    if (node->label == "<type>" && !node->children.empty()) return buildTypeText(node->children[0]);
+    if (node->label.find("ident(") == 0) return extractValue(node->label);
+    if (node->label == "<range>") return "subrange";
+    if (node->label == "<enumerated>") return "enumerated";
+    if (node->label == "<record-type>") return "record";
+    if (node->label == "<array-type>") {
+        std::string elem = "unknown";
+        for (auto& child : node->children) {
+            if (child->label == "<type>") elem = buildTypeText(child);
+        }
+        return "array of " + elem;
+    }
+    return "unknown";
+}
+
 // ==========================================
 // AST FORMATTER & PRINTER
 // ==========================================
 
 std::string formatExpr(std::shared_ptr<ExprNode> node, const std::string& baseIndent) {
     if (!node) return "null";
-    if (auto v = std::dynamic_pointer_cast<VarNode>(node)) return "Var('" + v->name + "')";
+    if (auto v = std::dynamic_pointer_cast<VarNode>(node)) {
+        std::string name = v->name;
+        for (const auto& selector : v->selectors) name += selector;
+        return "Var('" + name + "')";
+    }
     if (auto n = std::dynamic_pointer_cast<NumberNode>(node)) {
         std::string val = std::to_string(n->value);
         val.erase(val.find_last_not_of('0') + 1, std::string::npos);
@@ -425,6 +532,14 @@ std::vector<std::string> formatStmt(std::shared_ptr<StmtNode> node) {
     }
     if (auto i = std::dynamic_pointer_cast<IfNode>(node)) {
         std::string full = "If(cond: " + formatExpr(i->condition, "") + ")";
+        return splitLines(full);
+    }
+    if (auto r = std::dynamic_pointer_cast<RepeatNode>(node)) {
+        std::string full = "Repeat(until: " + formatExpr(r->condition, "") + ")";
+        return splitLines(full);
+    }
+    if (auto c = std::dynamic_pointer_cast<CaseNode>(node)) {
+        std::string full = "Case(selector: " + formatExpr(c->selector, "") + ")";
         return splitLines(full);
     }
     return {"UnknownStmt"};
@@ -493,6 +608,30 @@ void printStmt(std::shared_ptr<StmtNode> node, std::ostream& os, const std::stri
             printChildBlock(os, "FalseBranch", i->false_branch->statements, innerPrefix, true);
         }
     }
+    else if (auto r = std::dynamic_pointer_cast<RepeatNode>(node)) {
+        printChild(os, prefix, formatStmt(r), isLast);
+        std::string innerPrefix = getInnerPref(prefix, isLast);
+        printChildBlock(os, "Body", r->body ? r->body->statements : std::vector<std::shared_ptr<StmtNode>>(), innerPrefix, true);
+    }
+    else if (auto c = std::dynamic_pointer_cast<CaseNode>(node)) {
+        printChild(os, prefix, formatStmt(c), isLast);
+        std::string innerPrefix = getInnerPref(prefix, isLast);
+        for (size_t i = 0; i < c->branches.size(); ++i) {
+            auto branch = c->branches[i];
+            std::vector<std::string> lines;
+            std::string line = "Branch(labels: [";
+            for (size_t j = 0; j < branch->labels.size(); ++j) {
+                if (j) line += ", ";
+                line += formatExpr(branch->labels[j], "");
+            }
+            line += "])";
+            lines.push_back(line);
+            printChild(os, innerPrefix, lines, i + 1 == c->branches.size());
+            if (branch->statement) {
+                printStmt(branch->statement, os, getInnerPref(innerPrefix, i + 1 == c->branches.size()), true);
+            }
+        }
+    }
 }
 
 void printAST(std::shared_ptr<ASTNode> node, std::ostream& os) {
@@ -512,6 +651,12 @@ void printAST(std::shared_ptr<ASTNode> node, std::ostream& os) {
                 
                 if (auto v = std::dynamic_pointer_cast<VarDeclNode>(declNode)) {
                     printChild(os, declPrefix, {"VarDecl(name: '" + v->name + "', type: '" + v->type + "')"}, lastDecl);
+                }
+                else if (auto c = std::dynamic_pointer_cast<ConstDeclNode>(declNode)) {
+                    printChild(os, declPrefix, {"ConstDecl(name: '" + c->name + "', value: " + formatExpr(c->value, "") + ")"}, lastDecl);
+                }
+                else if (auto t = std::dynamic_pointer_cast<TypeDeclNode>(declNode)) {
+                    printChild(os, declPrefix, {"TypeDecl(name: '" + t->name + "', type: '" + t->type + "')"}, lastDecl);
                 }
                 else if (auto pd = std::dynamic_pointer_cast<ProcDeclNode>(declNode)) {
                     printChild(os, declPrefix, {"ProcedureDecl(name: '" + pd->name + "')"}, lastDecl);

@@ -41,7 +41,7 @@ $(TARGET): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compile
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/*.hpp
 	@$(MKDIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 

@@ -1,0 +1,7 @@
+program TypeMismatchTest;
+var
+    x : integer;
+    s : string;
+begin
+    x := s;
+end.

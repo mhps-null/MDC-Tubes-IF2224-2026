@@ -1,0 +1,14 @@
+program ScopeValid;
+var
+    x : integer;
+
+procedure Test;
+var
+    y : integer;
+begin
+    y := x + 1;
+end;
+
+begin
+    x := 10;
+end.

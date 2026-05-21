@@ -1,0 +1,6 @@
+program ArrayTest;
+var
+    data : array [1..5] of integer;
+begin
+    data[2] := 10;
+end.

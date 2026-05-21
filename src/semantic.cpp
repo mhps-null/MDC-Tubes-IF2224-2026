@@ -181,13 +181,37 @@ private:
             level--;
     }
 
-    bool sameType(const TypeInfo &a, const TypeInfo &b) const
+    // Symmetric type compatibility: two types can interact (e.g. in relational exprs)
+    bool typeCompatible(const TypeInfo &a, const TypeInfo &b) const
     {
         if (a.name == "unknown" || b.name == "unknown")
             return true;
         if (a.name == b.name)
             return true;
-        return a.name == "real" && b.name == "integer";
+        // Integer and Real are mutually compatible for comparisons
+        if ((a.name == "integer" || a.name == "real") &&
+            (b.name == "integer" || b.name == "real"))
+            return true;
+        return false;
+    }
+
+    // Assignment compatibility: value type can be assigned to target type
+    bool assignmentCompatible(const TypeInfo &target, const TypeInfo &value) const
+    {
+        if (target.name == "unknown" || value.name == "unknown")
+            return true;
+        if (target.name == value.name)
+            return true;
+        // real := integer is allowed (implicit widening)
+        if (target.name == "real" && value.name == "integer")
+            return true;
+        return false;
+    }
+
+    // Keep sameType as alias for assignmentCompatible for backward compatibility
+    bool sameType(const TypeInfo &a, const TypeInfo &b) const
+    {
+        return assignmentCompatible(a, b);
     }
 
     std::shared_ptr<SemanticNode> visitProgram(const std::shared_ptr<ParseNode> &node)
@@ -421,8 +445,9 @@ private:
     {
         ExprInfo target = variableInfo(node->children[0], false);
         ExprInfo value = expressionInfo(node->children[2]);
-        if (!sameType(target.type, value.type))
-            error("assignment incompatible: " + target.type.name + " := " + value.type.name);
+        if (!assignmentCompatible(target.type, value.type))
+            error("assignment incompatible: cannot assign " + value.type.name +
+                  " to " + target.type.name);
         if (target.tabIndex > 0)
             result.tab[target.tabIndex].initialized = true;
         auto ast = makeNode("Assign");
@@ -497,7 +522,7 @@ private:
         ExprInfo finish = expressionInfo(node->children[5]);
         if (var.type.name != "integer" && var.type.name != "char" && var.type.name != "unknown")
             error("for variable must be ordinal, got " + var.type.name);
-        if (!sameType(var.type, start.type) || !sameType(var.type, finish.type))
+        if (!typeCompatible(var.type, start.type) || !typeCompatible(var.type, finish.type))
             error("for range type is incompatible with variable " + name);
         ast->children = {var.node, start.node, finish.node};
         if (node->children.size() > 7)
@@ -746,11 +771,14 @@ private:
             if (node->children.size() == 1)
                 return left;
             ExprInfo right = expressionInfo(node->children[2]);
-            auto bin = makeNode("BinOp(" + tagOf(node->children[1]) + ")");
+            std::string op = tagOf(node->children[1]);
+            auto bin = makeNode("BinOp(" + op + ")");
             bin->annotations.push_back("type:boolean");
             bin->children = {left.node, right.node};
-            if (!sameType(left.type, right.type))
-                error("relational operands are incompatible: " + left.type.name + " and " + right.type.name);
+            // Relational operators require compatible types (symmetric check)
+            if (!typeCompatible(left.type, right.type))
+                error("relational operands are incompatible: " + left.type.name +
+                      " " + op + " " + right.type.name);
             return {{"boolean", 0, false, false}, bin, 0};
         }
         if (isNode(node, "<simple-expression>"))
@@ -791,19 +819,45 @@ private:
 
     TypeInfo operationType(const std::string &op, const TypeInfo &left, const TypeInfo &right)
     {
+        // Logical operators: require boolean operands
         if (op == "orsy" || op == "andsy")
         {
-            if (left.name != "boolean" || right.name != "boolean")
-                error("logical operator requires boolean operands");
+            if (left.name != "boolean" && left.name != "unknown")
+                error("operator '" + op + "' requires boolean operands, got " + left.name);
+            if (right.name != "boolean" && right.name != "unknown")
+                error("operator '" + op + "' requires boolean operands, got " + right.name);
             return {"boolean", 0, false, false};
         }
+        // Real division: always returns real
         if (op == "rdiv")
+        {
+            if (left.name != "integer" && left.name != "real" && left.name != "unknown")
+                error("operator '/' requires numeric operands, got " + left.name);
+            if (right.name != "integer" && right.name != "real" && right.name != "unknown")
+                error("operator '/' requires numeric operands, got " + right.name);
             return {"real", 0, false, false};
-        if ((left.name == "integer" || left.name == "real") &&
-            (right.name == "integer" || right.name == "real"))
-            return left.name == "real" || right.name == "real" ? TypeInfo{"real", 0, false, false}
-                                                               : TypeInfo{"integer", 0, false, false};
-        error("arithmetic operands are incompatible: " + left.name + " and " + right.name);
+        }
+        // Integer division and modulus: require integer operands
+        if (op == "idiv" || op == "imod")
+        {
+            if (left.name != "integer" && left.name != "unknown")
+                error("operator '" + op + "' requires integer operands, got " + left.name);
+            if (right.name != "integer" && right.name != "unknown")
+                error("operator '" + op + "' requires integer operands, got " + right.name);
+            return {"integer", 0, false, false};
+        }
+        // Arithmetic (+, -, *): numeric operands
+        if ((left.name == "integer" || left.name == "real" || left.name == "unknown") &&
+            (right.name == "integer" || right.name == "real" || right.name == "unknown"))
+        {
+            if (left.name == "real" || right.name == "real")
+                return {"real", 0, false, false};
+            if (left.name == "unknown" || right.name == "unknown")
+                return {"unknown", 0, false, false};
+            return {"integer", 0, false, false};
+        }
+        // String concatenation with + is not supported in Arion (no implicit coercion)
+        error("arithmetic operands are incompatible: " + left.name + " " + op + " " + right.name);
         return {"unknown", 0, false, false};
     }
 

@@ -199,6 +199,7 @@ bool DFA::isAccepting(State state)
     case STATE_NOT_EQUAL:
     case STATE_GREATER:
     case STATE_GREATER_EQUAL:
+    case STATE_EQUAL_TRANSITION:
     case STATE_EQUAL:
     case STATE_LEFT_PAREN:
     case STATE_RIGHT_PAREN:
@@ -245,6 +246,7 @@ TokenType DFA::stateToTokenType(State state)
         return TOKEN_GTR;
     case STATE_GREATER_EQUAL:
         return TOKEN_GEQ;
+    case STATE_EQUAL_TRANSITION:
     case STATE_EQUAL:
         return TOKEN_EQL;
     case STATE_LEFT_PAREN:

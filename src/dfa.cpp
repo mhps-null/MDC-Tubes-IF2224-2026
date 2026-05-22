@@ -54,7 +54,7 @@ State DFA::getNextState(State current, char c)
         }
 
     case STATE_IDENT:
-        if (std::isalpha(c) || c == '_')
+        if (std::isalnum(static_cast<unsigned char>(c)) || c == '_')
             return STATE_IDENT;
         return STATE_FINAL;
 
@@ -68,8 +68,8 @@ State DFA::getNextState(State current, char c)
     case STATE_REAL_DOT:
         if (std::isdigit(c))
             return STATE_REAL;
-        if(c == '.')
-            return STATE_FINAL; 
+        if (c == '.')
+            return STATE_FINAL;
         return STATE_DEAD;
 
     case STATE_REAL:

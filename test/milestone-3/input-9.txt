@@ -1,0 +1,13 @@
+program ProcedureParamTest;
+
+var
+    x : integer;
+
+procedure SetX(v : integer);
+begin
+    x := v;
+end;
+
+begin
+    SetX(10);
+end.

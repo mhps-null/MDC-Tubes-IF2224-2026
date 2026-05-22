@@ -96,28 +96,21 @@ period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
 ProgramNode(name: 'Hello')
-  |
-  +-- Declarations
-  |     |
-  |     +-- VarDecl(name: 'a', type: 'integer')
-  |     |
-  |     \-- VarDecl(name: 'b', type: 'integer')
-  |
-  \-- Block
-        |
-        +-- Assign(target: Var('a'),
-        |          value: Num(5))
-        |
-        +-- Assign(target: Var('b'),
-        |          value: BinOp(op: 'plus',
-        |                left: Var('a'),
-        |                right: Num(10)))
-        |
-        \-- ProcedureCall(name: 'writeln',
-                          args: [String(''Result = ''), Var('b')])
+├── Declarations
+│   ├── VarDecl(name: 'a', type: 'integer')
+│   └── VarDecl(name: 'b', type: 'integer')
+└── Block
+    ├── Assign(target: Var('a'),
+    │          value: Num(5))
+    ├── Assign(target: Var('b'),
+    │          value: BinOp(op: 'plus',
+    │                left: Var('a'),
+    │                right: Num(10)))
+    └── ProcedureCall(name: 'writeln',
+                      args: [String('Result = '), Var('b')])
 
 === DECORATED AST ===
-Program -> tab_index:37, lev:0
+ProgramNode(name: 'Hello') -> tab_index:37, lev:0
 ├── Declarations
 │   └── VarDecls
 │       ├── VarDecl(a) -> tab_index:38, type:integer, ref:0, lev:0
@@ -125,16 +118,21 @@ Program -> tab_index:37, lev:0
 └── Compound -> block_index:1, lev:1
     └── Statements
         ├── Assign -> type:void
-        │   ├── Var(a) -> tab_index:38, type:integer, lev:0
-        │   └── Int(5) -> type:integer
+        │   ├── Target
+        │   │   └── Var(a) -> tab_index:38, type:integer, lev:0
+        │   └── Value
+        │       └── Int(5) -> type:integer
         ├── Assign -> type:void
-        │   ├── Var(b) -> tab_index:39, type:integer, lev:0
-        │   └── BinOp(plus) -> type:integer
-        │       ├── Var(a) -> tab_index:38, type:integer, lev:0
-        │       └── Int(10) -> type:integer
+        │   ├── Target
+        │   │   └── Var(b) -> tab_index:39, type:integer, lev:0
+        │   └── Value
+        │       └── BinOp(plus) -> type:integer
+        │           ├── Var(a) -> tab_index:38, type:integer, lev:0
+        │           └── Int(10) -> type:integer
         └── Call(writeln) -> tab_index:36, lev:1
-            ├── String('Result = ') -> type:string, len:11
-            └── Var(b) -> tab_index:39, type:integer, lev:0
+            └── Args
+                ├── String('Result = ') -> type:string, len:9
+                └── Var(b) -> tab_index:39, type:integer, lev:0
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params

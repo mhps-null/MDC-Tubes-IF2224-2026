@@ -1,31 +1,30 @@
 === TOKENS ===
 programsy
-ident (ScopeValid)
+ident (RecordFieldError)
 semicolon
-varsy
+typesy
+ident (Point)
+eql
+recordsy
 ident (x)
 colon
 ident (integer)
 semicolon
-proceduresy
-ident (Test)
-semicolon
-varsy
 ident (y)
 colon
 ident (integer)
-semicolon
-beginsy
-ident (y)
-becomes
-ident (x)
-plus
-intcon (1)
 semicolon
 endsy
 semicolon
+varsy
+ident (p)
+colon
+ident (Point)
+semicolon
 beginsy
-ident (x)
+ident (p)
+period
+ident (z)
 becomes
 intcon (10)
 semicolon
@@ -36,57 +35,50 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(ScopeValid)
+│   ├── ident(RecordFieldError)
 │   └── semicolon
 ├── <declaration-part>
-│   ├── <var-declaration>
-│   │   ├── varsy
-│   │   ├── <identifier-list>
-│   │   │   └── ident(x)
-│   │   ├── colon
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Point)
+│   │   ├── eql
 │   │   ├── <type>
-│   │   │   └── ident(integer)
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(x)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   ├── semicolon
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(y)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
 │   │   └── semicolon
-│   └── <subprogram-declaration>
-│       └── <procedure-declaration>
-│           ├── proceduresy
-│           ├── ident(Test)
-│           ├── semicolon
-│           ├── <block>
-│           │   ├── <declaration-part>
-│           │   │   └── <var-declaration>
-│           │   │       ├── varsy
-│           │   │       ├── <identifier-list>
-│           │   │       │   └── ident(y)
-│           │   │       ├── colon
-│           │   │       ├── <type>
-│           │   │       │   └── ident(integer)
-│           │   │       └── semicolon
-│           │   └── <compound-statement>
-│           │       ├── beginsy
-│           │       ├── <statement-list>
-│           │       │   └── <assignment-statement>
-│           │       │       ├── <variable>
-│           │       │       │   └── ident(y)
-│           │       │       ├── becomes
-│           │       │       ├── <expression>
-│           │       │       │   └── <simple-expression>
-│           │       │       │       ├── <term>
-│           │       │       │       │   └── <factor>
-│           │       │       │       │       └── ident(x)
-│           │       │       │       ├── plus
-│           │       │       │       └── <term>
-│           │       │       │           └── <factor>
-│           │       │       │               └── intcon(1)
-│           │       │       └── semicolon
-│           │       └── endsy
-│           └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(p)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(Point)
+│       └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
 │   │   └── <assignment-statement>
 │   │       ├── <variable>
-│   │       │   └── ident(x)
+│   │       │   ├── ident(p)
+│   │       │   └── <component-variable>
+│   │       │       ├── period
+│   │       │       └── ident(z)
 │   │       ├── becomes
 │   │       ├── <expression>
 │   │       │   └── <simple-expression>
@@ -98,43 +90,26 @@ period
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'ScopeValid')
+ProgramNode(name: 'RecordFieldError')
 ├── Declarations
-│   ├── VarDecl(name: 'x', type: 'integer')
-│   └── ProcedureDecl(name: 'Test')
-│       └── Body
-│           └── Assign(target: Var('y'),
-│                      value: BinOp(op: 'plus',
-│                            left: Var('x'),
-│                            right: Num(1)))
+│   ├── TypeDecl(name: 'Point', type: 'record')
+│   └── VarDecl(name: 'p', type: 'Point')
 └── Block
-    └── Assign(target: Var('x'),
+    └── Assign(target: Var('p.z'),
                value: Num(10))
 
 === DECORATED AST ===
-ProgramNode(name: 'ScopeValid') -> tab_index:37, lev:0
+ProgramNode(name: 'RecordFieldError') -> tab_index:37, lev:0
 ├── Declarations
-│   ├── VarDecls
-│   │   └── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
-│   └── ProcedureDecl(Test) -> tab_index:39, block_index:1, lev:0, type:void
-│       └── Block -> block_index:1, lev:1
-│           ├── Declarations
-│           │   └── VarDecls
-│           │       └── VarDecl(y) -> tab_index:40, type:integer, ref:0, lev:1
-│           └── Compound
-│               └── Statements
-│                   └── Assign -> type:void
-│                       ├── Target
-│                       │   └── Var(y) -> tab_index:40, type:integer, lev:1
-│                       └── Value
-│                           └── BinOp(plus) -> type:integer
-│                               ├── Var(x) -> tab_index:38, type:integer, lev:0, warning:possibly_uninitialized
-│                               └── Int(1) -> type:integer
+│   ├── TypeDecls
+│   │   └── TypeDecl(Point) -> tab_index:40, type:record, ref:1, lev:0
+│   └── VarDecls
+│       └── VarDecl(p) -> tab_index:41, type:record, ref:1, lev:0
 └── Compound -> block_index:2, lev:1
     └── Statements
         └── Assign -> type:void
             ├── Target
-            │   └── Var(x) -> tab_index:38, type:integer, lev:0
+            │   └── Var(p).z -> tab_index:41, type:unknown, lev:0
             └── Value
                 └── Int(10) -> type:integer
 
@@ -178,16 +153,17 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
  36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  scopevalid              program         void          0    1    0    0    36   yes  
- 38  x                       variable        integer       0    1    0    0    37   yes  
- 39  test                    procedure       void          1    1    0    0    38   yes  
- 40  y                       variable        integer       0    1    1    1     0   yes  
+ 37  recordfielderror        program         void          0    1    0    0    36   yes  
+ 38  x                       field           integer       0    1    1    0     0   yes  
+ 39  y                       field           integer       0    1    1    1    38   yes  
+ 40  point                   type            record        1    1    0    0    37   yes  
+ 41  p                       variable        record        1    1    0    0    40   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    39     0     0     1
-  1    40     0     0     1
+  0    41     0     0     2
+  1    39     0     0     2
   2     0     0     0     0
 
 === SYMBOL TABLE: atab ===
@@ -195,4 +171,4 @@ idx  xtyp       etyp       eref  low  high  elsz  size
 ------------------------------------------------------
 
 === SEMANTIC DIAGNOSTICS ===
-No semantic errors.
+Semantic error: unknown record field: z

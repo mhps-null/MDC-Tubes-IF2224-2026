@@ -1,6 +1,6 @@
 === TOKENS ===
 programsy
-ident (ScopeValid)
+ident (ProcedureParamTest)
 semicolon
 varsy
 ident (x)
@@ -8,26 +8,25 @@ colon
 ident (integer)
 semicolon
 proceduresy
-ident (Test)
-semicolon
-varsy
-ident (y)
+ident (SetX)
+lparent
+ident (v)
 colon
 ident (integer)
+rparent
 semicolon
 beginsy
-ident (y)
-becomes
 ident (x)
-plus
-intcon (1)
+becomes
+ident (v)
 semicolon
 endsy
 semicolon
 beginsy
-ident (x)
-becomes
+ident (SetX)
+lparent
 intcon (10)
+rparent
 semicolon
 endsy
 period
@@ -36,7 +35,7 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(ScopeValid)
+│   ├── ident(ProcedureParamTest)
 │   └── semicolon
 ├── <declaration-part>
 │   ├── <var-declaration>
@@ -50,92 +49,85 @@ period
 │   └── <subprogram-declaration>
 │       └── <procedure-declaration>
 │           ├── proceduresy
-│           ├── ident(Test)
+│           ├── ident(SetX)
+│           ├── <formal-parameter-list>
+│           │   ├── lparent
+│           │   ├── <parameter-group>
+│           │   │   ├── <identifier-list>
+│           │   │   │   └── ident(v)
+│           │   │   ├── colon
+│           │   │   └── ident(integer)
+│           │   └── rparent
 │           ├── semicolon
 │           ├── <block>
 │           │   ├── <declaration-part>
-│           │   │   └── <var-declaration>
-│           │   │       ├── varsy
-│           │   │       ├── <identifier-list>
-│           │   │       │   └── ident(y)
-│           │   │       ├── colon
-│           │   │       ├── <type>
-│           │   │       │   └── ident(integer)
-│           │   │       └── semicolon
 │           │   └── <compound-statement>
 │           │       ├── beginsy
 │           │       ├── <statement-list>
 │           │       │   └── <assignment-statement>
 │           │       │       ├── <variable>
-│           │       │       │   └── ident(y)
+│           │       │       │   └── ident(x)
 │           │       │       ├── becomes
 │           │       │       ├── <expression>
 │           │       │       │   └── <simple-expression>
-│           │       │       │       ├── <term>
-│           │       │       │       │   └── <factor>
-│           │       │       │       │       └── ident(x)
-│           │       │       │       ├── plus
 │           │       │       │       └── <term>
 │           │       │       │           └── <factor>
-│           │       │       │               └── intcon(1)
+│           │       │       │               └── ident(v)
 │           │       │       └── semicolon
 │           │       └── endsy
 │           └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
-│   │   └── <assignment-statement>
-│   │       ├── <variable>
-│   │       │   └── ident(x)
-│   │       ├── becomes
-│   │       ├── <expression>
-│   │       │   └── <simple-expression>
-│   │       │       └── <term>
-│   │       │           └── <factor>
-│   │       │               └── intcon(10)
+│   │   └── <procedure/function-call>
+│   │       ├── ident(SetX)
+│   │       ├── lparent
+│   │       ├── <parameter-list>
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── intcon(10)
+│   │       ├── rparent
 │   │       └── semicolon
 │   └── endsy
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'ScopeValid')
+ProgramNode(name: 'ProcedureParamTest')
 ├── Declarations
 │   ├── VarDecl(name: 'x', type: 'integer')
-│   └── ProcedureDecl(name: 'Test')
+│   └── ProcedureDecl(name: 'SetX')
+│       ├── Params
+│       │   └── Param(name: 'v', type: 'integer')
 │       └── Body
-│           └── Assign(target: Var('y'),
-│                      value: BinOp(op: 'plus',
-│                            left: Var('x'),
-│                            right: Num(1)))
+│           └── Assign(target: Var('x'),
+│                      value: Var('v'))
 └── Block
-    └── Assign(target: Var('x'),
-               value: Num(10))
+    └── ProcedureCall(name: 'SetX',
+                      args: [Num(10)])
 
 === DECORATED AST ===
-ProgramNode(name: 'ScopeValid') -> tab_index:37, lev:0
+ProgramNode(name: 'ProcedureParamTest') -> tab_index:37, lev:0
 ├── Declarations
 │   ├── VarDecls
 │   │   └── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
-│   └── ProcedureDecl(Test) -> tab_index:39, block_index:1, lev:0, type:void
+│   └── ProcedureDecl(SetX) -> tab_index:39, block_index:1, lev:0, type:void
+│       ├── Parameters
+│       │   └── Param(v) -> tab_index:40, type:integer, ref:0, lev:1
 │       └── Block -> block_index:1, lev:1
 │           ├── Declarations
-│           │   └── VarDecls
-│           │       └── VarDecl(y) -> tab_index:40, type:integer, ref:0, lev:1
 │           └── Compound
 │               └── Statements
 │                   └── Assign -> type:void
 │                       ├── Target
-│                       │   └── Var(y) -> tab_index:40, type:integer, lev:1
+│                       │   └── Var(x) -> tab_index:38, type:integer, lev:0
 │                       └── Value
-│                           └── BinOp(plus) -> type:integer
-│                               ├── Var(x) -> tab_index:38, type:integer, lev:0, warning:possibly_uninitialized
-│                               └── Int(1) -> type:integer
+│                           └── Var(v) -> tab_index:40, type:integer, lev:1
 └── Compound -> block_index:2, lev:1
     └── Statements
-        └── Assign -> type:void
-            ├── Target
-            │   └── Var(x) -> tab_index:38, type:integer, lev:0
-            └── Value
+        └── Call(SetX) -> tab_index:39, lev:1
+            └── Args
                 └── Int(10) -> type:integer
 
 === SYMBOL TABLE: tab ===
@@ -178,16 +170,16 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
  36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  scopevalid              program         void          0    1    0    0    36   yes  
+ 37  procedureparamtest      program         void          0    1    0    0    36   yes  
  38  x                       variable        integer       0    1    0    0    37   yes  
- 39  test                    procedure       void          1    1    0    0    38   yes  
- 40  y                       variable        integer       0    1    1    1     0   yes  
+ 39  setx                    procedure       void          1    1    0    0    38   yes  integer
+ 40  v                       parameter       integer       0    1    1    0     0   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
   0    39     0     0     1
-  1    40     0     0     1
+  1    40    40     1     0
   2     0     0     0     0
 
 === SYMBOL TABLE: atab ===

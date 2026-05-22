@@ -1,0 +1,14 @@
+program RecordFieldError;
+
+type
+    Point == record
+        x : integer;
+        y : integer;
+    end;
+
+var
+    p : Point;
+
+begin
+    p.z := 10;
+end.

@@ -59,22 +59,16 @@ period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
 ProgramNode(name: 'IfErrorTest')
-  |
-  +-- Declarations
-  |     |
-  |     \-- VarDecl(name: 'x', type: 'integer')
-  |
-  \-- Block
-        |
-        \-- If(cond: Var('x'))
-              |
-              \-- TrueBranch
-                    |
-                    \-- Assign(target: Var('x'),
-                               value: Num(1))
+├── Declarations
+│   └── VarDecl(name: 'x', type: 'integer')
+└── Block
+    └── If(cond: Var('x'))
+        └── TrueBranch
+            └── Assign(target: Var('x'),
+                       value: Num(1))
 
 === DECORATED AST ===
-Program -> tab_index:37, lev:0
+ProgramNode(name: 'IfErrorTest') -> tab_index:37, lev:0
 ├── Declarations
 │   └── VarDecls
 │       └── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
@@ -83,8 +77,10 @@ Program -> tab_index:37, lev:0
         └── If
             ├── Var(x) -> tab_index:38, type:integer, lev:0, warning:possibly_uninitialized
             └── Assign -> type:void
-                ├── Var(x) -> tab_index:38, type:integer, lev:0
-                └── Int(1) -> type:integer
+                ├── Target
+                │   └── Var(x) -> tab_index:38, type:integer, lev:0
+                └── Value
+                    └── Int(1) -> type:integer
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params

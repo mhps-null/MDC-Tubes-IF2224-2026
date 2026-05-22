@@ -1,0 +1,15 @@
+program RecordTest;
+
+type
+    Point == record
+        x : integer;
+        y : integer;
+    end;
+
+var
+    p : Point;
+
+begin
+    p.x := 10;
+    p.y := p.x + 5;
+end.

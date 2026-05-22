@@ -111,16 +111,14 @@ static std::shared_ptr<ParseNode> makeErrorNode(
     return std::make_shared<ParseNode>(
         "ERROR(unexpected:" +
         tokenToString(current()) +
-        ", expected:" + expected + ")"
-    );
+        ", expected:" + expected + ")");
 }
 
 static std::shared_ptr<ParseNode> makeUnexpectedNode()
 {
     return std::make_shared<ParseNode>(
         "ERROR(unexpected:" +
-        tokenToString(current()) + ")"
-    );
+        tokenToString(current()) + ")");
 }
 
 // pastikan token sesuai harapan
@@ -225,8 +223,7 @@ static std::shared_ptr<ParseNode> parseConstant()
         {
             syntaxError("constant value (ident|intcon|realcon|charcon|string)");
             node->children.push_back(
-                makeErrorNode("constant")
-            );
+                makeErrorNode("constant"));
         }
     }
     return node;
@@ -314,8 +311,7 @@ static std::shared_ptr<ParseNode> parseArrayType()
     {
         syntaxError("range or ident for array index");
         node->children.push_back(
-            makeErrorNode("array-index")
-        );
+            makeErrorNode("array-index"));
     }
 
     node->children.push_back(expect(TOKEN_RBRACK));
@@ -514,43 +510,55 @@ static bool isStatementStart(TokenType t)
 static std::shared_ptr<ParseNode> parseStatementList()
 {
     auto node = std::make_shared<ParseNode>("<statement-list>");
-    while (!isStatementStart(current().type) &&
-           !check(TOKEN_ENDSY) &&
-           !check(TOKEN_EOF))
+
+    if (check(TOKEN_ENDSY) || check(TOKEN_UNTILSY) || check(TOKEN_EOF))
+    {
+        return node;
+    }
+
+    if (!isStatementStart(current().type))
     {
         syntaxError("statement");
-        auto errNode = makeUnexpectedNode();
-        node->children.push_back(errNode);
+        node->children.push_back(makeUnexpectedNode());
         consume();
-        if (check(TOKEN_SEMICOLON))
+        return node;
+    }
+
+    node->children.push_back(parseStatement());
+
+    while (check(TOKEN_SEMICOLON))
+    {
+        auto semNode = consume();
+
+        if (check(TOKEN_ENDSY) || check(TOKEN_UNTILSY) || check(TOKEN_EOF))
         {
-            node->children.push_back(consume());
+            if (!node->children.empty())
+                node->children.back()->children.push_back(semNode);
             break;
         }
-    }
-    node->children.push_back(parseStatement());
-    while (check(TOKEN_SEMICOLON) || isStatementStart(current().type))
-    {
-        if (check(TOKEN_SEMICOLON))
-        {
-            auto semNode = consume();
-            if (isStatementStart(current().type))
-            {
-                node->children.push_back(semNode);
-                node->children.push_back(parseStatement());
-            }
-            else
-            {
-                if (!node->children.empty())
-                    node->children.back()->children.push_back(semNode);
-                break;
-            }
-        }
-        else
+
+        node->children.push_back(semNode);
+
+        if (isStatementStart(current().type))
         {
             node->children.push_back(parseStatement());
         }
+        else
+        {
+            syntaxError("statement");
+            node->children.push_back(makeUnexpectedNode());
+            consume();
+        }
     }
+
+    if (isStatementStart(current().type) &&
+        !check(TOKEN_ENDSY) &&
+        !check(TOKEN_UNTILSY))
+    {
+        syntaxError("semicolon");
+        node->children.push_back(makeErrorNode("semicolon"));
+    }
+
     return node;
 }
 
@@ -755,7 +763,6 @@ static std::shared_ptr<ParseNode> parseWhileStatement()
     node->children.push_back(parseExpression());
     node->children.push_back(expect(TOKEN_DOSY));
     node->children.push_back(parseCompoundStatement());
-    node->children.push_back(expect(TOKEN_SEMICOLON));
     return node;
 }
 
@@ -776,14 +783,15 @@ static std::shared_ptr<ParseNode> parseForStatement()
     node->children.push_back(expect(TOKEN_IDENT));
     node->children.push_back(expect(TOKEN_BECOMES));
     node->children.push_back(parseExpression());
+
     if (check(TOKEN_TOSY))
         node->children.push_back(consume());
     else
         node->children.push_back(expect(TOKEN_DOWNTOSY));
+
     node->children.push_back(parseExpression());
     node->children.push_back(expect(TOKEN_DOSY));
     node->children.push_back(parseCompoundStatement());
-    node->children.push_back(expect(TOKEN_SEMICOLON));
     return node;
 }
 

@@ -58,20 +58,15 @@ period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
 ProgramNode(name: 'TypeMismatchTest')
-  |
-  +-- Declarations
-  |     |
-  |     +-- VarDecl(name: 'x', type: 'integer')
-  |     |
-  |     \-- VarDecl(name: 's', type: 'string')
-  |
-  \-- Block
-        |
-        \-- Assign(target: Var('x'),
-                   value: Var('s'))
+├── Declarations
+│   ├── VarDecl(name: 'x', type: 'integer')
+│   └── VarDecl(name: 's', type: 'string')
+└── Block
+    └── Assign(target: Var('x'),
+               value: Var('s'))
 
 === DECORATED AST ===
-Program -> tab_index:37, lev:0
+ProgramNode(name: 'TypeMismatchTest') -> tab_index:37, lev:0
 ├── Declarations
 │   └── VarDecls
 │       ├── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
@@ -79,8 +74,10 @@ Program -> tab_index:37, lev:0
 └── Compound -> block_index:1, lev:1
     └── Statements
         └── Assign -> type:void
-            ├── Var(x) -> tab_index:38, type:integer, lev:0
-            └── Var(s) -> tab_index:39, type:string, lev:0, warning:possibly_uninitialized
+            ├── Target
+            │   └── Var(x) -> tab_index:38, type:integer, lev:0
+            └── Value
+                └── Var(s) -> tab_index:39, type:string, lev:0, warning:possibly_uninitialized
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params

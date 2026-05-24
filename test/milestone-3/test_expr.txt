@@ -1,0 +1,33 @@
+program TestExpr;
+var
+  i: integer;
+  r: real;
+  b: boolean;
+  c: char;
+
+begin
+  { Test 1: integer arithmetic ok }
+  i := 5 + 3;
+  i := 10 - 2;
+  i := 4 * 3;
+  i := 10 div 3;
+  i := 10 mod 3;
+
+  { Test 2: real division always returns real }
+  r := 10 / 3;
+  r := i / 2;
+
+  { Test 3: assignment-compatible: real := integer ok }
+  r := i;
+  r := 5;
+
+  { Test 4: boolean from relational }
+  b := (i = 5);
+  b := (i > 3);
+  b := (i <> 10);
+
+  { Test 5: boolean operators }
+  b := (i > 0) and (i < 10);
+  b := not b;
+
+end.

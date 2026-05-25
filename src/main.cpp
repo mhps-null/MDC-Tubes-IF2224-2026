@@ -4,6 +4,7 @@
 #include "parsetree.hpp"
 #include "ast.hpp"
 #include "semantic.hpp"
+#include "codegen.hpp"
 
 #include <iostream>
 #include <string>
@@ -129,6 +130,14 @@ int main(int argc, char *argv[])
     printSemanticResult(semanticResult, std::cout);
 
     // =========================
+    // INTERMEDIATE CODE GENERATION
+    // =========================
+    CodeGenResult codeGenResult = generateCode(semanticResult);
+
+    std::cout << "\n";
+    printCodeGenResult(codeGenResult, std::cout);
+
+    // =========================
     // WRITE OUTPUT FILE
     // =========================
     if (!outputPath.empty())
@@ -155,6 +164,9 @@ int main(int argc, char *argv[])
 
         outFile << "\n";
         printSemanticResult(semanticResult, outFile);
+
+        outFile << "\n";
+        printCodeGenResult(codeGenResult, outFile);
 
         outFile.close();
 

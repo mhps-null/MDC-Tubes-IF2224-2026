@@ -1,0 +1,23 @@
+program TestExprErrors;
+var
+  i: integer;
+  r: real;
+  b: boolean;
+
+begin
+  { ERROR 1: integer := real is NOT ok (narrowing) }
+  i := r;
+
+  { ERROR 2: boolean := integer is NOT ok }
+  b := i;
+
+  { ERROR 3: div/mod requires integer operands }
+  i := r div 2;
+
+  { ERROR 4: mod with real }
+  i := 10 mod r;
+
+  { ERROR 5: boolean operator on non-boolean }
+  b := (i > 0) and i;
+
+end.

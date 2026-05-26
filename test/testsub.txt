@@ -1,0 +1,17 @@
+program testsub;
+var
+    x, y, res : integer;
+
+procedure hitungDanCetak(a : integer; b : integer);
+var
+    total : integer;
+begin
+    total := a + b;
+    writeln(total);
+end;
+
+begin
+    x := 5;
+    y := 10;
+    hitungDanCetak(x, y);
+end.

@@ -1,0 +1,13 @@
+program testproc;
+var 
+    m : integer;
+
+procedure cetak(x : integer);
+begin
+    writeln(x);
+end;
+
+begin
+    m := 10;
+    cetak(m);
+end.

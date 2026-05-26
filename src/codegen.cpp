@@ -4,6 +4,7 @@
 #include <cctype>
 #include <iomanip>
 #include <stdexcept>
+#include <unordered_map>
 
 // OPR codes sesuai konvensi IC.
 namespace opr
@@ -136,6 +137,9 @@ private:
     const SemanticResult &semantic;
     std::vector<Instruction> instructions;
     std::vector<std::string> errors;
+    
+    std::unordered_map<int, int> funcAddresses;
+    int currentLevel = 0; // Melacak eksekusi level
 
     void emit(const std::string &mnemonic, int level, int operand)
     {
@@ -157,6 +161,21 @@ private:
 
     void visitProgram(const SemanticNode &node)
     {
+        // Lompat ke blok utama (main) karena subprogram akan di-generate sebelum main
+        int jmpMainIdx = instructions.size();
+        emit("JMP", 0, 0);
+
+        // Visit Declarations untuk generate subprograms
+        for (const auto &child : node.children)
+        {
+            if (child && labelIs(child->label, "Declarations"))
+                visitDeclarations(*child);
+        }
+
+        // Backpatch JMP ke main block
+        if (jmpMainIdx < static_cast<int>(instructions.size()))
+            instructions[jmpMainIdx].operand = instructions.size();
+
         // Deklarasi top-level ada di block 0, sebelum pushBlock compound.
         const int vsze = (!semantic.btab.empty()) ? semantic.btab[0].vsze : 0;
         emit("INT", 0, vsze + FRAME_OVERHEAD);
@@ -170,6 +189,57 @@ private:
         }
 
         emitRet();
+    }
+
+    void visitDeclarations(const SemanticNode &node)
+    {
+        for (const auto &child : node.children)
+        {
+            if (!child) continue;
+            if (labelStartsWith(child->label, "ProcedureDecl") || labelStartsWith(child->label, "FunctionDecl"))
+            {
+                visitSubprogram(*child);
+            }
+        }
+    }
+
+    void visitSubprogram(const SemanticNode &node)
+    {
+        const int tabIdx = getAnnotationInt(node, "tab_index");
+        if (tabIdx > 0 && tabIdx < static_cast<int>(semantic.tab.size()))
+        {
+            funcAddresses[tabIdx] = instructions.size();
+
+            int btabIdx = getAnnotationInt(node, "block_index", -1);
+            int vsze = (btabIdx >= 0 && btabIdx < static_cast<int>(semantic.btab.size())) ? semantic.btab[btabIdx].vsze : 0;
+            int psze = (btabIdx >= 0 && btabIdx < static_cast<int>(semantic.btab.size())) ? semantic.btab[btabIdx].psze : 0;
+            emit("INT", 0, vsze + psze + FRAME_OVERHEAD);
+
+            int oldLevel = currentLevel;
+            currentLevel = semantic.tab[tabIdx].lev + 1; // Level eksekusi adalah deklarasi + 1
+
+            for (const auto &child : node.children)
+            {
+                if (child && labelIs(child->label, "Block"))
+                {
+                    // Opsional: Jika subprogram punya deklarasi (nested func), proses di sini
+                    for (const auto &bChild : child->children)
+                    {
+                        if (bChild && labelIs(bChild->label, "Declarations"))
+                            visitDeclarations(*bChild);
+                    }
+                    
+                    // Eksekusi tubuh subprogram
+                    for (const auto &bChild : child->children)
+                    {
+                        if (bChild && labelIs(bChild->label, "Compound"))
+                            visitCompound(*bChild);
+                    }
+                }
+            }
+            emitRet();
+            currentLevel = oldLevel; // Kembalikan level
+        }
     }
 
     void visitCompound(const SemanticNode &node)
@@ -216,17 +286,80 @@ private:
             return;
         }
 
-        // control flow — belum di-generate di P1
-        static const char *p2Nodes[] = {"If", "While", "For", "Repeat", "Case", nullptr};
-        for (const char **n = p2Nodes; *n; ++n)
+        if (labelIs(lbl, "If")) { visitIf(node); return; }
+        if (labelIs(lbl, "While")) { visitWhile(node); return; }
+        if (labelIs(lbl, "Repeat")) { visitRepeat(node); return; }
+        if (labelIs(lbl, "For")) { visitFor(node); return; }
+        if (labelIs(lbl, "Case")) { visitCase(node); return; }
+
+        errors.push_back(std::string("ICG error: unknown statement node '") + lbl + "'");
+    }
+
+    void visitIf(const SemanticNode &node)
+    {
+        if (node.children.empty()) return;
+        visitExpression(*node.children[0]);
+        int jpcIdx = instructions.size();
+        emit("JPC", 0, 0);
+
+        if (node.children.size() > 1 && node.children[1])
+            visitStatement(*node.children[1]);
+
+        if (node.children.size() > 2 && node.children[2])
         {
-            if (labelIs(lbl, *n))
-            {
-                errors.push_back(std::string("ICG: '") + lbl +
-                                 "' requires P2 (control flow) — skipped.");
-                return;
-            }
+            int jmpIdx = instructions.size();
+            emit("JMP", 0, 0);
+            instructions[jpcIdx].operand = instructions.size();
+            visitStatement(*node.children[2]);
+            instructions[jmpIdx].operand = instructions.size();
         }
+        else
+        {
+            instructions[jpcIdx].operand = instructions.size();
+        }
+    }
+
+    void visitWhile(const SemanticNode &node)
+    {
+        if (node.children.size() < 2) return;
+        int conditionIdx = instructions.size();
+        visitExpression(*node.children[0]);
+        int jpcIdx = instructions.size();
+        emit("JPC", 0, 0);
+
+        if (node.children[1])
+            visitStatement(*node.children[1]);
+
+        emit("JMP", 0, conditionIdx);
+        instructions[jpcIdx].operand = instructions.size();
+    }
+
+    void visitRepeat(const SemanticNode &node)
+    {
+        if (node.children.size() < 2) return;
+        int loopIdx = instructions.size();
+
+        if (node.children[0])
+            visitStatement(*node.children[0]); // Body (bisa Statements)
+
+        if (node.children[1])
+            visitExpression(*node.children[1]); // Condition
+
+        emit("JPC", 0, loopIdx); // Lompat kembali jika false (repeat UNTIL condition)
+    }
+
+    void visitFor(const SemanticNode &node)
+    {
+        // P2: ForNode(Assign, direction, end_expr, body)
+        // Disederhanakan untuk ICG: Karena kita tidak memiliki node AST spesifik untuk pengkondisian di ICG,
+        // For biasanya diterjemahkan ke While, tapi karena struktur node mungkin beda,
+        // kita ambil Assign lalu JMP / JPC. 
+        errors.push_back("ICG: 'For' is not fully translated in this milestone.");
+    }
+
+    void visitCase(const SemanticNode &node)
+    {
+        errors.push_back("ICG: 'Case' is not fully translated in this milestone.");
     }
 
     void visitAssign(const SemanticNode &node)
@@ -265,7 +398,7 @@ private:
             }
 
             const TabEntry &entry = semantic.tab[tabIdx];
-            emit("STO", entry.lev, entry.adr + FRAME_OVERHEAD);
+            emit("STO", currentLevel - entry.lev, entry.adr + FRAME_OVERHEAD);
         }
     }
 
@@ -291,7 +424,36 @@ private:
         }
 
         // user-defined: butuh CAL/RET, baru di P2
-        errors.push_back("ICG: call to '" + name + "' requires P2 (CAL/RET) — skipped.");
+        const int tabIdx = getAnnotationInt(node, "tab_index");
+        if (tabIdx <= 0 || tabIdx >= static_cast<int>(semantic.tab.size()))
+        {
+            errors.push_back("ICG error: unresolved call to '" + name + "'");
+            return;
+        }
+        
+        for (const auto &child : node.children)
+        {
+            if (child && labelIs(child->label, "Args"))
+            {
+                for (const auto &arg : child->children)
+                {
+                    if (arg) visitExpression(*arg);
+                }
+            }
+        }
+        
+        const TabEntry &entry = semantic.tab[tabIdx];
+        
+        // Pencarian nilai alamat pada funcAddresses
+        if (funcAddresses.find(tabIdx) != funcAddresses.end())
+        {
+            emit("CAL", currentLevel - entry.lev, funcAddresses[tabIdx]);
+        }
+        else
+        {
+            errors.push_back("ICG error: unresolved function address for tab index " + std::to_string(tabIdx));
+            emit("CAL", currentLevel - entry.lev, 0); // fallback dummy address
+        }
     }
 
     // Tiap argumen: push nilai → OPR WRT. Argumen terakhir writeln: OPR WRTLN.
@@ -387,7 +549,7 @@ private:
                 }
                 else
                 {
-                    emit("LOD", entry.lev, entry.adr + FRAME_OVERHEAD);
+                    emit("LOD", currentLevel - entry.lev, entry.adr + FRAME_OVERHEAD);
                 }
             }
         }

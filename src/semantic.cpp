@@ -296,6 +296,24 @@ namespace
             return 0;
         }
 
+        int lookupCallable(const std::string &name) const
+        {
+            std::string id = lower(name);
+            for (int i = static_cast<int>(display.size()) - 1; i >= 0; --i)
+            {
+                int block = display[i];
+                if (block < 0 || block >= static_cast<int>(result.btab.size())) continue;
+                int idx = result.btab[block].last;
+                while (idx > 0)
+                {
+                    if (result.tab[idx].identifier == id && (result.tab[idx].obj == "function" || result.tab[idx].obj == "procedure"))
+                        return idx;
+                    idx = result.tab[idx].link;
+                }
+            }
+            return 0;
+        }
+
         int lookupInBlock(int block, const std::string &name) const
         {
             if (block < 0 || block >= static_cast<int>(result.btab.size()))
@@ -556,10 +574,11 @@ namespace
                     }
 
                     int size = symbols.sizeOf(type);
+                    int currentBlock = symbols.currentBlock();
 
-                    result.tab[idx].adr = nextAddress;
+                    result.tab[idx].adr = result.btab[currentBlock].vsze + result.btab[currentBlock].psze;
                     nextAddress += size;
-                    result.btab[symbols.currentBlock()].vsze += size;
+                    result.btab[currentBlock].vsze += size;
 
                     var->annotations = typeAnnotations(idx, type);
                     ast->children.push_back(var);
@@ -587,7 +606,6 @@ namespace
             if (function)
             {
                 functionStack.push_back(subIdx);
-                symbols.declare(name, "function-result", returnType, false);
             }
 
             auto ast = makeNode(function ? "FunctionDecl(" + name + ")" : "ProcedureDecl(" + name + ")");
@@ -601,7 +619,15 @@ namespace
                 if (ParseTreeView::node(child, "<formal-parameter-list>"))
                     ast->children.push_back(visitFormalParameters(child, subIdx));
                 else if (ParseTreeView::node(child, "<block>"))
+                {
+                    if (function)
+                    {
+                        int resIdx = symbols.declare(name, "function-result", returnType, false);
+                        result.tab[resIdx].adr = result.btab[block].vsze + result.btab[block].psze;
+                        result.btab[block].vsze += symbols.sizeOf(returnType);
+                    }
                     ast->children.push_back(visitBlock(child));
+                }
             }
 
             if (function)
@@ -740,7 +766,7 @@ namespace
         ExprInfo visitCall(const std::shared_ptr<ParseNode> &node)
         {
             std::string name = ParseTreeView::value(node->children.empty() ? nullptr : node->children[0]);
-            int idx = symbols.lookup(name);
+            int idx = symbols.lookupCallable(name);
 
             if (!idx)
                 error("undeclared procedure/function: " + name);

@@ -5,6 +5,7 @@
 #include "ast.hpp"
 #include "semantic.hpp"
 #include "codegen.hpp"
+#include "interpreter.hpp"
 
 #include <iostream>
 #include <string>
@@ -167,6 +168,8 @@ int main(int argc, char *argv[])
 
         outFile << "\n";
         printCodeGenResult(codeGenResult, outFile);
+
+        runInterpreter(codeGenResult);
 
         outFile.close();
 

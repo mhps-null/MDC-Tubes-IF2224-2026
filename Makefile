@@ -29,7 +29,8 @@ SOURCES  = $(SRCDIR)/main.cpp \
            $(SRCDIR)/parsetree.cpp \
            $(SRCDIR)/utils.cpp \
            $(SRCDIR)/codegen.cpp \
-           $(SRCDIR)/ast.cpp
+           $(SRCDIR)/ast.cpp \
+           $(SRCDIR)/interpreter.cpp
 
 OBJECTS  = $(SOURCES:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 

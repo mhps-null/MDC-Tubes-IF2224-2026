@@ -1,17 +1,16 @@
-program testrec;
+program testfunc;
 var
-    n, hasil : integer;
+  n : integer;
 
-function faktorial(x : integer) : integer;
+function fact(x : integer) : integer;
 begin
-    if x <= 1 then
-        faktorial := 1
-    else
-        faktorial := x * faktorial(x - 1);
+  if x = 0 then
+    fact := 1
+  else
+    fact := x * fact(x - 1);
 end;
 
 begin
-    n := 4;
-    hasil := faktorial(n);
-    writeln(hasil);
+  n := fact(4);
+  writeln(n);
 end.

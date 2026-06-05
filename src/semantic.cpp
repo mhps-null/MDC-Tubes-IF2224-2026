@@ -455,6 +455,7 @@ namespace
             result.tab[falseIdx].adr = 0;
 
             symbols.declare("readln", "procedure", primitive(TypeKind::Void), true);
+            symbols.declare("write", "procedure", primitive(TypeKind::Void), true);
             symbols.declare("writeln", "procedure", primitive(TypeKind::Void), true);
         }
 
@@ -892,6 +893,8 @@ namespace
                 error("for variable must be ordinal, got " + var.type.name);
             if (!compatible(var.type, start.type) || !compatible(var.type, finish.type))
                 error("for range type is incompatible with variable " + ParseTreeView::value(node->children[1]));
+            std::string direction = ParseTreeView::tag(node->children[4]);
+            ast->annotations.push_back("direction:" + direction);
             ast->children = {var.node, start.node, finish.node};
             if (node->children.size() > 7)
                 ast->children.push_back(visitStatement(node->children[7]));
@@ -1282,23 +1285,50 @@ namespace
 
             ExprInfo base = identifierInfo(ParseTreeView::value(node->children[0]), warnUninitialized);
             int ownerTab = base.tabIndex;
+
             for (size_t i = 1; i < node->children.size(); ++i)
             {
                 if (!ParseTreeView::node(node->children[i], "<component-variable>"))
                     continue;
+
                 auto comp = node->children[i];
                 if (!comp->children.empty() && ParseTreeView::terminal(comp->children[0], "lbrack"))
                 {
-                    base.node->label += "[]";
-                    if (base.type.kind != TypeKind::Array)
+                    std::vector<ExprInfo> indexes = collectIndexExpressions(comp);
+                    if (indexes.empty())
+                        indexes.push_back({unknownType(), makeNode("Index(?)"), 0, false, 0, ""});
+
+                    for (const auto &idxExpr : indexes)
                     {
-                        error("indexing non-array variable");
-                        base.type = unknownType();
-                    }
-                    else
-                    {
-                        validateIndexList(comp, base.type);
+                        base.node->label += "[]";
+                        auto idxNode = makeNode("Index");
+
+                        if (base.type.kind != TypeKind::Array || base.type.ref < 0 ||
+                            base.type.ref >= static_cast<int>(result.atab.size()))
+                        {
+                            error("indexing non-array variable");
+                            base.type = unknownType();
+                            idxNode->children.push_back(idxExpr.node);
+                            base.node->children.push_back(idxNode);
+                            refreshTypeAnnotation(base.node, base.type);
+                            continue;
+                        }
+
                         const ATabEntry &array = result.atab[base.type.ref];
+                        TypeInfo expected = typeFromComposite(array.xtyp, 0);
+                        if (!compatible(expected, idxExpr.type))
+                            error("array index type " + idxExpr.type.name + " is incompatible with " + expected.name);
+                        if (idxExpr.constant && (idxExpr.intValue < array.low || idxExpr.intValue > array.high))
+                            error("array index " + std::to_string(idxExpr.intValue) + " out of bounds [" +
+                                  std::to_string(array.low) + ".." + std::to_string(array.high) + "]");
+
+                        idxNode->annotations.push_back("array_ref:" + std::to_string(base.type.ref));
+                        idxNode->annotations.push_back("low:" + std::to_string(array.low));
+                        idxNode->annotations.push_back("high:" + std::to_string(array.high));
+                        idxNode->annotations.push_back("elsz:" + std::to_string(array.elsz));
+                        idxNode->children.push_back(idxExpr.node);
+                        base.node->children.push_back(idxNode);
+
                         TypeInfo elem = typeFromComposite(array.etyp, array.eref);
                         base.type = elem;
                         refreshTypeAnnotation(base.node, elem);
@@ -1323,6 +1353,11 @@ namespace
                         }
                         else
                         {
+                            auto fieldNode = makeNode("Field(" + fieldName + ")");
+                            fieldNode->annotations.push_back("field_tab_index:" + std::to_string(fieldIdx));
+                            fieldNode->annotations.push_back("offset:" + std::to_string(result.tab[fieldIdx].adr));
+                            fieldNode->annotations.push_back("type:" + result.tab[fieldIdx].type);
+                            base.node->children.push_back(fieldNode);
                             base.type = symbols.typeOf(fieldIdx);
                             base.tabIndex = ownerTab;
                         }
@@ -1353,12 +1388,12 @@ namespace
             return {type, node, idx, constant, result.tab[idx].adr, ""};
         }
 
-        void validateIndexList(const std::shared_ptr<ParseNode> &component, const TypeInfo &arrayType)
+        std::vector<ExprInfo> collectIndexExpressions(const std::shared_ptr<ParseNode> &component)
         {
-            if (arrayType.ref < 0 || arrayType.ref >= static_cast<int>(result.atab.size()))
-                return;
-            const ATabEntry &array = result.atab[arrayType.ref];
-            TypeInfo expected = typeFromComposite(array.xtyp, 0);
+            std::vector<ExprInfo> indexes;
+            if (!component)
+                return indexes;
+
             for (const auto &child : component->children)
             {
                 if (!ParseTreeView::node(child, "<index-list>"))
@@ -1367,19 +1402,15 @@ namespace
                 {
                     if (ParseTreeView::terminal(idxNode, "comma"))
                         continue;
-                    ExprInfo idx = constantInfo(idxNode);
-                    if (!compatible(expected, idx.type))
-                        error("array index type " + idx.type.name + " is incompatible with " + expected.name);
-                    if (idx.constant && (idx.intValue < array.low || idx.intValue > array.high))
-                        error("array index " + std::to_string(idx.intValue) + " out of bounds [" +
-                              std::to_string(array.low) + ".." + std::to_string(array.high) + "]");
+                    indexes.push_back(expressionInfo(idxNode));
                 }
             }
+            return indexes;
         }
 
         void validateCallArguments(const std::string &name, int idx, const std::vector<ExprInfo> &args)
         {
-            if (!idx || name == "writeln" || name == "readln")
+            if (!idx || name == "writeln" || name == "write" || name == "readln")
                 return;
             auto it = subprogramParams.find(idx);
             if (it == subprogramParams.end())

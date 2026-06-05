@@ -1,13 +1,19 @@
-program testproc;
-var 
-    m : integer;
+program testarrayrecord;
 
-procedure cetak(x : integer);
-begin
-    writeln(x);
-end;
+type
+  Point = record
+    x : integer;
+    y : integer;
+  end;
+
+var
+  data : array[1..3] of integer;
+  p : Point;
 
 begin
-    m := 10;
-    cetak(m);
+  data[1] := 4;
+  data[2] := 6;
+
+  p.x := data[1] + data[2];
+  writeln(p.x);
 end.

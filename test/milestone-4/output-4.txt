@@ -1,36 +1,72 @@
 === TOKENS ===
 programsy
-ident (testproc)
+ident (testarrayrecord)
 semicolon
-varsy
-ident (m)
-colon
-ident (integer)
-semicolon
-proceduresy
-ident (cetak)
-lparent
+typesy
+ident (Point)
+eql
+recordsy
 ident (x)
 colon
 ident (integer)
-rparent
 semicolon
-beginsy
-ident (writeln)
-lparent
-ident (x)
-rparent
+ident (y)
+colon
+ident (integer)
 semicolon
 endsy
 semicolon
-beginsy
-ident (m)
-becomes
-intcon (10)
+varsy
+ident (data)
+colon
+arraysy
+lbrack
+intcon (1)
+period
+period
+intcon (3)
+rbrack
+ofsy
+ident (integer)
 semicolon
-ident (cetak)
+ident (p)
+colon
+ident (Point)
+semicolon
+beginsy
+ident (data)
+lbrack
+intcon (1)
+rbrack
+becomes
+intcon (4)
+semicolon
+ident (data)
+lbrack
+intcon (2)
+rbrack
+becomes
+intcon (6)
+semicolon
+ident (p)
+period
+ident (x)
+becomes
+ident (data)
+lbrack
+intcon (1)
+rbrack
+plus
+ident (data)
+lbrack
+intcon (2)
+rbrack
+semicolon
+ident (writeln)
 lparent
-ident (m)
+ident (p)
+period
+ident (x)
 rparent
 semicolon
 endsy
@@ -40,116 +76,204 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(testproc)
+│   ├── ident(testarrayrecord)
 │   └── semicolon
 ├── <declaration-part>
-│   ├── <var-declaration>
-│   │   ├── varsy
-│   │   ├── <identifier-list>
-│   │   │   └── ident(m)
-│   │   ├── colon
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Point)
+│   │   ├── eql
 │   │   ├── <type>
-│   │   │   └── ident(integer)
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(x)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   ├── semicolon
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(y)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
 │   │   └── semicolon
-│   └── <subprogram-declaration>
-│       └── <procedure-declaration>
-│           ├── proceduresy
-│           ├── ident(cetak)
-│           ├── <formal-parameter-list>
-│           │   ├── lparent
-│           │   ├── <parameter-group>
-│           │   │   ├── <identifier-list>
-│           │   │   │   └── ident(x)
-│           │   │   ├── colon
-│           │   │   └── ident(integer)
-│           │   └── rparent
-│           ├── semicolon
-│           ├── <block>
-│           │   ├── <declaration-part>
-│           │   └── <compound-statement>
-│           │       ├── beginsy
-│           │       ├── <statement-list>
-│           │       │   └── <procedure/function-call>
-│           │       │       ├── ident(writeln)
-│           │       │       ├── lparent
-│           │       │       ├── <parameter-list>
-│           │       │       │   └── <expression>
-│           │       │       │       └── <simple-expression>
-│           │       │       │           └── <term>
-│           │       │       │               └── <factor>
-│           │       │       │                   └── ident(x)
-│           │       │       ├── rparent
-│           │       │       └── semicolon
-│           │       └── endsy
-│           └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(data)
+│       ├── colon
+│       ├── <type>
+│       │   └── <array-type>
+│       │       ├── arraysy
+│       │       ├── lbrack
+│       │       ├── <range>
+│       │       │   ├── <expression>
+│       │       │   │   └── <simple-expression>
+│       │       │   │       └── <term>
+│       │       │   │           └── <factor>
+│       │       │   │               └── intcon(1)
+│       │       │   ├── period
+│       │       │   ├── period
+│       │       │   └── <expression>
+│       │       │       └── <simple-expression>
+│       │       │           └── <term>
+│       │       │               └── <factor>
+│       │       │                   └── intcon(3)
+│       │       ├── rbrack
+│       │       ├── ofsy
+│       │       └── <type>
+│       │           └── ident(integer)
+│       ├── semicolon
+│       ├── <identifier-list>
+│       │   └── ident(p)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(Point)
+│       └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
 │   │   ├── <assignment-statement>
 │   │   │   ├── <variable>
-│   │   │   │   └── ident(m)
+│   │   │   │   ├── ident(data)
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── lbrack
+│   │   │   │       ├── <index-list>
+│   │   │   │       │   └── intcon(1)
+│   │   │   │       └── rbrack
 │   │   │   ├── becomes
 │   │   │   └── <expression>
 │   │   │       └── <simple-expression>
 │   │   │           └── <term>
 │   │   │               └── <factor>
-│   │   │                   └── intcon(10)
+│   │   │                   └── intcon(4)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(data)
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── lbrack
+│   │   │   │       ├── <index-list>
+│   │   │   │       │   └── intcon(2)
+│   │   │   │       └── rbrack
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(6)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(p)
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(x)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           ├── <term>
+│   │   │           │   └── <factor>
+│   │   │           │       └── <variable>
+│   │   │           │           ├── ident(data)
+│   │   │           │           └── <component-variable>
+│   │   │           │               ├── lbrack
+│   │   │           │               ├── <index-list>
+│   │   │           │               │   └── intcon(1)
+│   │   │           │               └── rbrack
+│   │   │           ├── plus
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── <variable>
+│   │   │                       ├── ident(data)
+│   │   │                       └── <component-variable>
+│   │   │                           ├── lbrack
+│   │   │                           ├── <index-list>
+│   │   │                           │   └── intcon(2)
+│   │   │                           └── rbrack
 │   │   ├── semicolon
 │   │   └── <procedure/function-call>
-│   │       ├── ident(cetak)
+│   │       ├── ident(writeln)
 │   │       ├── lparent
 │   │       ├── <parameter-list>
 │   │       │   └── <expression>
 │   │       │       └── <simple-expression>
 │   │       │           └── <term>
 │   │       │               └── <factor>
-│   │       │                   └── ident(m)
+│   │       │                   └── <variable>
+│   │       │                       ├── ident(p)
+│   │       │                       └── <component-variable>
+│   │       │                           ├── period
+│   │       │                           └── ident(x)
 │   │       ├── rparent
 │   │       └── semicolon
 │   └── endsy
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'testproc')
+ProgramNode(name: 'testarrayrecord')
 ├── Declarations
-│   ├── VarDecl(name: 'm', type: 'integer')
-│   └── ProcedureDecl(name: 'cetak')
-│       ├── Params
-│       │   └── Param(name: 'x', type: 'integer')
-│       └── Body
-│           └── ProcedureCall(name: 'writeln',
-│                             args: [Var('x')])
+│   ├── TypeDecl(name: 'Point', type: 'record')
+│   ├── VarDecl(name: 'data', type: 'array of integer')
+│   └── VarDecl(name: 'p', type: 'Point')
 └── Block
-    ├── Assign(target: Var('m'),
-    │          value: Num(10))
-    └── ProcedureCall(name: 'cetak',
-                      args: [Var('m')])
+    ├── Assign(target: Var('data[]'),
+    │          value: Num(4))
+    ├── Assign(target: Var('data[]'),
+    │          value: Num(6))
+    ├── Assign(target: Var('p.x'),
+    │          value: BinOp(op: 'plus',
+    │                left: Var('data[]'),
+    │                right: Var('data[]')))
+    └── ProcedureCall(name: 'writeln',
+                      args: [Var('p.x')])
 
 === DECORATED AST ===
-ProgramNode(name: 'testproc') -> tab_index:37, lev:0
+ProgramNode(name: 'testarrayrecord') -> tab_index:38, lev:0
 ├── Declarations
-│   ├── VarDecls
-│   │   └── VarDecl(m) -> tab_index:38, type:integer, ref:0, lev:0
-│   └── ProcedureDecl(cetak) -> tab_index:39, block_index:1, lev:0, type:void
-│       ├── Parameters
-│       │   └── Param(x) -> tab_index:40, type:integer, ref:0, lev:1
-│       └── Block -> block_index:1, lev:1
-│           ├── Declarations
-│           └── Compound
-│               └── Statements
-│                   └── Call(writeln) -> tab_index:36, lev:1
-│                       └── Args
-│                           └── Var(x) -> tab_index:40, type:integer, lev:1
+│   ├── TypeDecls
+│   │   └── TypeDecl(Point) -> tab_index:41, type:record, ref:1, lev:0
+│   └── VarDecls
+│       ├── VarDecl(data) -> tab_index:42, type:array, ref:0, lev:0
+│       └── VarDecl(p) -> tab_index:43, type:record, ref:1, lev:0
 └── Compound -> block_index:2, lev:1
     └── Statements
         ├── Assign -> type:void
         │   ├── Target
-        │   │   └── Var(m) -> tab_index:38, type:integer, lev:0
+        │   │   └── Var(data)[] -> tab_index:42, type:integer, lev:0
+        │   │       └── Index -> array_ref:0, low:1, high:3, elsz:1
+        │   │           └── Int(1) -> type:integer
         │   └── Value
-        │       └── Int(10) -> type:integer
-        └── Call(cetak) -> tab_index:39, lev:1
+        │       └── Int(4) -> type:integer
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(data)[] -> tab_index:42, type:integer, lev:0
+        │   │       └── Index -> array_ref:0, low:1, high:3, elsz:1
+        │   │           └── Int(2) -> type:integer
+        │   └── Value
+        │       └── Int(6) -> type:integer
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(p).x -> tab_index:43, type:integer, lev:0
+        │   │       └── Field(x) -> field_tab_index:39, offset:0, type:integer
+        │   └── Value
+        │       └── BinOp(plus) -> type:integer
+        │           ├── Var(data)[] -> tab_index:42, type:integer, lev:0
+        │           │   └── Index -> array_ref:0, low:1, high:3, elsz:1
+        │           │       └── Int(1) -> type:integer
+        │           └── Var(data)[] -> tab_index:42, type:integer, lev:0
+        │               └── Index -> array_ref:0, low:1, high:3, elsz:1
+        │                   └── Int(2) -> type:integer
+        └── Call(writeln) -> tab_index:37, lev:1
             └── Args
-                └── Var(m) -> tab_index:38, type:integer, lev:0
+                └── Var(p).x -> tab_index:43, type:integer, lev:0
+                    └── Field(x) -> field_tab_index:39, offset:0, type:integer
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
@@ -190,38 +314,66 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  33  true                    constant        boolean       0    1    0    1    32   yes  
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
- 36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  testproc                program         void          0    1    0    0    36   yes  
- 38  m                       variable        integer       0    1    0    0    37   yes  
- 39  cetak                   procedure       void          1    1    0    0    38   yes  integer
- 40  x                       parameter       integer       0    1    1    0     0   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  testarrayrecord         program         void          0    1    0    0    37   yes  
+ 39  x                       field           integer       0    1    1    0     0   yes  
+ 40  y                       field           integer       0    1    1    1    39   yes  
+ 41  point                   type            record        1    1    0    0    38   yes  
+ 42  data                    variable        array         0    1    0    0    41   yes  
+ 43  p                       variable        record        1    1    0    3    42   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    39     0     0     1
-  1    40    40     1     0
+  0    43     0     0     5
+  1    40     0     0     2
   2     0     0     0     0
 
 === SYMBOL TABLE: atab ===
 idx  xtyp       etyp       eref  low  high  elsz  size
 ------------------------------------------------------
+  0  subrange  integer      0    1     3     1     3
 
 === SEMANTIC DIAGNOSTICS ===
 No semantic errors.
 
 === INTERMEDIATE CODE ===
-0 JMP 0 5
-1 INT 0 4
-2 LOD 0 3
-3 OPR 0 14
-4 RET
-5 INT 0 4
-6 LIT 0 10
-7 STO 0 3
-8 LOD 0 3
-9 CAL 0 1
-10 RET
+0 JMP 0 1
+1 INT 0 8
+2 LDA 0 3
+3 LIT 0 1
+4 IDX 1 3 ; elsz 1
+5 OPR 0 2
+6 LIT 0 4
+7 STI 0 0
+8 LDA 0 3
+9 LIT 0 2
+10 IDX 1 3 ; elsz 1
+11 OPR 0 2
+12 LIT 0 6
+13 STI 0 0
+14 LDA 0 6
+15 LIT 0 0
+16 OPR 0 2
+17 LDA 0 3
+18 LIT 0 1
+19 IDX 1 3 ; elsz 1
+20 OPR 0 2
+21 LDI 0 0
+22 LDA 0 3
+23 LIT 0 2
+24 IDX 1 3 ; elsz 1
+25 OPR 0 2
+26 LDI 0 0
+27 OPR 0 2
+28 STI 0 0
+29 LDA 0 6
+30 LIT 0 0
+31 OPR 0 2
+32 LDI 0 0
+33 OPR 0 14
+34 RET
 
 INTERPRETER OUTPUT
 10

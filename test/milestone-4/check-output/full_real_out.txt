@@ -1,30 +1,22 @@
 === TOKENS ===
 programsy
-ident (Hello)
+ident (RealRun)
 semicolon
 varsy
-ident (a)
-comma
-ident (b)
+ident (x)
 colon
-ident (integer)
+ident (real)
 semicolon
 beginsy
-ident (a)
+ident (x)
 becomes
-intcon (5)
-semicolon
-ident (b)
-becomes
-ident (a)
+realcon (2.5)
 plus
-intcon (10)
+realcon (1.25)
 semicolon
 ident (writeln)
 lparent
-string ('Result = ')
-comma
-ident (b)
+ident (x)
 rparent
 semicolon
 endsy
@@ -34,105 +26,77 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(Hello)
+│   ├── ident(RealRun)
 │   └── semicolon
 ├── <declaration-part>
 │   └── <var-declaration>
 │       ├── varsy
 │       ├── <identifier-list>
-│       │   ├── ident(a)
-│       │   ├── comma
-│       │   └── ident(b)
+│       │   └── ident(x)
 │       ├── colon
 │       ├── <type>
-│       │   └── ident(integer)
+│       │   └── ident(real)
 │       └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
 │   │   ├── <assignment-statement>
 │   │   │   ├── <variable>
-│   │   │   │   └── ident(a)
-│   │   │   ├── becomes
-│   │   │   └── <expression>
-│   │   │       └── <simple-expression>
-│   │   │           └── <term>
-│   │   │               └── <factor>
-│   │   │                   └── intcon(5)
-│   │   ├── semicolon
-│   │   ├── <assignment-statement>
-│   │   │   ├── <variable>
-│   │   │   │   └── ident(b)
+│   │   │   │   └── ident(x)
 │   │   │   ├── becomes
 │   │   │   └── <expression>
 │   │   │       └── <simple-expression>
 │   │   │           ├── <term>
 │   │   │           │   └── <factor>
-│   │   │           │       └── ident(a)
+│   │   │           │       └── realcon(2.5)
 │   │   │           ├── plus
 │   │   │           └── <term>
 │   │   │               └── <factor>
-│   │   │                   └── intcon(10)
+│   │   │                   └── realcon(1.25)
 │   │   ├── semicolon
 │   │   └── <procedure/function-call>
 │   │       ├── ident(writeln)
 │   │       ├── lparent
 │   │       ├── <parameter-list>
-│   │       │   ├── <expression>
-│   │       │   │   └── <simple-expression>
-│   │       │   │       └── <term>
-│   │       │   │           └── <factor>
-│   │       │   │               └── string('Result = ')
-│   │       │   ├── comma
 │   │       │   └── <expression>
 │   │       │       └── <simple-expression>
 │   │       │           └── <term>
 │   │       │               └── <factor>
-│   │       │                   └── ident(b)
+│   │       │                   └── ident(x)
 │   │       ├── rparent
 │   │       └── semicolon
 │   └── endsy
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'Hello')
+ProgramNode(name: 'RealRun')
 ├── Declarations
-│   ├── VarDecl(name: 'a', type: 'integer')
-│   └── VarDecl(name: 'b', type: 'integer')
+│   └── VarDecl(name: 'x', type: 'real')
 └── Block
-    ├── Assign(target: Var('a'),
-    │          value: Num(5))
-    ├── Assign(target: Var('b'),
+    ├── Assign(target: Var('x'),
     │          value: BinOp(op: 'plus',
-    │                left: Var('a'),
-    │                right: Num(10)))
+    │                left: Num(2.5),
+    │                right: Num(1.25)))
     └── ProcedureCall(name: 'writeln',
-                      args: [String('Result = '), Var('b')])
+                      args: [Var('x')])
 
 === DECORATED AST ===
-ProgramNode(name: 'Hello') -> tab_index:37, lev:0
+ProgramNode(name: 'RealRun') -> tab_index:38, lev:0
 ├── Declarations
 │   └── VarDecls
-│       ├── VarDecl(a) -> tab_index:38, type:integer, ref:0, lev:0
-│       └── VarDecl(b) -> tab_index:39, type:integer, ref:0, lev:0
+│       └── VarDecl(x) -> tab_index:39, type:real, ref:0, lev:0
 └── Compound -> block_index:1, lev:1
     └── Statements
         ├── Assign -> type:void
         │   ├── Target
-        │   │   └── Var(a) -> tab_index:38, type:integer, lev:0
+        │   │   └── Var(x) -> tab_index:39, type:real, lev:0
         │   └── Value
-        │       └── Int(5) -> type:integer
-        ├── Assign -> type:void
-        │   ├── Target
-        │   │   └── Var(b) -> tab_index:39, type:integer, lev:0
-        │   └── Value
-        │       └── BinOp(plus) -> type:integer
-        │           ├── Var(a) -> tab_index:38, type:integer, lev:0
-        │           └── Int(10) -> type:integer
-        └── Call(writeln) -> tab_index:36, lev:1
+        │       └── BinOp(plus) -> type:real
+        │           ├── Real(2.5) -> type:real
+        │           └── Real(1.25) -> type:real
+        └── Call(writeln) -> tab_index:37, lev:1
             └── Args
-                ├── String('Result = ') -> type:string, len:9
-                └── Var(b) -> tab_index:39, type:integer, lev:0
+                └── Var(x) -> tab_index:39, type:real, lev:0
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
@@ -173,15 +137,15 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  33  true                    constant        boolean       0    1    0    1    32   yes  
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
- 36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  hello                   program         void          0    1    0    0    36   yes  
- 38  a                       variable        integer       0    1    0    0    37   yes  
- 39  b                       variable        integer       0    1    0    1    38   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  realrun                 program         void          0    1    0    0    37   yes  
+ 39  x                       variable        real          0    1    0    0    38   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    39     0     0     2
+  0    39     0     0     1
   1     0     0     0     0
 
 === SYMBOL TABLE: atab ===
@@ -193,18 +157,14 @@ No semantic errors.
 
 === INTERMEDIATE CODE ===
 0 JMP 0 1
-1 INT 0 5
-2 LIT 0 5
-3 STO 0 3
-4 LOD 0 3
-5 LIT 0 10
-6 OPR 0 2
-7 STO 0 4
-8 LIT 0 0
-9 OPR 0 13
-10 LOD 0 4
-11 OPR 0 14
-12 RET
+1 INT 0 4
+2 LIT 0 0 ; real 2.5
+3 LIT 0 0 ; real 1.25
+4 OPR 0 2
+5 STO 0 3
+6 LOD 0 3
+7 OPR 0 14
+8 RET
 
 INTERPRETER OUTPUT
-015
+3.75

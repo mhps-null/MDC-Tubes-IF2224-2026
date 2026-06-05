@@ -1,17 +1,15 @@
-program testsub;
+program testflow;
 var
-    x, y, res : integer;
-
-procedure hitungDanCetak(a : integer; b : integer);
-var
-    total : integer;
+  i : integer;
+  sum : integer;
 begin
-    total := a + b;
-    writeln(total);
-end;
+  sum := 0;
 
-begin
-    x := 5;
-    y := 10;
-    hitungDanCetak(x, y);
+  for i := 1 to 5 do
+    sum := sum + i;
+
+  if sum = 15 then
+    writeln(sum)
+  else
+    writeln(0);
 end.

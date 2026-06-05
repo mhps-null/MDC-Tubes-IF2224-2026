@@ -1,0 +1,170 @@
+=== TOKENS ===
+programsy
+ident (testdivzero)
+semicolon
+varsy
+ident (x)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (x)
+becomes
+intcon (10)
+idiv
+intcon (0)
+semicolon
+ident (writeln)
+lparent
+ident (x)
+rparent
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(testdivzero)
+│   └── semicolon
+├── <declaration-part>
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(x)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(x)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               ├── <factor>
+│   │   │               │   └── intcon(10)
+│   │   │               ├── idiv
+│   │   │               └── <factor>
+│   │   │                   └── intcon(0)
+│   │   ├── semicolon
+│   │   └── <procedure/function-call>
+│   │       ├── ident(writeln)
+│   │       ├── lparent
+│   │       ├── <parameter-list>
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── ident(x)
+│   │       ├── rparent
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'testdivzero')
+├── Declarations
+│   └── VarDecl(name: 'x', type: 'integer')
+└── Block
+    ├── Assign(target: Var('x'),
+    │          value: BinOp(op: 'idiv',
+    │                left: Num(10),
+    │                right: Num(0)))
+    └── ProcedureCall(name: 'writeln',
+                      args: [Var('x')])
+
+=== DECORATED AST ===
+ProgramNode(name: 'testdivzero') -> tab_index:38, lev:0
+├── Declarations
+│   └── VarDecls
+│       └── VarDecl(x) -> tab_index:39, type:integer, ref:0, lev:0
+└── Compound -> block_index:1, lev:1
+    └── Statements
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(x) -> tab_index:39, type:integer, lev:0
+        │   └── Value
+        │       └── BinOp(idiv) -> type:integer
+        │           ├── Int(10) -> type:integer
+        │           └── Int(0) -> type:integer
+        └── Call(writeln) -> tab_index:37, lev:1
+            └── Args
+                └── Var(x) -> tab_index:39, type:integer, lev:0
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
+----------------------------------------------------------------------------
+  0  <none>                  sentinel        none          0    1    0    0     0   yes  
+  1  and                     reserved        unknown       0    1    0    0     0   yes  
+  2  array                   reserved        unknown       0    1    0    0     1   yes  
+  3  begin                   reserved        unknown       0    1    0    0     2   yes  
+  4  case                    reserved        unknown       0    1    0    0     3   yes  
+  5  const                   reserved        unknown       0    1    0    0     4   yes  
+  6  div                     reserved        unknown       0    1    0    0     5   yes  
+  7  downto                  reserved        unknown       0    1    0    0     6   yes  
+  8  do                      reserved        unknown       0    1    0    0     7   yes  
+  9  else                    reserved        unknown       0    1    0    0     8   yes  
+ 10  end                     reserved        unknown       0    1    0    0     9   yes  
+ 11  for                     reserved        unknown       0    1    0    0    10   yes  
+ 12  function                reserved        unknown       0    1    0    0    11   yes  
+ 13  if                      reserved        unknown       0    1    0    0    12   yes  
+ 14  mod                     reserved        unknown       0    1    0    0    13   yes  
+ 15  not                     reserved        unknown       0    1    0    0    14   yes  
+ 16  of                      reserved        unknown       0    1    0    0    15   yes  
+ 17  or                      reserved        unknown       0    1    0    0    16   yes  
+ 18  procedure               reserved        unknown       0    1    0    0    17   yes  
+ 19  program                 reserved        unknown       0    1    0    0    18   yes  
+ 20  record                  reserved        unknown       0    1    0    0    19   yes  
+ 21  repeat                  reserved        unknown       0    1    0    0    20   yes  
+ 22  then                    reserved        unknown       0    1    0    0    21   yes  
+ 23  to                      reserved        unknown       0    1    0    0    22   yes  
+ 24  type                    reserved        unknown       0    1    0    0    23   yes  
+ 25  until                   reserved        unknown       0    1    0    0    24   yes  
+ 26  var                     reserved        unknown       0    1    0    0    25   yes  
+ 27  while                   reserved        unknown       0    1    0    0    26   yes  
+ 28  real                    type            real          0    1    0    0    27   yes  
+ 29  integer                 type            integer       0    1    0    0    28   yes  
+ 30  char                    type            char          0    1    0    0    29   yes  
+ 31  boolean                 type            boolean       0    1    0    0    30   yes  
+ 32  string                  type            string        0    1    0    0    31   yes  
+ 33  true                    constant        boolean       0    1    0    1    32   yes  
+ 34  false                   constant        boolean       0    1    0    0    33   yes  
+ 35  readln                  procedure       void          0    1    0    0    34   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  testdivzero             program         void          0    1    0    0    37   yes  
+ 39  x                       variable        integer       0    1    0    0    38   yes  
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    39     0     0     1
+  1     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.
+
+=== INTERMEDIATE CODE ===
+0 JMP 0 1
+1 INT 0 4
+2 LIT 0 10
+3 LIT 0 0
+4 OPR 0 5
+5 STO 0 3
+6 LOD 0 3
+7 OPR 0 14
+8 RET
+
+INTERPRETER OUTPUT
+
+[RUNTIME ERROR] Runtime Error: Division by Zero

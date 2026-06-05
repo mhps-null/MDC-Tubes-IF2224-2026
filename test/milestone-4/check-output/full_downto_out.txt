@@ -1,0 +1,253 @@
+=== TOKENS ===
+programsy
+ident (ForDownTest)
+semicolon
+varsy
+ident (i)
+comma
+ident (sum)
+colon
+ident (integer)
+semicolon
+beginsy
+ident (sum)
+becomes
+intcon (0)
+semicolon
+forsy
+ident (i)
+becomes
+intcon (5)
+downtosy
+intcon (1)
+dosy
+beginsy
+ident (sum)
+becomes
+ident (sum)
+plus
+ident (i)
+semicolon
+endsy
+semicolon
+ident (writeln)
+lparent
+ident (sum)
+rparent
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(ForDownTest)
+│   └── semicolon
+├── <declaration-part>
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   ├── ident(i)
+│       │   ├── comma
+│       │   └── ident(sum)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(sum)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(0)
+│   │   ├── semicolon
+│   │   ├── <for-statement>
+│   │   │   ├── forsy
+│   │   │   ├── ident(i)
+│   │   │   ├── becomes
+│   │   │   ├── <expression>
+│   │   │   │   └── <simple-expression>
+│   │   │   │       └── <term>
+│   │   │   │           └── <factor>
+│   │   │   │               └── intcon(5)
+│   │   │   ├── downtosy
+│   │   │   ├── <expression>
+│   │   │   │   └── <simple-expression>
+│   │   │   │       └── <term>
+│   │   │   │           └── <factor>
+│   │   │   │               └── intcon(1)
+│   │   │   ├── dosy
+│   │   │   └── <compound-statement>
+│   │   │       ├── beginsy
+│   │   │       ├── <statement-list>
+│   │   │       │   └── <assignment-statement>
+│   │   │       │       ├── <variable>
+│   │   │       │       │   └── ident(sum)
+│   │   │       │       ├── becomes
+│   │   │       │       ├── <expression>
+│   │   │       │       │   └── <simple-expression>
+│   │   │       │       │       ├── <term>
+│   │   │       │       │       │   └── <factor>
+│   │   │       │       │       │       └── ident(sum)
+│   │   │       │       │       ├── plus
+│   │   │       │       │       └── <term>
+│   │   │       │       │           └── <factor>
+│   │   │       │       │               └── ident(i)
+│   │   │       │       └── semicolon
+│   │   │       └── endsy
+│   │   ├── semicolon
+│   │   └── <procedure/function-call>
+│   │       ├── ident(writeln)
+│   │       ├── lparent
+│   │       ├── <parameter-list>
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── ident(sum)
+│   │       ├── rparent
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'ForDownTest')
+├── Declarations
+│   ├── VarDecl(name: 'i', type: 'integer')
+│   └── VarDecl(name: 'sum', type: 'integer')
+└── Block
+    ├── Assign(target: Var('sum'),
+    │          value: Num(0))
+    ├── For(dir: 'downto',
+    │       end: Num(1))
+    │   ├── Assign(target: Var('i'),
+    │   │          value: Num(5))
+    │   └── Body
+    │       └── Assign(target: Var('sum'),
+    │                  value: BinOp(op: 'plus',
+    │                        left: Var('sum'),
+    │                        right: Var('i')))
+    └── ProcedureCall(name: 'writeln',
+                      args: [Var('sum')])
+
+=== DECORATED AST ===
+ProgramNode(name: 'ForDownTest') -> tab_index:38, lev:0
+├── Declarations
+│   └── VarDecls
+│       ├── VarDecl(i) -> tab_index:39, type:integer, ref:0, lev:0
+│       └── VarDecl(sum) -> tab_index:40, type:integer, ref:0, lev:0
+└── Compound -> block_index:1, lev:1
+    └── Statements
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(sum) -> tab_index:40, type:integer, lev:0
+        │   └── Value
+        │       └── Int(0) -> type:integer
+        ├── For -> direction:downtosy
+        │   ├── Var(i) -> tab_index:39, type:integer, lev:0, warning:possibly_uninitialized
+        │   ├── Int(5) -> type:integer
+        │   ├── Int(1) -> type:integer
+        │   └── Compound
+        │       └── Statements
+        │           └── Assign -> type:void
+        │               ├── Target
+        │               │   └── Var(sum) -> tab_index:40, type:integer, lev:0
+        │               └── Value
+        │                   └── BinOp(plus) -> type:integer
+        │                       ├── Var(sum) -> tab_index:40, type:integer, lev:0
+        │                       └── Var(i) -> tab_index:39, type:integer, lev:0, warning:possibly_uninitialized
+        └── Call(writeln) -> tab_index:37, lev:1
+            └── Args
+                └── Var(sum) -> tab_index:40, type:integer, lev:0
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
+----------------------------------------------------------------------------
+  0  <none>                  sentinel        none          0    1    0    0     0   yes  
+  1  and                     reserved        unknown       0    1    0    0     0   yes  
+  2  array                   reserved        unknown       0    1    0    0     1   yes  
+  3  begin                   reserved        unknown       0    1    0    0     2   yes  
+  4  case                    reserved        unknown       0    1    0    0     3   yes  
+  5  const                   reserved        unknown       0    1    0    0     4   yes  
+  6  div                     reserved        unknown       0    1    0    0     5   yes  
+  7  downto                  reserved        unknown       0    1    0    0     6   yes  
+  8  do                      reserved        unknown       0    1    0    0     7   yes  
+  9  else                    reserved        unknown       0    1    0    0     8   yes  
+ 10  end                     reserved        unknown       0    1    0    0     9   yes  
+ 11  for                     reserved        unknown       0    1    0    0    10   yes  
+ 12  function                reserved        unknown       0    1    0    0    11   yes  
+ 13  if                      reserved        unknown       0    1    0    0    12   yes  
+ 14  mod                     reserved        unknown       0    1    0    0    13   yes  
+ 15  not                     reserved        unknown       0    1    0    0    14   yes  
+ 16  of                      reserved        unknown       0    1    0    0    15   yes  
+ 17  or                      reserved        unknown       0    1    0    0    16   yes  
+ 18  procedure               reserved        unknown       0    1    0    0    17   yes  
+ 19  program                 reserved        unknown       0    1    0    0    18   yes  
+ 20  record                  reserved        unknown       0    1    0    0    19   yes  
+ 21  repeat                  reserved        unknown       0    1    0    0    20   yes  
+ 22  then                    reserved        unknown       0    1    0    0    21   yes  
+ 23  to                      reserved        unknown       0    1    0    0    22   yes  
+ 24  type                    reserved        unknown       0    1    0    0    23   yes  
+ 25  until                   reserved        unknown       0    1    0    0    24   yes  
+ 26  var                     reserved        unknown       0    1    0    0    25   yes  
+ 27  while                   reserved        unknown       0    1    0    0    26   yes  
+ 28  real                    type            real          0    1    0    0    27   yes  
+ 29  integer                 type            integer       0    1    0    0    28   yes  
+ 30  char                    type            char          0    1    0    0    29   yes  
+ 31  boolean                 type            boolean       0    1    0    0    30   yes  
+ 32  string                  type            string        0    1    0    0    31   yes  
+ 33  true                    constant        boolean       0    1    0    1    32   yes  
+ 34  false                   constant        boolean       0    1    0    0    33   yes  
+ 35  readln                  procedure       void          0    1    0    0    34   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  fordowntest             program         void          0    1    0    0    37   yes  
+ 39  i                       variable        integer       0    1    0    0    38    no  
+ 40  sum                     variable        integer       0    1    0    1    39   yes  
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    40     0     0     2
+  1     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.
+
+=== INTERMEDIATE CODE ===
+0 JMP 0 1
+1 INT 0 5
+2 LIT 0 0
+3 STO 0 4
+4 LIT 0 5
+5 STO 0 3
+6 LOD 0 3
+7 LIT 0 1
+8 OPR 0 10
+9 JPC 0 19
+10 LOD 0 4
+11 LOD 0 3
+12 OPR 0 2
+13 STO 0 4
+14 LOD 0 3
+15 LIT 0 1
+16 OPR 0 3
+17 STO 0 3
+18 JMP 0 6
+19 LOD 0 4
+20 OPR 0 14
+21 RET
+
+INTERPRETER OUTPUT
+15

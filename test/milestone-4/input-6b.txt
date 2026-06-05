@@ -1,0 +1,7 @@
+program testdivzero;
+var
+  x : integer;
+begin
+  x := 10 div 0;
+  writeln(x);
+end.

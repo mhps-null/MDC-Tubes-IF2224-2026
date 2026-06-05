@@ -1,0 +1,276 @@
+=== TOKENS ===
+programsy
+ident (RecordRun)
+semicolon
+typesy
+ident (Point)
+eql
+recordsy
+ident (x)
+colon
+ident (integer)
+semicolon
+ident (y)
+colon
+ident (integer)
+semicolon
+endsy
+semicolon
+varsy
+ident (p)
+colon
+ident (Point)
+semicolon
+beginsy
+ident (p)
+period
+ident (x)
+becomes
+intcon (10)
+semicolon
+ident (p)
+period
+ident (y)
+becomes
+ident (p)
+period
+ident (x)
+plus
+intcon (5)
+semicolon
+ident (writeln)
+lparent
+ident (p)
+period
+ident (y)
+rparent
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(RecordRun)
+│   └── semicolon
+├── <declaration-part>
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Point)
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(x)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   ├── semicolon
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(y)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(integer)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
+│   │   └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(p)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(Point)
+│       └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(p)
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(x)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(10)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(p)
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(y)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           ├── <term>
+│   │   │           │   └── <factor>
+│   │   │           │       └── <variable>
+│   │   │           │           ├── ident(p)
+│   │   │           │           └── <component-variable>
+│   │   │           │               ├── period
+│   │   │           │               └── ident(x)
+│   │   │           ├── plus
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── intcon(5)
+│   │   ├── semicolon
+│   │   └── <procedure/function-call>
+│   │       ├── ident(writeln)
+│   │       ├── lparent
+│   │       ├── <parameter-list>
+│   │       │   └── <expression>
+│   │       │       └── <simple-expression>
+│   │       │           └── <term>
+│   │       │               └── <factor>
+│   │       │                   └── <variable>
+│   │       │                       ├── ident(p)
+│   │       │                       └── <component-variable>
+│   │       │                           ├── period
+│   │       │                           └── ident(y)
+│   │       ├── rparent
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'RecordRun')
+├── Declarations
+│   ├── TypeDecl(name: 'Point', type: 'record')
+│   └── VarDecl(name: 'p', type: 'Point')
+└── Block
+    ├── Assign(target: Var('p.x'),
+    │          value: Num(10))
+    ├── Assign(target: Var('p.y'),
+    │          value: BinOp(op: 'plus',
+    │                left: Var('p.x'),
+    │                right: Num(5)))
+    └── ProcedureCall(name: 'writeln',
+                      args: [Var('p.y')])
+
+=== DECORATED AST ===
+ProgramNode(name: 'RecordRun') -> tab_index:38, lev:0
+├── Declarations
+│   ├── TypeDecls
+│   │   └── TypeDecl(Point) -> tab_index:41, type:record, ref:1, lev:0
+│   └── VarDecls
+│       └── VarDecl(p) -> tab_index:42, type:record, ref:1, lev:0
+└── Compound -> block_index:2, lev:1
+    └── Statements
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(p).x -> tab_index:42, type:integer, lev:0
+        │   │       └── Field(x) -> field_tab_index:39, offset:0, type:integer
+        │   └── Value
+        │       └── Int(10) -> type:integer
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(p).y -> tab_index:42, type:integer, lev:0
+        │   │       └── Field(y) -> field_tab_index:40, offset:1, type:integer
+        │   └── Value
+        │       └── BinOp(plus) -> type:integer
+        │           ├── Var(p).x -> tab_index:42, type:integer, lev:0
+        │           │   └── Field(x) -> field_tab_index:39, offset:0, type:integer
+        │           └── Int(5) -> type:integer
+        └── Call(writeln) -> tab_index:37, lev:1
+            └── Args
+                └── Var(p).y -> tab_index:42, type:integer, lev:0
+                    └── Field(y) -> field_tab_index:40, offset:1, type:integer
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
+----------------------------------------------------------------------------
+  0  <none>                  sentinel        none          0    1    0    0     0   yes  
+  1  and                     reserved        unknown       0    1    0    0     0   yes  
+  2  array                   reserved        unknown       0    1    0    0     1   yes  
+  3  begin                   reserved        unknown       0    1    0    0     2   yes  
+  4  case                    reserved        unknown       0    1    0    0     3   yes  
+  5  const                   reserved        unknown       0    1    0    0     4   yes  
+  6  div                     reserved        unknown       0    1    0    0     5   yes  
+  7  downto                  reserved        unknown       0    1    0    0     6   yes  
+  8  do                      reserved        unknown       0    1    0    0     7   yes  
+  9  else                    reserved        unknown       0    1    0    0     8   yes  
+ 10  end                     reserved        unknown       0    1    0    0     9   yes  
+ 11  for                     reserved        unknown       0    1    0    0    10   yes  
+ 12  function                reserved        unknown       0    1    0    0    11   yes  
+ 13  if                      reserved        unknown       0    1    0    0    12   yes  
+ 14  mod                     reserved        unknown       0    1    0    0    13   yes  
+ 15  not                     reserved        unknown       0    1    0    0    14   yes  
+ 16  of                      reserved        unknown       0    1    0    0    15   yes  
+ 17  or                      reserved        unknown       0    1    0    0    16   yes  
+ 18  procedure               reserved        unknown       0    1    0    0    17   yes  
+ 19  program                 reserved        unknown       0    1    0    0    18   yes  
+ 20  record                  reserved        unknown       0    1    0    0    19   yes  
+ 21  repeat                  reserved        unknown       0    1    0    0    20   yes  
+ 22  then                    reserved        unknown       0    1    0    0    21   yes  
+ 23  to                      reserved        unknown       0    1    0    0    22   yes  
+ 24  type                    reserved        unknown       0    1    0    0    23   yes  
+ 25  until                   reserved        unknown       0    1    0    0    24   yes  
+ 26  var                     reserved        unknown       0    1    0    0    25   yes  
+ 27  while                   reserved        unknown       0    1    0    0    26   yes  
+ 28  real                    type            real          0    1    0    0    27   yes  
+ 29  integer                 type            integer       0    1    0    0    28   yes  
+ 30  char                    type            char          0    1    0    0    29   yes  
+ 31  boolean                 type            boolean       0    1    0    0    30   yes  
+ 32  string                  type            string        0    1    0    0    31   yes  
+ 33  true                    constant        boolean       0    1    0    1    32   yes  
+ 34  false                   constant        boolean       0    1    0    0    33   yes  
+ 35  readln                  procedure       void          0    1    0    0    34   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  recordrun               program         void          0    1    0    0    37   yes  
+ 39  x                       field           integer       0    1    1    0     0   yes  
+ 40  y                       field           integer       0    1    1    1    39   yes  
+ 41  point                   type            record        1    1    0    0    38   yes  
+ 42  p                       variable        record        1    1    0    0    41   yes  
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    42     0     0     2
+  1    40     0     0     2
+  2     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.
+
+=== INTERMEDIATE CODE ===
+0 JMP 0 1
+1 INT 0 5
+2 LDA 0 3
+3 LIT 0 0
+4 OPR 0 2
+5 LIT 0 10
+6 STI 0 0
+7 LDA 0 3
+8 LIT 0 1
+9 OPR 0 2
+10 LDA 0 3
+11 LIT 0 0
+12 OPR 0 2
+13 LDI 0 0
+14 LIT 0 5
+15 OPR 0 2
+16 STI 0 0
+17 LDA 0 3
+18 LIT 0 1
+19 OPR 0 2
+20 LDI 0 0
+21 OPR 0 14
+22 RET
+
+INTERPRETER OUTPUT
+15

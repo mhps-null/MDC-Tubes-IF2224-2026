@@ -1,61 +1,47 @@
 === TOKENS ===
 programsy
-ident (testsub)
+ident (testflow)
 semicolon
 varsy
-ident (x)
-comma
-ident (y)
-comma
-ident (res)
+ident (i)
 colon
 ident (integer)
 semicolon
-proceduresy
-ident (hitungDanCetak)
-lparent
-ident (a)
-colon
-ident (integer)
-semicolon
-ident (b)
-colon
-ident (integer)
-rparent
-semicolon
-varsy
-ident (total)
+ident (sum)
 colon
 ident (integer)
 semicolon
 beginsy
-ident (total)
+ident (sum)
 becomes
-ident (a)
-plus
-ident (b)
+intcon (0)
 semicolon
+forsy
+ident (i)
+becomes
+intcon (1)
+tosy
+intcon (5)
+dosy
+ident (sum)
+becomes
+ident (sum)
+plus
+ident (i)
+semicolon
+ifsy
+ident (sum)
+eql
+intcon (15)
+thensy
 ident (writeln)
 lparent
-ident (total)
+ident (sum)
 rparent
-semicolon
-endsy
-semicolon
-beginsy
-ident (x)
-becomes
-intcon (5)
-semicolon
-ident (y)
-becomes
-intcon (10)
-semicolon
-ident (hitungDanCetak)
+elsesy
+ident (writeln)
 lparent
-ident (x)
-comma
-ident (y)
+intcon (0)
 rparent
 semicolon
 endsy
@@ -65,191 +51,171 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(testsub)
+│   ├── ident(testflow)
 │   └── semicolon
 ├── <declaration-part>
-│   ├── <var-declaration>
-│   │   ├── varsy
-│   │   ├── <identifier-list>
-│   │   │   ├── ident(x)
-│   │   │   ├── comma
-│   │   │   ├── ident(y)
-│   │   │   ├── comma
-│   │   │   └── ident(res)
-│   │   ├── colon
-│   │   ├── <type>
-│   │   │   └── ident(integer)
-│   │   └── semicolon
-│   └── <subprogram-declaration>
-│       └── <procedure-declaration>
-│           ├── proceduresy
-│           ├── ident(hitungDanCetak)
-│           ├── <formal-parameter-list>
-│           │   ├── lparent
-│           │   ├── <parameter-group>
-│           │   │   ├── <identifier-list>
-│           │   │   │   └── ident(a)
-│           │   │   ├── colon
-│           │   │   └── ident(integer)
-│           │   ├── semicolon
-│           │   ├── <parameter-group>
-│           │   │   ├── <identifier-list>
-│           │   │   │   └── ident(b)
-│           │   │   ├── colon
-│           │   │   └── ident(integer)
-│           │   └── rparent
-│           ├── semicolon
-│           ├── <block>
-│           │   ├── <declaration-part>
-│           │   │   └── <var-declaration>
-│           │   │       ├── varsy
-│           │   │       ├── <identifier-list>
-│           │   │       │   └── ident(total)
-│           │   │       ├── colon
-│           │   │       ├── <type>
-│           │   │       │   └── ident(integer)
-│           │   │       └── semicolon
-│           │   └── <compound-statement>
-│           │       ├── beginsy
-│           │       ├── <statement-list>
-│           │       │   ├── <assignment-statement>
-│           │       │   │   ├── <variable>
-│           │       │   │   │   └── ident(total)
-│           │       │   │   ├── becomes
-│           │       │   │   └── <expression>
-│           │       │   │       └── <simple-expression>
-│           │       │   │           ├── <term>
-│           │       │   │           │   └── <factor>
-│           │       │   │           │       └── ident(a)
-│           │       │   │           ├── plus
-│           │       │   │           └── <term>
-│           │       │   │               └── <factor>
-│           │       │   │                   └── ident(b)
-│           │       │   ├── semicolon
-│           │       │   └── <procedure/function-call>
-│           │       │       ├── ident(writeln)
-│           │       │       ├── lparent
-│           │       │       ├── <parameter-list>
-│           │       │       │   └── <expression>
-│           │       │       │       └── <simple-expression>
-│           │       │       │           └── <term>
-│           │       │       │               └── <factor>
-│           │       │       │                   └── ident(total)
-│           │       │       ├── rparent
-│           │       │       └── semicolon
-│           │       └── endsy
-│           └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   └── ident(i)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       ├── semicolon
+│       ├── <identifier-list>
+│       │   └── ident(sum)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
 │   │   ├── <assignment-statement>
 │   │   │   ├── <variable>
-│   │   │   │   └── ident(x)
+│   │   │   │   └── ident(sum)
 │   │   │   ├── becomes
 │   │   │   └── <expression>
 │   │   │       └── <simple-expression>
 │   │   │           └── <term>
 │   │   │               └── <factor>
-│   │   │                   └── intcon(5)
+│   │   │                   └── intcon(0)
 │   │   ├── semicolon
-│   │   ├── <assignment-statement>
-│   │   │   ├── <variable>
-│   │   │   │   └── ident(y)
-│   │   │   ├── becomes
-│   │   │   └── <expression>
-│   │   │       └── <simple-expression>
-│   │   │           └── <term>
-│   │   │               └── <factor>
-│   │   │                   └── intcon(10)
-│   │   ├── semicolon
-│   │   └── <procedure/function-call>
-│   │       ├── ident(hitungDanCetak)
-│   │       ├── lparent
-│   │       ├── <parameter-list>
-│   │       │   ├── <expression>
-│   │       │   │   └── <simple-expression>
-│   │       │   │       └── <term>
-│   │       │   │           └── <factor>
-│   │       │   │               └── ident(x)
-│   │       │   ├── comma
-│   │       │   └── <expression>
-│   │       │       └── <simple-expression>
-│   │       │           └── <term>
-│   │       │               └── <factor>
-│   │       │                   └── ident(y)
-│   │       ├── rparent
-│   │       └── semicolon
-│   └── endsy
+│   │   └── <for-statement>
+│   │       ├── forsy
+│   │       ├── ident(i)
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── intcon(1)
+│   │       ├── tosy
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── intcon(5)
+│   │       ├── dosy
+│   │       └── <compound-statement>
+│   │           ├── ERROR(unexpected:ident (sum), expected:beginsy)
+│   │           ├── <statement-list>
+│   │           │   ├── <assignment-statement>
+│   │           │   │   ├── <variable>
+│   │           │   │   │   └── ident(sum)
+│   │           │   │   ├── becomes
+│   │           │   │   └── <expression>
+│   │           │   │       └── <simple-expression>
+│   │           │   │           ├── <term>
+│   │           │   │           │   └── <factor>
+│   │           │   │           │       └── ident(sum)
+│   │           │   │           ├── plus
+│   │           │   │           └── <term>
+│   │           │   │               └── <factor>
+│   │           │   │                   └── ident(i)
+│   │           │   ├── semicolon
+│   │           │   └── <if-statement>
+│   │           │       ├── ifsy
+│   │           │       ├── <expression>
+│   │           │       │   ├── <simple-expression>
+│   │           │       │   │   └── <term>
+│   │           │       │   │       └── <factor>
+│   │           │       │   │           └── ident(sum)
+│   │           │       │   ├── eql
+│   │           │       │   └── <simple-expression>
+│   │           │       │       └── <term>
+│   │           │       │           └── <factor>
+│   │           │       │               └── intcon(15)
+│   │           │       ├── thensy
+│   │           │       ├── <procedure/function-call>
+│   │           │       │   ├── ident(writeln)
+│   │           │       │   ├── lparent
+│   │           │       │   ├── <parameter-list>
+│   │           │       │   │   └── <expression>
+│   │           │       │   │       └── <simple-expression>
+│   │           │       │   │           └── <term>
+│   │           │       │   │               └── <factor>
+│   │           │       │   │                   └── ident(sum)
+│   │           │       │   └── rparent
+│   │           │       ├── elsesy
+│   │           │       ├── <procedure/function-call>
+│   │           │       │   ├── ident(writeln)
+│   │           │       │   ├── lparent
+│   │           │       │   ├── <parameter-list>
+│   │           │       │   │   └── <expression>
+│   │           │       │   │       └── <simple-expression>
+│   │           │       │   │           └── <term>
+│   │           │       │   │               └── <factor>
+│   │           │       │   │                   └── intcon(0)
+│   │           │       │   └── rparent
+│   │           │       └── semicolon
+│   │           └── endsy
+│   └── ERROR(unexpected:period, expected:endsy)
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'testsub')
+ProgramNode(name: 'testflow')
 ├── Declarations
-│   ├── VarDecl(name: 'x', type: 'integer')
-│   ├── VarDecl(name: 'y', type: 'integer')
-│   ├── VarDecl(name: 'res', type: 'integer')
-│   └── ProcedureDecl(name: 'hitungDanCetak')
-│       ├── Params
-│       │   ├── Param(name: 'a', type: 'integer')
-│       │   └── Param(name: 'b', type: 'integer')
-│       └── Body
-│           ├── Assign(target: Var('total'),
-│           │          value: BinOp(op: 'plus',
-│           │                left: Var('a'),
-│           │                right: Var('b')))
-│           └── ProcedureCall(name: 'writeln',
-│                             args: [Var('total')])
+│   ├── VarDecl(name: 'i', type: 'integer')
+│   └── VarDecl(name: 'sum', type: 'integer')
 └── Block
-    ├── Assign(target: Var('x'),
-    │          value: Num(5))
-    ├── Assign(target: Var('y'),
-    │          value: Num(10))
-    └── ProcedureCall(name: 'hitungDanCetak',
-                      args: [Var('x'), Var('y')])
+    ├── Assign(target: Var('sum'),
+    │          value: Num(0))
+    └── For(dir: 'to',
+            end: Num(5))
+        ├── Assign(target: Var('i'),
+        │          value: Num(1))
+        └── Body
+            ├── Assign(target: Var('sum'),
+            │          value: BinOp(op: 'plus',
+            │                left: Var('sum'),
+            │                right: Var('i')))
+            └── If(cond: BinOp(op: 'eql',
+                      left: Var('sum'),
+                      right: Num(15)))
+                ├── TrueBranch
+                │   └── ProcedureCall(name: 'writeln',
+                │                     args: [Var('sum')])
+                └── FalseBranch
+                    └── ProcedureCall(name: 'writeln',
+                                      args: [Num(0)])
 
 === DECORATED AST ===
-ProgramNode(name: 'testsub') -> tab_index:37, lev:0
+ProgramNode(name: 'testflow') -> tab_index:38, lev:0
 ├── Declarations
-│   ├── VarDecls
-│   │   ├── VarDecl(x) -> tab_index:38, type:integer, ref:0, lev:0
-│   │   ├── VarDecl(y) -> tab_index:39, type:integer, ref:0, lev:0
-│   │   └── VarDecl(res) -> tab_index:40, type:integer, ref:0, lev:0
-│   └── ProcedureDecl(hitungDanCetak) -> tab_index:41, block_index:1, lev:0, type:void
-│       ├── Parameters
-│       │   ├── Param(a) -> tab_index:42, type:integer, ref:0, lev:1
-│       │   └── Param(b) -> tab_index:43, type:integer, ref:0, lev:1
-│       └── Block -> block_index:1, lev:1
-│           ├── Declarations
-│           │   └── VarDecls
-│           │       └── VarDecl(total) -> tab_index:44, type:integer, ref:0, lev:1
-│           └── Compound
-│               └── Statements
-│                   ├── Assign -> type:void
-│                   │   ├── Target
-│                   │   │   └── Var(total) -> tab_index:44, type:integer, lev:1
-│                   │   └── Value
-│                   │       └── BinOp(plus) -> type:integer
-│                   │           ├── Var(a) -> tab_index:42, type:integer, lev:1
-│                   │           └── Var(b) -> tab_index:43, type:integer, lev:1
-│                   └── Call(writeln) -> tab_index:36, lev:1
-│                       └── Args
-│                           └── Var(total) -> tab_index:44, type:integer, lev:1
-└── Compound -> block_index:2, lev:1
+│   └── VarDecls
+│       ├── VarDecl(i) -> tab_index:39, type:integer, ref:0, lev:0
+│       └── VarDecl(sum) -> tab_index:40, type:integer, ref:0, lev:0
+└── Compound -> block_index:1, lev:1
     └── Statements
         ├── Assign -> type:void
         │   ├── Target
-        │   │   └── Var(x) -> tab_index:38, type:integer, lev:0
+        │   │   └── Var(sum) -> tab_index:40, type:integer, lev:0
         │   └── Value
-        │       └── Int(5) -> type:integer
-        ├── Assign -> type:void
-        │   ├── Target
-        │   │   └── Var(y) -> tab_index:39, type:integer, lev:0
-        │   └── Value
-        │       └── Int(10) -> type:integer
-        └── Call(hitungDanCetak) -> tab_index:41, lev:1
-            └── Args
-                ├── Var(x) -> tab_index:38, type:integer, lev:0
-                └── Var(y) -> tab_index:39, type:integer, lev:0
+        │       └── Int(0) -> type:integer
+        └── For -> direction:tosy
+            ├── Var(i) -> tab_index:39, type:integer, lev:0, warning:possibly_uninitialized
+            ├── Int(1) -> type:integer
+            ├── Int(5) -> type:integer
+            └── Compound
+                └── Statements
+                    ├── Assign -> type:void
+                    │   ├── Target
+                    │   │   └── Var(sum) -> tab_index:40, type:integer, lev:0
+                    │   └── Value
+                    │       └── BinOp(plus) -> type:integer
+                    │           ├── Var(sum) -> tab_index:40, type:integer, lev:0
+                    │           └── Var(i) -> tab_index:39, type:integer, lev:0, warning:possibly_uninitialized
+                    └── If
+                        ├── BinOp(eql) -> type:boolean
+                        │   ├── Var(sum) -> tab_index:40, type:integer, lev:0
+                        │   └── Int(15) -> type:integer
+                        ├── Call(writeln) -> tab_index:37, lev:1
+                        │   └── Args
+                        │       └── Var(sum) -> tab_index:40, type:integer, lev:0
+                        └── Call(writeln) -> tab_index:37, lev:1
+                            └── Args
+                                └── Int(0) -> type:integer
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
@@ -290,22 +256,17 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  33  true                    constant        boolean       0    1    0    1    32   yes  
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
- 36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  testsub                 program         void          0    1    0    0    36   yes  
- 38  x                       variable        integer       0    1    0    0    37   yes  
- 39  y                       variable        integer       0    1    0    1    38   yes  
- 40  res                     variable        integer       0    1    0    2    39    no  
- 41  hitungdancetak          procedure       void          1    1    0    0    40   yes  integer,integer
- 42  a                       parameter       integer       0    1    1    0     0   yes  
- 43  b                       parameter       integer       0    1    1    1    42   yes  
- 44  total                   variable        integer       0    1    1    2    43   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  testflow                program         void          0    1    0    0    37   yes  
+ 39  i                       variable        integer       0    1    0    0    38    no  
+ 40  sum                     variable        integer       0    1    0    1    39   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    41     0     0     3
-  1    44    43     2     1
-  2     0     0     0     0
+  0    40     0     0     2
+  1     0     0     0     0
 
 === SYMBOL TABLE: atab ===
 idx  xtyp       etyp       eref  low  high  elsz  size
@@ -315,24 +276,39 @@ idx  xtyp       etyp       eref  low  high  elsz  size
 No semantic errors.
 
 === INTERMEDIATE CODE ===
-0 JMP 0 9
-1 INT 0 6
-2 LOD 0 3
-3 LOD 0 4
-4 OPR 0 2
-5 STO 0 5
-6 LOD 0 5
-7 OPR 0 14
-8 RET
-9 INT 0 6
-10 LIT 0 5
-11 STO 0 3
-12 LIT 0 10
+0 JMP 0 1
+1 INT 0 5
+2 LIT 0 0
+3 STO 0 4
+4 LIT 0 1
+5 STO 0 3
+6 LOD 0 3
+7 LIT 0 5
+8 OPR 0 12
+9 JPC 0 28
+10 LOD 0 4
+11 LOD 0 3
+12 OPR 0 2
 13 STO 0 4
-14 LOD 0 3
-15 LOD 0 4
-16 CAL 0 1
-17 RET
+14 LOD 0 4
+15 LIT 0 15
+16 OPR 0 7
+17 JPC 0 21
+18 LOD 0 4
+19 OPR 0 14
+20 JMP 0 23
+21 LIT 0 0
+22 OPR 0 14
+23 LOD 0 3
+24 LIT 0 1
+25 OPR 0 2
+26 STO 0 3
+27 JMP 0 6
+28 RET
 
 INTERPRETER OUTPUT
+0
+0
+0
+0
 15

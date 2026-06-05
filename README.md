@@ -1,41 +1,67 @@
 # MDC-Tubes-IF2224-2026
 
-> Tugas Besar IF2224 Teori Bahasa Formal dan Automata
+> Tugas Besar IF2224 Teori Bahasa Formal dan Otomata  
+> Milestone 4 - Intermediate Code Generator & Interpreter
 
-<p align="center"> <img src="doc/preview.png" width="60%"/></p>
+<p align="center">
+  <img src="doc/preview.png" width="60%"/>
+</p>
 
 ## Identitas Kelompok
 
-- Nathan Adhika Santosa - 13524041
-- Muhammad Haris Putra Sulastianto - 13524053
-- Ariel Cornelius Sitorus - 13524085
-- Vara Azzara Ramli Pulukadang - 13524091
+| NIM      | Nama                             |
+| -------- | -------------------------------- |
+| 13524041 | Nathan Adhika Santosa            |
+| 13524053 | Muhammad Haris Putra Sulastianto |
+| 13524085 | Ariel Cornelius Sitorus          |
+| 13524091 | Vara Azzara Ramli Pulukadang     |
 
 ---
 
 ## Deskripsi Program
 
-Program ini merupakan implementasi lexer berbasis DFA untuk bahasa pemrograman Arion. Lexer membaca file kode sumber, melakukan pemindaian karakter demi karakter, lalu menghasilkan daftar token sesuai spesifikasi bahasa Arion.
+Program ini merupakan implementasi akhir compiler/interpreter untuk bahasa pemrograman **Arion**.
 
-Token yang dikenali meliputi literal (integer, real, karakter, string), operator aritmatika dan relasional, keyword, identifier, delimiter, serta komentar. Secara keseluruhan, terdapat 52 jenis token. Komentar tetap dikenali, tetapi tidak ditampilkan pada keluaran.
+Pada milestone terakhir ini, program sudah menjalankan pipeline lengkap:
 
-Alur kerja program:
+```text
+Source Code
+-> Lexer
+-> Parser
+-> AST Builder
+-> Semantic Analyzer
+-> Intermediate Code Generator
+-> Interpreter
+-> Output Program
+```
 
-1. Membaca file masukan dari argumen command line.
-2. Menjalankan proses analisis leksikal menggunakan kelas `Lexer`.
-3. Menampilkan token ke terminal.
-4. Jika argumen file keluaran diberikan, hasil juga ditulis ke file.
+Program membaca source code Arion, melakukan analisis leksikal, sintaksis, dan semantik, lalu menghasilkan **Intermediate Code** dan mengeksekusinya menggunakan interpreter berbasis **stack machine**.
+
+Fitur utama yang sudah didukung:
+
+- tokenisasi source code Arion;
+- parsing dan pembentukan AST;
+- semantic analysis dan Decorated AST;
+- symbol table dan lexical scope;
+- intermediate code generation;
+- eksekusi instruksi stack machine;
+- assignment dan ekspresi aritmatika;
+- `if`, `while`, `repeat`, `for`, dan `case`;
+- procedure dan function;
+- recursive function;
+- array dan record;
+- `write`, `writeln`, dan `readln`;
+- runtime protection untuk out-of-bounds array access, division by zero, numerical overflow, stack overflow, dan invalid memory access.
 
 ---
 
 ## Requirements
 
-- Compiler C++17 (contoh: GCC, Clang, atau MinGW-w64)
+- C++17
 - GNU Make
+- GCC / Clang / MinGW-w64
 
-### Verifikasi Instalasi
-
-Gunakan perintah berikut untuk memastikan dependency utama telah tersedia:
+Cek instalasi:
 
 ```bash
 g++ --version
@@ -48,7 +74,7 @@ make --version
 
 ### Quick Start
 
-Kompilasi program:
+Kompilasi program dari root repository:
 
 ```bash
 make
@@ -58,10 +84,6 @@ Jalankan pengujian bawaan:
 
 ```bash
 make run
-
-# akan membaca file input dan menulis output pada
-# Input: `milestone-1/input-1.txt`
-# Output: `milestone-1/output-1.txt`
 ```
 
 Bersihkan hasil kompilasi:
@@ -72,19 +94,13 @@ make clean
 
 ### Menjalankan Program Manual
 
-Pindah ke folder tempat hasil kompilasi (`bin/`):
+Format umum dijalankan dari root repository:
 
 ```bash
-cd bin
-```
-
-Format umum (relatif terhadap folder `test/`):
-
-```bash
-./lexer <input_file>.txt <output_file>.txt
+./bin/lexer <input_file>.txt <output_file>.txt
 
 # Contoh:
-./lexer milestone-1/input-1.txt milestone-1/output-1.txt
+./bin/lexer test/milestone-4/check/full_case.txt test/milestone-4/output/full_case_out.txt
 ```
 
 `<output_file>` bersifat opsional.
@@ -97,25 +113,17 @@ Kompilasi program:
 make
 ```
 
-Pindah ke folder tempat hasil kompilasi (`bin/`):
+Jalankan program secara manual dari root repository:
 
 ```bash
-cd bin
+./bin/lexer.exe test/milestone-4/check/full_case.txt test/milestone-4/output/full_case_out.txt
 ```
 
-Jalankan lexer secara manual:
-
-```bash
-./lexer.exe milestone-1/input-1.txt [milestone-1/output-1.txt]
-```
-
-Untuk PowerShell, disarankan menggunakan format path Windows:
+Untuk PowerShell, gunakan:
 
 ```powershell
-.\lexer.exe milestone-1\input-1.txt milestone-1\output-1.txt
+.\bin\lexer.exe test\milestone-4\check\full_case.txt test\milestone-4\output\full_case_out.txt
 ```
-
-Jalankan pengujian bawaan:
 
 ### Linux
 
@@ -125,25 +133,65 @@ Kompilasi program:
 make
 ```
 
-Pindah ke folder tempat hasil kompilasi (`bin/`):
+Jalankan program secara manual dari root repository:
 
 ```bash
-cd bin
+./bin/lexer test/milestone-4/check/full_case.txt test/milestone-4/output/full_case_out.txt
 ```
 
-Jalankan lexer secara manual:
+---
+
+## Contoh Pengujian Milestone 4
+
+Dijalankan dari root repository:
 
 ```bash
-./lexer milestone-1/input-1.txt [milestone-1/output-1.txt]
+make
+
+./bin/lexer test/milestone-4/check/full_array_oob.txt test/milestone-4/output/full_array_oob_out.txt
+./bin/lexer test/milestone-4/check/full_case_nomatch.txt test/milestone-4/output/full_case_nomatch_out.txt
+./bin/lexer test/milestone-4/check/full_for.txt test/milestone-4/output/full_for_out.txt
+./bin/lexer test/milestone-4/check/full_downto.txt test/milestone-4/output/full_downto_out.txt
+./bin/lexer test/milestone-4/check/full_case.txt test/milestone-4/output/full_case_out.txt
+./bin/lexer test/milestone-4/check/full_array.txt test/milestone-4/output/full_array_out.txt
+./bin/lexer test/milestone-4/check/full_record.txt test/milestone-4/output/full_record_out.txt
+./bin/lexer test/milestone-4/check/full_readln.txt test/milestone-4/output/full_readln_out.txt
+./bin/lexer test/milestone-4/check/full_real.txt test/milestone-4/output/full_real_out.txt
+./bin/lexer test/milestone-4/check/full_overflow.txt test/milestone-4/output/full_overflow_out.txt
+./bin/lexer test/milestone-4/check/full_stack_overflow.txt test/milestone-4/output/full_stack_overflow_out.txt
+```
+
+---
+
+## Struktur Direktori
+
+```text
+.
+├── bin/                    # hasil kompilasi
+├── doc/                    # gambar dan dokumen pendukung
+├── src/                    # source code program
+│   ├── lexer.cpp / lexer.hpp
+│   ├── parser.cpp / parser.hpp
+│   ├── ast.cpp / ast.hpp
+│   ├── semantic.cpp / semantic.hpp
+│   ├── codegen.cpp / codegen.hpp
+│   ├── interpreter.cpp / interpreter.hpp
+│   └── main.cpp
+├── test/                   # testcase
+│   └── milestone-4/
+│       ├── check/
+│       └── output/
+├── Makefile
+└── README.md
 ```
 
 ---
 
 ## Pembagian Tugas
 
-| NIM      | Nama                             | Tugas                         |
-| -------- | -------------------------------- | ----------------------------- |
-| 13524041 | Nathan Adhika Santosa            | Laporan, Source Code, Diagram |
-| 13524053 | Muhammad Haris Putra Sulastianto | Laporan, Source Code, Diagram |
-| 13524085 | Ariel Cornelius Sitorus          | Source Code                   |
-| 13524091 | Vara Azzara Ramli Pulukadang     | Laporan                       |
+| Nama                             | Tugas                                                                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------- |
+| Nathan Adhika Santosa            | Integrasi parser, AST, semantic analyzer, code generator, dan testcase syntax-semantic |
+| Muhammad Haris Putra Sulastianto | Implementasi dan perapihan Intermediate Code Generator, testing, dan laporan           |
+| Ariel Cornelius Sitorus          | Implementasi interpreter, stack machine, activation record, dan operasi OPR            |
+| Vara Azzara Ramli Pulukadang     | Runtime protection, validasi array/record, dokumentasi, dan verifikasi testcase        |

@@ -1,0 +1,143 @@
+=== TOKENS ===
+programsy
+ident (StackRun)
+semicolon
+proceduresy
+ident (p)
+semicolon
+beginsy
+ident (p)
+semicolon
+endsy
+semicolon
+beginsy
+ident (p)
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(StackRun)
+│   └── semicolon
+├── <declaration-part>
+│   └── <subprogram-declaration>
+│       └── <procedure-declaration>
+│           ├── proceduresy
+│           ├── ident(p)
+│           ├── semicolon
+│           ├── <block>
+│           │   ├── <declaration-part>
+│           │   └── <compound-statement>
+│           │       ├── beginsy
+│           │       ├── <statement-list>
+│           │       │   └── <procedure/function-call>
+│           │       │       ├── ident(p)
+│           │       │       └── semicolon
+│           │       └── endsy
+│           └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   └── <procedure/function-call>
+│   │       ├── ident(p)
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'StackRun')
+├── Declarations
+│   └── ProcedureDecl(name: 'p')
+│       └── Body
+│           └── ProcedureCall(name: 'p',
+│                             args: [])
+└── Block
+    └── ProcedureCall(name: 'p',
+                      args: [])
+
+=== DECORATED AST ===
+ProgramNode(name: 'StackRun') -> tab_index:38, lev:0
+├── Declarations
+│   └── ProcedureDecl(p) -> tab_index:39, block_index:1, lev:0, type:void
+│       └── Block -> block_index:1, lev:1
+│           ├── Declarations
+│           └── Compound
+│               └── Statements
+│                   └── Call(p) -> tab_index:39, lev:1
+└── Compound -> block_index:2, lev:1
+    └── Statements
+        └── Call(p) -> tab_index:39, lev:1
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
+----------------------------------------------------------------------------
+  0  <none>                  sentinel        none          0    1    0    0     0   yes  
+  1  and                     reserved        unknown       0    1    0    0     0   yes  
+  2  array                   reserved        unknown       0    1    0    0     1   yes  
+  3  begin                   reserved        unknown       0    1    0    0     2   yes  
+  4  case                    reserved        unknown       0    1    0    0     3   yes  
+  5  const                   reserved        unknown       0    1    0    0     4   yes  
+  6  div                     reserved        unknown       0    1    0    0     5   yes  
+  7  downto                  reserved        unknown       0    1    0    0     6   yes  
+  8  do                      reserved        unknown       0    1    0    0     7   yes  
+  9  else                    reserved        unknown       0    1    0    0     8   yes  
+ 10  end                     reserved        unknown       0    1    0    0     9   yes  
+ 11  for                     reserved        unknown       0    1    0    0    10   yes  
+ 12  function                reserved        unknown       0    1    0    0    11   yes  
+ 13  if                      reserved        unknown       0    1    0    0    12   yes  
+ 14  mod                     reserved        unknown       0    1    0    0    13   yes  
+ 15  not                     reserved        unknown       0    1    0    0    14   yes  
+ 16  of                      reserved        unknown       0    1    0    0    15   yes  
+ 17  or                      reserved        unknown       0    1    0    0    16   yes  
+ 18  procedure               reserved        unknown       0    1    0    0    17   yes  
+ 19  program                 reserved        unknown       0    1    0    0    18   yes  
+ 20  record                  reserved        unknown       0    1    0    0    19   yes  
+ 21  repeat                  reserved        unknown       0    1    0    0    20   yes  
+ 22  then                    reserved        unknown       0    1    0    0    21   yes  
+ 23  to                      reserved        unknown       0    1    0    0    22   yes  
+ 24  type                    reserved        unknown       0    1    0    0    23   yes  
+ 25  until                   reserved        unknown       0    1    0    0    24   yes  
+ 26  var                     reserved        unknown       0    1    0    0    25   yes  
+ 27  while                   reserved        unknown       0    1    0    0    26   yes  
+ 28  real                    type            real          0    1    0    0    27   yes  
+ 29  integer                 type            integer       0    1    0    0    28   yes  
+ 30  char                    type            char          0    1    0    0    29   yes  
+ 31  boolean                 type            boolean       0    1    0    0    30   yes  
+ 32  string                  type            string        0    1    0    0    31   yes  
+ 33  true                    constant        boolean       0    1    0    1    32   yes  
+ 34  false                   constant        boolean       0    1    0    0    33   yes  
+ 35  readln                  procedure       void          0    1    0    0    34   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  stackrun                program         void          0    1    0    0    37   yes  
+ 39  p                       procedure       void          1    1    0    0    38   yes  
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    39     0     0     0
+  1     0     0     0     0
+  2     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.
+
+=== INTERMEDIATE CODE ===
+0 JMP 0 4
+1 INT 0 3
+2 CAL 1 1
+3 RET
+4 INT 0 3
+5 CAL 0 1
+6 RET
+
+INTERPRETER OUTPUT
+
+[RUNTIME ERROR] Runtime Error: Stack Overflow

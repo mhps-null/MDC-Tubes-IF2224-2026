@@ -1,16 +1,14 @@
 === TOKENS ===
 programsy
-ident (testrec)
+ident (testfunc)
 semicolon
 varsy
 ident (n)
-comma
-ident (hasil)
 colon
 ident (integer)
 semicolon
 functionsy
-ident (faktorial)
+ident (fact)
 lparent
 ident (x)
 colon
@@ -22,18 +20,18 @@ semicolon
 beginsy
 ifsy
 ident (x)
-leq
-intcon (1)
+eql
+intcon (0)
 thensy
-ident (faktorial)
+ident (fact)
 becomes
 intcon (1)
 elsesy
-ident (faktorial)
+ident (fact)
 becomes
 ident (x)
 times
-ident (faktorial)
+ident (fact)
 lparent
 ident (x)
 minus
@@ -45,18 +43,14 @@ semicolon
 beginsy
 ident (n)
 becomes
-intcon (4)
-semicolon
-ident (hasil)
-becomes
-ident (faktorial)
+ident (fact)
 lparent
-ident (n)
+intcon (4)
 rparent
 semicolon
 ident (writeln)
 lparent
-ident (hasil)
+ident (n)
 rparent
 semicolon
 endsy
@@ -66,15 +60,13 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(testrec)
+│   ├── ident(testfunc)
 │   └── semicolon
 ├── <declaration-part>
 │   ├── <var-declaration>
 │   │   ├── varsy
 │   │   ├── <identifier-list>
-│   │   │   ├── ident(n)
-│   │   │   ├── comma
-│   │   │   └── ident(hasil)
+│   │   │   └── ident(n)
 │   │   ├── colon
 │   │   ├── <type>
 │   │   │   └── ident(integer)
@@ -82,7 +74,7 @@ period
 │   └── <subprogram-declaration>
 │       └── <function-declaration>
 │           ├── functionsy
-│           ├── ident(faktorial)
+│           ├── ident(fact)
 │           ├── <formal-parameter-list>
 │           │   ├── lparent
 │           │   ├── <parameter-group>
@@ -106,15 +98,15 @@ period
 │           │       │       │   │   └── <term>
 │           │       │       │   │       └── <factor>
 │           │       │       │   │           └── ident(x)
-│           │       │       │   ├── leq
+│           │       │       │   ├── eql
 │           │       │       │   └── <simple-expression>
 │           │       │       │       └── <term>
 │           │       │       │           └── <factor>
-│           │       │       │               └── intcon(1)
+│           │       │       │               └── intcon(0)
 │           │       │       ├── thensy
 │           │       │       ├── <assignment-statement>
 │           │       │       │   ├── <variable>
-│           │       │       │   │   └── ident(faktorial)
+│           │       │       │   │   └── ident(fact)
 │           │       │       │   ├── becomes
 │           │       │       │   └── <expression>
 │           │       │       │       └── <simple-expression>
@@ -124,7 +116,7 @@ period
 │           │       │       ├── elsesy
 │           │       │       ├── <assignment-statement>
 │           │       │       │   ├── <variable>
-│           │       │       │   │   └── ident(faktorial)
+│           │       │       │   │   └── ident(fact)
 │           │       │       │   ├── becomes
 │           │       │       │   └── <expression>
 │           │       │       │       └── <simple-expression>
@@ -134,7 +126,7 @@ period
 │           │       │       │               ├── times
 │           │       │       │               └── <factor>
 │           │       │       │                   └── <procedure/function-call>
-│           │       │       │                       ├── ident(faktorial)
+│           │       │       │                       ├── ident(fact)
 │           │       │       │                       ├── lparent
 │           │       │       │                       ├── <parameter-list>
 │           │       │       │                       │   └── <expression>
@@ -161,25 +153,15 @@ period
 │   │   │       └── <simple-expression>
 │   │   │           └── <term>
 │   │   │               └── <factor>
-│   │   │                   └── intcon(4)
-│   │   ├── semicolon
-│   │   ├── <assignment-statement>
-│   │   │   ├── <variable>
-│   │   │   │   └── ident(hasil)
-│   │   │   ├── becomes
-│   │   │   └── <expression>
-│   │   │       └── <simple-expression>
-│   │   │           └── <term>
-│   │   │               └── <factor>
 │   │   │                   └── <procedure/function-call>
-│   │   │                       ├── ident(faktorial)
+│   │   │                       ├── ident(fact)
 │   │   │                       ├── lparent
 │   │   │                       ├── <parameter-list>
 │   │   │                       │   └── <expression>
 │   │   │                       │       └── <simple-expression>
 │   │   │                       │           └── <term>
 │   │   │                       │               └── <factor>
-│   │   │                       │                   └── ident(n)
+│   │   │                       │                   └── intcon(4)
 │   │   │                       └── rparent
 │   │   ├── semicolon
 │   │   └── <procedure/function-call>
@@ -190,51 +172,47 @@ period
 │   │       │       └── <simple-expression>
 │   │       │           └── <term>
 │   │       │               └── <factor>
-│   │       │                   └── ident(hasil)
+│   │       │                   └── ident(n)
 │   │       ├── rparent
 │   │       └── semicolon
 │   └── endsy
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'testrec')
+ProgramNode(name: 'testfunc')
 ├── Declarations
 │   ├── VarDecl(name: 'n', type: 'integer')
-│   ├── VarDecl(name: 'hasil', type: 'integer')
-│   └── FunctionDecl(name: 'faktorial', returnType: 'integer')
+│   └── FunctionDecl(name: 'fact', returnType: 'integer')
 │       ├── Params
 │       │   └── Param(name: 'x', type: 'integer')
 │       └── Body
-│           └── If(cond: BinOp(op: 'leq',
+│           └── If(cond: BinOp(op: 'eql',
 │                     left: Var('x'),
-│                     right: Num(1)))
+│                     right: Num(0)))
 │               ├── TrueBranch
-│               │   └── Assign(target: Var('faktorial'),
+│               │   └── Assign(target: Var('fact'),
 │               │              value: Num(1))
 │               └── FalseBranch
-│                   └── Assign(target: Var('faktorial'),
+│                   └── Assign(target: Var('fact'),
 │                              value: BinOp(op: 'times',
 │                                    left: Var('x'),
-│                                    right: FunctionCall(name: 'faktorial',
+│                                    right: FunctionCall(name: 'fact',
 │                                                        args: [BinOp(op: 'minus',
 │                                                                     left: Var('x'),
 │                                                                     right: Num(1))])))
 └── Block
     ├── Assign(target: Var('n'),
-    │          value: Num(4))
-    ├── Assign(target: Var('hasil'),
-    │          value: FunctionCall(name: 'faktorial',
-    │                       args: [Var('n')]))
+    │          value: FunctionCall(name: 'fact',
+    │                       args: [Num(4)]))
     └── ProcedureCall(name: 'writeln',
-                      args: [Var('hasil')])
+                      args: [Var('n')])
 
 === DECORATED AST ===
-ProgramNode(name: 'testrec') -> tab_index:37, lev:0
+ProgramNode(name: 'testfunc') -> tab_index:38, lev:0
 ├── Declarations
 │   ├── VarDecls
-│   │   ├── VarDecl(n) -> tab_index:38, type:integer, ref:0, lev:0
-│   │   └── VarDecl(hasil) -> tab_index:39, type:integer, ref:0, lev:0
-│   └── FunctionDecl(faktorial) -> tab_index:40, block_index:1, lev:0, type:integer
+│   │   └── VarDecl(n) -> tab_index:39, type:integer, ref:0, lev:0
+│   └── FunctionDecl(fact) -> tab_index:40, block_index:1, lev:0, type:integer
 │       ├── Parameters
 │       │   └── Param(x) -> tab_index:41, type:integer, ref:0, lev:1
 │       └── Block -> block_index:1, lev:1
@@ -242,21 +220,21 @@ ProgramNode(name: 'testrec') -> tab_index:37, lev:0
 │           └── Compound
 │               └── Statements
 │                   └── If
-│                       ├── BinOp(leq) -> type:boolean
+│                       ├── BinOp(eql) -> type:boolean
 │                       │   ├── Var(x) -> tab_index:41, type:integer, lev:1
-│                       │   └── Int(1) -> type:integer
+│                       │   └── Int(0) -> type:integer
 │                       ├── Assign -> type:void
 │                       │   ├── Target
-│                       │   │   └── Var(faktorial) -> tab_index:42, type:integer, lev:1
+│                       │   │   └── Var(fact) -> tab_index:42, type:integer, lev:1
 │                       │   └── Value
 │                       │       └── Int(1) -> type:integer
 │                       └── Assign -> type:void
 │                           ├── Target
-│                           │   └── Var(faktorial) -> tab_index:42, type:integer, lev:1
+│                           │   └── Var(fact) -> tab_index:42, type:integer, lev:1
 │                           └── Value
 │                               └── BinOp(times) -> type:integer
 │                                   ├── Var(x) -> tab_index:41, type:integer, lev:1
-│                                   └── Call(faktorial) -> tab_index:40, lev:1
+│                                   └── Call(fact) -> tab_index:40, lev:1
 │                                       └── Args
 │                                           └── BinOp(minus) -> type:integer
 │                                               ├── Var(x) -> tab_index:41, type:integer, lev:1
@@ -265,19 +243,14 @@ ProgramNode(name: 'testrec') -> tab_index:37, lev:0
     └── Statements
         ├── Assign -> type:void
         │   ├── Target
-        │   │   └── Var(n) -> tab_index:38, type:integer, lev:0
+        │   │   └── Var(n) -> tab_index:39, type:integer, lev:0
         │   └── Value
-        │       └── Int(4) -> type:integer
-        ├── Assign -> type:void
-        │   ├── Target
-        │   │   └── Var(hasil) -> tab_index:39, type:integer, lev:0
-        │   └── Value
-        │       └── Call(faktorial) -> tab_index:40, lev:1
+        │       └── Call(fact) -> tab_index:40, lev:1
         │           └── Args
-        │               └── Var(n) -> tab_index:38, type:integer, lev:0
-        └── Call(writeln) -> tab_index:36, lev:1
+        │               └── Int(4) -> type:integer
+        └── Call(writeln) -> tab_index:37, lev:1
             └── Args
-                └── Var(hasil) -> tab_index:39, type:integer, lev:0
+                └── Var(n) -> tab_index:39, type:integer, lev:0
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
@@ -318,18 +291,18 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  33  true                    constant        boolean       0    1    0    1    32   yes  
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
- 36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  testrec                 program         void          0    1    0    0    36   yes  
- 38  n                       variable        integer       0    1    0    0    37   yes  
- 39  hasil                   variable        integer       0    1    0    1    38   yes  
- 40  faktorial               function        integer       1    1    0    0    39   yes  integer
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  testfunc                program         void          0    1    0    0    37   yes  
+ 39  n                       variable        integer       0    1    0    0    38   yes  
+ 40  fact                    function        integer       1    1    0    0    39   yes  integer
  41  x                       parameter       integer       0    1    1    0     0   yes  
- 42  faktorial               function-result integer       0    1    1    1    41   yes  
+ 42  fact                    function-result integer       0    1    1    1    41   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    40     0     0     2
+  0    40     0     0     1
   1    42    41     1     1
   2     0     0     0     0
 
@@ -344,8 +317,8 @@ No semantic errors.
 0 JMP 0 17
 1 INT 0 5
 2 LOD 0 3
-3 LIT 0 1
-4 OPR 0 12
+3 LIT 0 0
+4 OPR 0 7
 5 JPC 0 9
 6 LIT 0 1
 7 STO 0 4
@@ -358,15 +331,13 @@ No semantic errors.
 14 OPR 0 4
 15 STO 0 4
 16 RET
-17 INT 0 5
+17 INT 0 4
 18 LIT 0 4
-19 STO 0 3
-20 LOD 0 3
-21 CAL 0 1
-22 STO 0 4
-23 LOD 0 4
-24 OPR 0 14
-25 RET
+19 CAL 0 1
+20 STO 0 3
+21 LOD 0 3
+22 OPR 0 14
+23 RET
 
 INTERPRETER OUTPUT
 24

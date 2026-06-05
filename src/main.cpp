@@ -139,7 +139,9 @@ int main(int argc, char *argv[])
     printCodeGenResult(codeGenResult, std::cout);
 
     std::cout << "\n";
-    runInterpreter(codeGenResult, std::cout);
+    std::stringstream interpreterOutput;
+    runInterpreter(codeGenResult, interpreterOutput);
+    std::cout << interpreterOutput.str();
 
     // =========================
     // WRITE OUTPUT FILE
@@ -173,7 +175,7 @@ int main(int argc, char *argv[])
         printCodeGenResult(codeGenResult, outFile);
 
         outFile << "\n";
-        runInterpreter(codeGenResult, outFile);
+        outFile << interpreterOutput.str();
 
         outFile.close();
 

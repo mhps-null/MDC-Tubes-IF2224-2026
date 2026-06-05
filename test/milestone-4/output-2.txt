@@ -333,3 +333,6 @@ No semantic errors.
 15 LOD 0 4
 16 CAL 0 1
 17 RET
+
+INTERPRETER OUTPUT
+15

@@ -1,36 +1,30 @@
 === TOKENS ===
 programsy
-ident (testproc)
+ident (Hello)
 semicolon
 varsy
-ident (m)
+ident (a)
+comma
+ident (b)
 colon
 ident (integer)
 semicolon
-proceduresy
-ident (cetak)
-lparent
-ident (x)
-colon
-ident (integer)
-rparent
-semicolon
 beginsy
-ident (writeln)
-lparent
-ident (x)
-rparent
-semicolon
-endsy
-semicolon
-beginsy
-ident (m)
+ident (a)
 becomes
+intcon (5)
+semicolon
+ident (b)
+becomes
+ident (a)
+plus
 intcon (10)
 semicolon
-ident (cetak)
+ident (writeln)
 lparent
-ident (m)
+string ('Result = ')
+comma
+ident (b)
 rparent
 semicolon
 endsy
@@ -40,116 +34,105 @@ period
 <program>
 ├── <program-header>
 │   ├── programsy
-│   ├── ident(testproc)
+│   ├── ident(Hello)
 │   └── semicolon
 ├── <declaration-part>
-│   ├── <var-declaration>
-│   │   ├── varsy
-│   │   ├── <identifier-list>
-│   │   │   └── ident(m)
-│   │   ├── colon
-│   │   ├── <type>
-│   │   │   └── ident(integer)
-│   │   └── semicolon
-│   └── <subprogram-declaration>
-│       └── <procedure-declaration>
-│           ├── proceduresy
-│           ├── ident(cetak)
-│           ├── <formal-parameter-list>
-│           │   ├── lparent
-│           │   ├── <parameter-group>
-│           │   │   ├── <identifier-list>
-│           │   │   │   └── ident(x)
-│           │   │   ├── colon
-│           │   │   └── ident(integer)
-│           │   └── rparent
-│           ├── semicolon
-│           ├── <block>
-│           │   ├── <declaration-part>
-│           │   └── <compound-statement>
-│           │       ├── beginsy
-│           │       ├── <statement-list>
-│           │       │   └── <procedure/function-call>
-│           │       │       ├── ident(writeln)
-│           │       │       ├── lparent
-│           │       │       ├── <parameter-list>
-│           │       │       │   └── <expression>
-│           │       │       │       └── <simple-expression>
-│           │       │       │           └── <term>
-│           │       │       │               └── <factor>
-│           │       │       │                   └── ident(x)
-│           │       │       ├── rparent
-│           │       │       └── semicolon
-│           │       └── endsy
-│           └── semicolon
+│   └── <var-declaration>
+│       ├── varsy
+│       ├── <identifier-list>
+│       │   ├── ident(a)
+│       │   ├── comma
+│       │   └── ident(b)
+│       ├── colon
+│       ├── <type>
+│       │   └── ident(integer)
+│       └── semicolon
 ├── <compound-statement>
 │   ├── beginsy
 │   ├── <statement-list>
 │   │   ├── <assignment-statement>
 │   │   │   ├── <variable>
-│   │   │   │   └── ident(m)
+│   │   │   │   └── ident(a)
 │   │   │   ├── becomes
 │   │   │   └── <expression>
 │   │   │       └── <simple-expression>
 │   │   │           └── <term>
 │   │   │               └── <factor>
+│   │   │                   └── intcon(5)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   └── ident(b)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           ├── <term>
+│   │   │           │   └── <factor>
+│   │   │           │       └── ident(a)
+│   │   │           ├── plus
+│   │   │           └── <term>
+│   │   │               └── <factor>
 │   │   │                   └── intcon(10)
 │   │   ├── semicolon
 │   │   └── <procedure/function-call>
-│   │       ├── ident(cetak)
+│   │       ├── ident(writeln)
 │   │       ├── lparent
 │   │       ├── <parameter-list>
+│   │       │   ├── <expression>
+│   │       │   │   └── <simple-expression>
+│   │       │   │       └── <term>
+│   │       │   │           └── <factor>
+│   │       │   │               └── string('Result = ')
+│   │       │   ├── comma
 │   │       │   └── <expression>
 │   │       │       └── <simple-expression>
 │   │       │           └── <term>
 │   │       │               └── <factor>
-│   │       │                   └── ident(m)
+│   │       │                   └── ident(b)
 │   │       ├── rparent
 │   │       └── semicolon
 │   └── endsy
 └── period
 
 === ABSTRACT SYNTAX TREE (RAW) ===
-ProgramNode(name: 'testproc')
+ProgramNode(name: 'Hello')
 ├── Declarations
-│   ├── VarDecl(name: 'm', type: 'integer')
-│   └── ProcedureDecl(name: 'cetak')
-│       ├── Params
-│       │   └── Param(name: 'x', type: 'integer')
-│       └── Body
-│           └── ProcedureCall(name: 'writeln',
-│                             args: [Var('x')])
+│   ├── VarDecl(name: 'a', type: 'integer')
+│   └── VarDecl(name: 'b', type: 'integer')
 └── Block
-    ├── Assign(target: Var('m'),
-    │          value: Num(10))
-    └── ProcedureCall(name: 'cetak',
-                      args: [Var('m')])
+    ├── Assign(target: Var('a'),
+    │          value: Num(5))
+    ├── Assign(target: Var('b'),
+    │          value: BinOp(op: 'plus',
+    │                left: Var('a'),
+    │                right: Num(10)))
+    └── ProcedureCall(name: 'writeln',
+                      args: [String('Result = '), Var('b')])
 
 === DECORATED AST ===
-ProgramNode(name: 'testproc') -> tab_index:37, lev:0
+ProgramNode(name: 'Hello') -> tab_index:37, lev:0
 ├── Declarations
-│   ├── VarDecls
-│   │   └── VarDecl(m) -> tab_index:38, type:integer, ref:0, lev:0
-│   └── ProcedureDecl(cetak) -> tab_index:39, block_index:1, lev:0, type:void
-│       ├── Parameters
-│       │   └── Param(x) -> tab_index:40, type:integer, ref:0, lev:1
-│       └── Block -> block_index:1, lev:1
-│           ├── Declarations
-│           └── Compound
-│               └── Statements
-│                   └── Call(writeln) -> tab_index:36, lev:1
-│                       └── Args
-│                           └── Var(x) -> tab_index:40, type:integer, lev:1
-└── Compound -> block_index:2, lev:1
+│   └── VarDecls
+│       ├── VarDecl(a) -> tab_index:38, type:integer, ref:0, lev:0
+│       └── VarDecl(b) -> tab_index:39, type:integer, ref:0, lev:0
+└── Compound -> block_index:1, lev:1
     └── Statements
         ├── Assign -> type:void
         │   ├── Target
-        │   │   └── Var(m) -> tab_index:38, type:integer, lev:0
+        │   │   └── Var(a) -> tab_index:38, type:integer, lev:0
         │   └── Value
-        │       └── Int(10) -> type:integer
-        └── Call(cetak) -> tab_index:39, lev:1
+        │       └── Int(5) -> type:integer
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(b) -> tab_index:39, type:integer, lev:0
+        │   └── Value
+        │       └── BinOp(plus) -> type:integer
+        │           ├── Var(a) -> tab_index:38, type:integer, lev:0
+        │           └── Int(10) -> type:integer
+        └── Call(writeln) -> tab_index:36, lev:1
             └── Args
-                └── Var(m) -> tab_index:38, type:integer, lev:0
+                ├── String('Result = ') -> type:string, len:9
+                └── Var(b) -> tab_index:39, type:integer, lev:0
 
 === SYMBOL TABLE: tab ===
 idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
@@ -191,17 +174,15 @@ idx  identifier              obj             type        ref  nrm  lev  adr  lin
  34  false                   constant        boolean       0    1    0    0    33   yes  
  35  readln                  procedure       void          0    1    0    0    34   yes  
  36  writeln                 procedure       void          0    1    0    0    35   yes  
- 37  testproc                program         void          0    1    0    0    36   yes  
- 38  m                       variable        integer       0    1    0    0    37   yes  
- 39  cetak                   procedure       void          1    1    0    0    38   yes  integer
- 40  x                       parameter       integer       0    1    1    0     0   yes  
+ 37  hello                   program         void          0    1    0    0    36   yes  
+ 38  a                       variable        integer       0    1    0    0    37   yes  
+ 39  b                       variable        integer       0    1    0    1    38   yes  
 
 === SYMBOL TABLE: btab ===
 idx  last  lpar  psze  vsze
 ----------------------------
-  0    39     0     0     1
-  1    40    40     1     0
-  2     0     0     0     0
+  0    39     0     0     2
+  1     0     0     0     0
 
 === SYMBOL TABLE: atab ===
 idx  xtyp       etyp       eref  low  high  elsz  size
@@ -211,17 +192,19 @@ idx  xtyp       etyp       eref  low  high  elsz  size
 No semantic errors.
 
 === INTERMEDIATE CODE ===
-0 JMP 0 5
-1 INT 0 4
-2 LOD 0 3
-3 OPR 0 14
-4 RET
-5 INT 0 4
-6 LIT 0 10
-7 STO 0 3
-8 LOD 0 3
-9 CAL 0 1
-10 RET
+0 JMP 0 1
+1 INT 0 5
+2 LIT 0 5
+3 STO 0 3
+4 LOD 0 3
+5 LIT 0 10
+6 OPR 0 2
+7 STO 0 4
+8 LIT 0 0
+9 OPR 0 13
+10 LOD 0 4
+11 OPR 0 14
+12 RET
 
 INTERPRETER OUTPUT
-10
+015

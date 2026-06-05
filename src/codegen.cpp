@@ -146,6 +146,12 @@ private:
         instructions.push_back({mnemonic, level, operand});
     }
 
+    int emitAndGetIndex(const std::string &mnemonic, int level, int operand)
+    {
+        instructions.push_back({mnemonic, level, operand});
+        return static_cast<int>(instructions.size()) - 1;
+    }
+
     void emitRet()
     {
         instructions.push_back({"RET", 0, 0});
@@ -157,6 +163,37 @@ private:
         if (tabIndex <= 0 || tabIndex >= static_cast<int>(semantic.tab.size()))
             return FRAME_OVERHEAD;
         return semantic.tab[tabIndex].adr + FRAME_OVERHEAD;
+    }
+
+    int blockParamSize(int blockIdx) const
+    {
+        if (blockIdx < 0 || blockIdx >= static_cast<int>(semantic.btab.size()))
+            return 0;
+        return semantic.btab[blockIdx].psze;
+    }
+
+    int functionReturnOffset(int functionTabIdx) const
+    {
+        if (functionTabIdx <= 0 || functionTabIdx >= static_cast<int>(semantic.tab.size()))
+            return 0;
+
+        const TabEntry &fn = semantic.tab[functionTabIdx];
+        if (fn.obj != "function")
+            return 0;
+
+        const int blockIdx = fn.ref;
+        if (blockIdx < 0 || blockIdx >= static_cast<int>(semantic.btab.size()))
+            return 0;
+
+        int idx = semantic.btab[blockIdx].last;
+        while (idx > 0 && idx < static_cast<int>(semantic.tab.size()))
+        {
+            const TabEntry &entry = semantic.tab[idx];
+            if (entry.obj == "function-result" && entry.identifier == fn.identifier)
+                return entry.adr + FRAME_OVERHEAD;
+            idx = entry.link;
+        }
+        return 0;
     }
 
     void visitProgram(const SemanticNode &node)
@@ -431,13 +468,18 @@ private:
             return;
         }
         
+        int argCount = 0;
         for (const auto &child : node.children)
         {
             if (child && labelIs(child->label, "Args"))
             {
                 for (const auto &arg : child->children)
                 {
-                    if (arg) visitExpression(*arg);
+                    if (arg)
+                    {
+                        visitExpression(*arg);
+                        ++argCount;
+                    }
                 }
             }
         }
@@ -445,14 +487,24 @@ private:
         const TabEntry &entry = semantic.tab[tabIdx];
         
         // Pencarian nilai alamat pada funcAddresses
+        int calIdx = -1;
         if (funcAddresses.find(tabIdx) != funcAddresses.end())
         {
-            emit("CAL", currentLevel - entry.lev, funcAddresses[tabIdx]);
+            calIdx = emitAndGetIndex("CAL", currentLevel - entry.lev, funcAddresses[tabIdx]);
         }
         else
         {
             errors.push_back("ICG error: unresolved function address for tab index " + std::to_string(tabIdx));
-            emit("CAL", currentLevel - entry.lev, 0); // fallback dummy address
+            calIdx = emitAndGetIndex("CAL", currentLevel - entry.lev, 0); // fallback dummy address
+        }
+
+        if (calIdx >= 0)
+        {
+            // Metadata ini dipakai VM untuk memindahkan argumen ke frame callee
+            // dan untuk mengembalikan nilai function ke stack caller.
+            instructions[calIdx].argCount = argCount;
+            instructions[calIdx].returnsValue = (entry.obj == "function");
+            instructions[calIdx].returnOffset = functionReturnOffset(tabIdx);
         }
     }
 
@@ -566,11 +618,27 @@ private:
                 visitExpression(*node.children[0]); // left operand → stack
                 visitExpression(*node.children[1]); // right operand → stack
                 const std::string op = labelValue(lbl);
-                const int code = binOpToOpr(op);
-                if (code < 0)
-                    errors.push_back("ICG error: unknown binary operator: " + op);
+                if (op == "andsy")
+                {
+                    // Boolean direpresentasikan sebagai 0/1, sehingga AND dapat
+                    // dihitung dengan perkalian.
+                    emit("OPR", 0, opr::MUL);
+                }
+                else if (op == "orsy")
+                {
+                    // OR: (a + b) > 0
+                    emit("OPR", 0, opr::ADD);
+                    emit("LIT", 0, 0);
+                    emit("OPR", 0, opr::GTR);
+                }
                 else
-                    emit("OPR", 0, code);
+                {
+                    const int code = binOpToOpr(op);
+                    if (code < 0)
+                        errors.push_back("ICG error: unknown binary operator: " + op);
+                    else
+                        emit("OPR", 0, code);
+                }
             }
         }
 
@@ -579,8 +647,10 @@ private:
         {
             if (!node.children.empty())
                 visitExpression(*node.children[0]);
-            emit("OPR", 0, opr::NEG);
-            return; // NEG sudah menangani negasi; skip unaryNeg di bawah
+            // NOT x => x == 0
+            emit("LIT", 0, 0);
+            emit("OPR", 0, opr::EQL);
+            return;
         }
 
         // function call di dalam ekspresi

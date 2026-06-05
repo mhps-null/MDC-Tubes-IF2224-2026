@@ -138,6 +138,9 @@ int main(int argc, char *argv[])
     std::cout << "\n";
     printCodeGenResult(codeGenResult, std::cout);
 
+    std::cout << "\n";
+    runInterpreter(codeGenResult, std::cout);
+
     // =========================
     // WRITE OUTPUT FILE
     // =========================
@@ -169,7 +172,8 @@ int main(int argc, char *argv[])
         outFile << "\n";
         printCodeGenResult(codeGenResult, outFile);
 
-        runInterpreter(codeGenResult);
+        outFile << "\n";
+        runInterpreter(codeGenResult, outFile);
 
         outFile.close();
 

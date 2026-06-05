@@ -18,6 +18,13 @@ struct Instruction
     std::string mnemonic;
     int level   = 0;
     int operand = 0;
+
+    // Metadata internal untuk VM. Metadata ini tidak dicetak sebagai bagian
+    // dari intermediate code agar format output tetap mengikuti spesifikasi:
+    // <idx> <mnemonic> <level> <operand>.
+    int argCount = 0;
+    bool returnsValue = false;
+    int returnOffset = 0;
 };
 
 // Result of the code generation phase.

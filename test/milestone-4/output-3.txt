@@ -367,3 +367,6 @@ No semantic errors.
 23 LOD 0 4
 24 OPR 0 14
 25 RET
+
+INTERPRETER OUTPUT
+24

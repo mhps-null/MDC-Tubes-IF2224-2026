@@ -1,0 +1,7 @@
+program RealRun;
+var
+  x: real;
+begin
+  x := 2.5 + 1.25;
+  writeln(x);
+end.

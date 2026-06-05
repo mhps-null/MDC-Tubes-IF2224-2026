@@ -1,0 +1,9 @@
+program ArrayRun;
+var
+  data : array [1..5] of integer;
+  i: integer;
+begin
+  i := 2;
+  data[i] := 10;
+  writeln(data[2]);
+end.

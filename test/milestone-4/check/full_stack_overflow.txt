@@ -1,0 +1,8 @@
+program StackRun;
+procedure p;
+begin
+  p;
+end;
+begin
+  p;
+end.

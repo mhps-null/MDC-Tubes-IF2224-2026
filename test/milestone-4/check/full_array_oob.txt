@@ -1,0 +1,8 @@
+program ArrayOobRun;
+var
+  data : array [1..5] of integer;
+  i: integer;
+begin
+  i := 6;
+  data[i] := 10;
+end.

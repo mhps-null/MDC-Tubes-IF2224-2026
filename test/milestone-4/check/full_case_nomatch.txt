@@ -1,0 +1,11 @@
+program CaseNoMatch;
+var
+  x: integer;
+begin
+  x := 9;
+  case x of
+    1: writeln(10);
+    2: writeln(20);
+  end;
+  writeln(99);
+end.

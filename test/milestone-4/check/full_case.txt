@@ -1,0 +1,11 @@
+program CaseTest;
+var
+  x: integer;
+begin
+  x := 2;
+  case x of
+    1: writeln(10);
+    2: writeln(20);
+    3: writeln(30);
+  end;
+end.

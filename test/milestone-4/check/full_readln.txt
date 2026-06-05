@@ -1,0 +1,7 @@
+program ReadRun;
+var
+  x: integer;
+begin
+  readln(x);
+  writeln(x + 2);
+end.

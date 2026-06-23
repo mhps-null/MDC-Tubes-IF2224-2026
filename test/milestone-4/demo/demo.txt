@@ -1,0 +1,60 @@
+program SampleProgram;
+
+const
+  PASSINGGRADE == 60.0;
+  MAXSTUDENTS == 3;
+
+type
+  Student == record
+    name: string;
+    score: real;
+  end;
+
+var
+  classroom: array[1..MAXSTUDENTS] of Student;
+  i: integer;
+  buffer: string;
+
+function IsPassing(score: real): boolean;
+begin
+  if score >= PASSINGGRADE then
+    IsPassing := true
+  else
+    IsPassing := false;
+end;
+
+procedure DisplayStudentDetails(s: Student);
+begin
+  { Test comment. }
+  writeln('Name: ', s.name, ' | Score: ', s.score:0:1, ' | Status: ');
+  
+  if IsPassing(s.score) then
+    buffer := 'PASSED'
+  else
+    buffer := 'FAILED';
+
+  { Test comment 2. }
+  writeln(buffer);
+end;
+
+begin
+  { Test comment 3. }   
+  writeln('--- Populating Student Records ---');
+  
+  classroom[1].name := 'Alice';
+  classroom[1].score := 85.5;
+
+  classroom[2].name := 'Bob';
+  classroom[2].score := 42.0;
+
+  classroom[3].name := 'Charlie';
+  classroom[3].score := 60.0;
+
+  { Test comment 4. } 
+  writeln('--- Displaying Student Results ---');
+
+  for i := 1 to MAXSTUDENTS do
+  begin
+    DisplayStudentDetails(classroom[i]);
+  end;
+end.

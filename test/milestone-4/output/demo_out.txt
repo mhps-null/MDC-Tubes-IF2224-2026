@@ -1,0 +1,1048 @@
+=== TOKENS ===
+programsy
+ident (SampleProgram)
+semicolon
+constsy
+ident (PASSINGGRADE)
+eql
+realcon (60.0)
+semicolon
+ident (MAXSTUDENTS)
+eql
+intcon (3)
+semicolon
+typesy
+ident (Student)
+eql
+recordsy
+ident (name)
+colon
+ident (string)
+semicolon
+ident (score)
+colon
+ident (real)
+semicolon
+endsy
+semicolon
+varsy
+ident (classroom)
+colon
+arraysy
+lbrack
+intcon (1)
+period
+period
+ident (MAXSTUDENTS)
+rbrack
+ofsy
+ident (Student)
+semicolon
+ident (i)
+colon
+ident (integer)
+semicolon
+ident (buffer)
+colon
+ident (string)
+semicolon
+functionsy
+ident (IsPassing)
+lparent
+ident (score)
+colon
+ident (real)
+rparent
+colon
+ident (boolean)
+semicolon
+beginsy
+ifsy
+ident (score)
+geq
+ident (PASSINGGRADE)
+thensy
+ident (IsPassing)
+becomes
+ident (true)
+elsesy
+ident (IsPassing)
+becomes
+ident (false)
+semicolon
+endsy
+semicolon
+proceduresy
+ident (DisplayStudentDetails)
+lparent
+ident (s)
+colon
+ident (Student)
+rparent
+semicolon
+beginsy
+comment ( Test comment. )
+ident (writeln)
+lparent
+string ('Name: ')
+comma
+ident (s)
+period
+ident (name)
+comma
+string (' | Score: ')
+comma
+ident (s)
+period
+ident (score)
+colon
+intcon (0)
+colon
+intcon (1)
+comma
+string (' | Status: ')
+rparent
+semicolon
+ifsy
+ident (IsPassing)
+lparent
+ident (s)
+period
+ident (score)
+rparent
+thensy
+ident (buffer)
+becomes
+string ('PASSED')
+elsesy
+ident (buffer)
+becomes
+string ('FAILED')
+semicolon
+comment ( Test comment 2. )
+ident (writeln)
+lparent
+ident (buffer)
+rparent
+semicolon
+endsy
+semicolon
+beginsy
+comment ( Test comment 3. )
+ident (writeln)
+lparent
+string ('--- Populating Student Records ---')
+rparent
+semicolon
+ident (classroom)
+lbrack
+intcon (1)
+rbrack
+period
+ident (name)
+becomes
+string ('Alice')
+semicolon
+ident (classroom)
+lbrack
+intcon (1)
+rbrack
+period
+ident (score)
+becomes
+realcon (85.5)
+semicolon
+ident (classroom)
+lbrack
+intcon (2)
+rbrack
+period
+ident (name)
+becomes
+string ('Bob')
+semicolon
+ident (classroom)
+lbrack
+intcon (2)
+rbrack
+period
+ident (score)
+becomes
+realcon (42.0)
+semicolon
+ident (classroom)
+lbrack
+intcon (3)
+rbrack
+period
+ident (name)
+becomes
+string ('Charlie')
+semicolon
+ident (classroom)
+lbrack
+intcon (3)
+rbrack
+period
+ident (score)
+becomes
+realcon (60.0)
+semicolon
+comment ( Test comment 4. )
+ident (writeln)
+lparent
+string ('--- Displaying Student Results ---')
+rparent
+semicolon
+forsy
+ident (i)
+becomes
+intcon (1)
+tosy
+ident (MAXSTUDENTS)
+dosy
+beginsy
+ident (DisplayStudentDetails)
+lparent
+ident (classroom)
+lbrack
+ident (i)
+rbrack
+rparent
+semicolon
+endsy
+semicolon
+endsy
+period
+
+=== PARSE TREE ===
+<program>
+├── <program-header>
+│   ├── programsy
+│   ├── ident(SampleProgram)
+│   └── semicolon
+├── <declaration-part>
+│   ├── <const-declaration>
+│   │   ├── constsy
+│   │   ├── ident(PASSINGGRADE)
+│   │   ├── eql
+│   │   ├── <constant>
+│   │   │   └── realcon(60.0)
+│   │   ├── semicolon
+│   │   ├── ident(MAXSTUDENTS)
+│   │   ├── eql
+│   │   ├── <constant>
+│   │   │   └── intcon(3)
+│   │   └── semicolon
+│   ├── <type-declaration>
+│   │   ├── typesy
+│   │   ├── ident(Student)
+│   │   ├── eql
+│   │   ├── <type>
+│   │   │   └── <record-type>
+│   │   │       ├── recordsy
+│   │   │       ├── <field-list>
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(name)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(string)
+│   │   │       │   ├── semicolon
+│   │   │       │   ├── <field-part>
+│   │   │       │   │   ├── <identifier-list>
+│   │   │       │   │   │   └── ident(score)
+│   │   │       │   │   ├── colon
+│   │   │       │   │   └── <type>
+│   │   │       │   │       └── ident(real)
+│   │   │       │   └── semicolon
+│   │   │       └── endsy
+│   │   └── semicolon
+│   ├── <var-declaration>
+│   │   ├── varsy
+│   │   ├── <identifier-list>
+│   │   │   └── ident(classroom)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── <array-type>
+│   │   │       ├── arraysy
+│   │   │       ├── lbrack
+│   │   │       ├── <range>
+│   │   │       │   ├── <expression>
+│   │   │       │   │   └── <simple-expression>
+│   │   │       │   │       └── <term>
+│   │   │       │   │           └── <factor>
+│   │   │       │   │               └── intcon(1)
+│   │   │       │   ├── period
+│   │   │       │   ├── period
+│   │   │       │   └── <expression>
+│   │   │       │       └── <simple-expression>
+│   │   │       │           └── <term>
+│   │   │       │               └── <factor>
+│   │   │       │                   └── ident(MAXSTUDENTS)
+│   │   │       ├── rbrack
+│   │   │       ├── ofsy
+│   │   │       └── <type>
+│   │   │           └── ident(Student)
+│   │   ├── semicolon
+│   │   ├── <identifier-list>
+│   │   │   └── ident(i)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── ident(integer)
+│   │   ├── semicolon
+│   │   ├── <identifier-list>
+│   │   │   └── ident(buffer)
+│   │   ├── colon
+│   │   ├── <type>
+│   │   │   └── ident(string)
+│   │   └── semicolon
+│   ├── <subprogram-declaration>
+│   │   └── <function-declaration>
+│   │       ├── functionsy
+│   │       ├── ident(IsPassing)
+│   │       ├── <formal-parameter-list>
+│   │       │   ├── lparent
+│   │       │   ├── <parameter-group>
+│   │       │   │   ├── <identifier-list>
+│   │       │   │   │   └── ident(score)
+│   │       │   │   ├── colon
+│   │       │   │   └── ident(real)
+│   │       │   └── rparent
+│   │       ├── colon
+│   │       ├── ident(boolean)
+│   │       ├── semicolon
+│   │       ├── <block>
+│   │       │   ├── <declaration-part>
+│   │       │   └── <compound-statement>
+│   │       │       ├── beginsy
+│   │       │       ├── <statement-list>
+│   │       │       │   └── <if-statement>
+│   │       │       │       ├── ifsy
+│   │       │       │       ├── <expression>
+│   │       │       │       │   ├── <simple-expression>
+│   │       │       │       │   │   └── <term>
+│   │       │       │       │   │       └── <factor>
+│   │       │       │       │   │           └── ident(score)
+│   │       │       │       │   ├── geq
+│   │       │       │       │   └── <simple-expression>
+│   │       │       │       │       └── <term>
+│   │       │       │       │           └── <factor>
+│   │       │       │       │               └── ident(PASSINGGRADE)
+│   │       │       │       ├── thensy
+│   │       │       │       ├── <assignment-statement>
+│   │       │       │       │   ├── <variable>
+│   │       │       │       │   │   └── ident(IsPassing)
+│   │       │       │       │   ├── becomes
+│   │       │       │       │   └── <expression>
+│   │       │       │       │       └── <simple-expression>
+│   │       │       │       │           └── <term>
+│   │       │       │       │               └── <factor>
+│   │       │       │       │                   └── ident(true)
+│   │       │       │       ├── elsesy
+│   │       │       │       ├── <assignment-statement>
+│   │       │       │       │   ├── <variable>
+│   │       │       │       │   │   └── ident(IsPassing)
+│   │       │       │       │   ├── becomes
+│   │       │       │       │   └── <expression>
+│   │       │       │       │       └── <simple-expression>
+│   │       │       │       │           └── <term>
+│   │       │       │       │               └── <factor>
+│   │       │       │       │                   └── ident(false)
+│   │       │       │       └── semicolon
+│   │       │       └── endsy
+│   │       └── semicolon
+│   └── <subprogram-declaration>
+│       └── <procedure-declaration>
+│           ├── proceduresy
+│           ├── ident(DisplayStudentDetails)
+│           ├── <formal-parameter-list>
+│           │   ├── lparent
+│           │   ├── <parameter-group>
+│           │   │   ├── <identifier-list>
+│           │   │   │   └── ident(s)
+│           │   │   ├── colon
+│           │   │   └── ident(Student)
+│           │   └── rparent
+│           ├── semicolon
+│           ├── <block>
+│           │   ├── <declaration-part>
+│           │   └── <compound-statement>
+│           │       ├── beginsy
+│           │       ├── <statement-list>
+│           │       │   ├── <procedure/function-call>
+│           │       │   │   ├── ident(writeln)
+│           │       │   │   ├── lparent
+│           │       │   │   ├── <parameter-list>
+│           │       │   │   │   ├── <expression>
+│           │       │   │   │   │   └── <simple-expression>
+│           │       │   │   │   │       └── <term>
+│           │       │   │   │   │           └── <factor>
+│           │       │   │   │   │               └── string('Name: ')
+│           │       │   │   │   ├── comma
+│           │       │   │   │   ├── <expression>
+│           │       │   │   │   │   └── <simple-expression>
+│           │       │   │   │   │       └── <term>
+│           │       │   │   │   │           └── <factor>
+│           │       │   │   │   │               └── <variable>
+│           │       │   │   │   │                   ├── ident(s)
+│           │       │   │   │   │                   └── <component-variable>
+│           │       │   │   │   │                       ├── period
+│           │       │   │   │   │                       └── ident(name)
+│           │       │   │   │   ├── comma
+│           │       │   │   │   ├── <expression>
+│           │       │   │   │   │   └── <simple-expression>
+│           │       │   │   │   │       └── <term>
+│           │       │   │   │   │           └── <factor>
+│           │       │   │   │   │               └── string(' | Score: ')
+│           │       │   │   │   ├── comma
+│           │       │   │   │   ├── <expression>
+│           │       │   │   │   │   └── <simple-expression>
+│           │       │   │   │   │       └── <term>
+│           │       │   │   │   │           └── <factor>
+│           │       │   │   │   │               └── <variable>
+│           │       │   │   │   │                   ├── ident(s)
+│           │       │   │   │   │                   └── <component-variable>
+│           │       │   │   │   │                       ├── period
+│           │       │   │   │   │                       └── ident(score)
+│           │       │   │   │   ├── comma
+│           │       │   │   │   └── <expression>
+│           │       │   │   │       └── <simple-expression>
+│           │       │   │   │           └── <term>
+│           │       │   │   │               └── <factor>
+│           │       │   │   │                   └── string(' | Status: ')
+│           │       │   │   └── rparent
+│           │       │   ├── semicolon
+│           │       │   ├── <if-statement>
+│           │       │   │   ├── ifsy
+│           │       │   │   ├── <expression>
+│           │       │   │   │   └── <simple-expression>
+│           │       │   │   │       └── <term>
+│           │       │   │   │           └── <factor>
+│           │       │   │   │               └── <procedure/function-call>
+│           │       │   │   │                   ├── ident(IsPassing)
+│           │       │   │   │                   ├── lparent
+│           │       │   │   │                   ├── <parameter-list>
+│           │       │   │   │                   │   └── <expression>
+│           │       │   │   │                   │       └── <simple-expression>
+│           │       │   │   │                   │           └── <term>
+│           │       │   │   │                   │               └── <factor>
+│           │       │   │   │                   │                   └── <variable>
+│           │       │   │   │                   │                       ├── ident(s)
+│           │       │   │   │                   │                       └── <component-variable>
+│           │       │   │   │                   │                           ├── period
+│           │       │   │   │                   │                           └── ident(score)
+│           │       │   │   │                   └── rparent
+│           │       │   │   ├── thensy
+│           │       │   │   ├── <assignment-statement>
+│           │       │   │   │   ├── <variable>
+│           │       │   │   │   │   └── ident(buffer)
+│           │       │   │   │   ├── becomes
+│           │       │   │   │   └── <expression>
+│           │       │   │   │       └── <simple-expression>
+│           │       │   │   │           └── <term>
+│           │       │   │   │               └── <factor>
+│           │       │   │   │                   └── string('PASSED')
+│           │       │   │   ├── elsesy
+│           │       │   │   └── <assignment-statement>
+│           │       │   │       ├── <variable>
+│           │       │   │       │   └── ident(buffer)
+│           │       │   │       ├── becomes
+│           │       │   │       └── <expression>
+│           │       │   │           └── <simple-expression>
+│           │       │   │               └── <term>
+│           │       │   │                   └── <factor>
+│           │       │   │                       └── string('FAILED')
+│           │       │   ├── semicolon
+│           │       │   └── <procedure/function-call>
+│           │       │       ├── ident(writeln)
+│           │       │       ├── lparent
+│           │       │       ├── <parameter-list>
+│           │       │       │   └── <expression>
+│           │       │       │       └── <simple-expression>
+│           │       │       │           └── <term>
+│           │       │       │               └── <factor>
+│           │       │       │                   └── ident(buffer)
+│           │       │       ├── rparent
+│           │       │       └── semicolon
+│           │       └── endsy
+│           └── semicolon
+├── <compound-statement>
+│   ├── beginsy
+│   ├── <statement-list>
+│   │   ├── <procedure/function-call>
+│   │   │   ├── ident(writeln)
+│   │   │   ├── lparent
+│   │   │   ├── <parameter-list>
+│   │   │   │   └── <expression>
+│   │   │   │       └── <simple-expression>
+│   │   │   │           └── <term>
+│   │   │   │               └── <factor>
+│   │   │   │                   └── string('--- Populating Student Records ---')
+│   │   │   └── rparent
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(classroom)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(1)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(name)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── string('Alice')
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(classroom)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(1)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(score)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── realcon(85.5)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(classroom)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(2)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(name)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── string('Bob')
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(classroom)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(2)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(score)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── realcon(42.0)
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(classroom)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(3)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(name)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── string('Charlie')
+│   │   ├── semicolon
+│   │   ├── <assignment-statement>
+│   │   │   ├── <variable>
+│   │   │   │   ├── ident(classroom)
+│   │   │   │   ├── <component-variable>
+│   │   │   │   │   ├── lbrack
+│   │   │   │   │   ├── <index-list>
+│   │   │   │   │   │   └── intcon(3)
+│   │   │   │   │   └── rbrack
+│   │   │   │   └── <component-variable>
+│   │   │   │       ├── period
+│   │   │   │       └── ident(score)
+│   │   │   ├── becomes
+│   │   │   └── <expression>
+│   │   │       └── <simple-expression>
+│   │   │           └── <term>
+│   │   │               └── <factor>
+│   │   │                   └── realcon(60.0)
+│   │   ├── semicolon
+│   │   ├── <procedure/function-call>
+│   │   │   ├── ident(writeln)
+│   │   │   ├── lparent
+│   │   │   ├── <parameter-list>
+│   │   │   │   └── <expression>
+│   │   │   │       └── <simple-expression>
+│   │   │   │           └── <term>
+│   │   │   │               └── <factor>
+│   │   │   │                   └── string('--- Displaying Student Results ---')
+│   │   │   └── rparent
+│   │   ├── semicolon
+│   │   └── <for-statement>
+│   │       ├── forsy
+│   │       ├── ident(i)
+│   │       ├── becomes
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── intcon(1)
+│   │       ├── tosy
+│   │       ├── <expression>
+│   │       │   └── <simple-expression>
+│   │       │       └── <term>
+│   │       │           └── <factor>
+│   │       │               └── ident(MAXSTUDENTS)
+│   │       ├── dosy
+│   │       ├── <compound-statement>
+│   │       │   ├── beginsy
+│   │       │   ├── <statement-list>
+│   │       │   │   └── <procedure/function-call>
+│   │       │   │       ├── ident(DisplayStudentDetails)
+│   │       │   │       ├── lparent
+│   │       │   │       ├── <parameter-list>
+│   │       │   │       │   └── <expression>
+│   │       │   │       │       └── <simple-expression>
+│   │       │   │       │           └── <term>
+│   │       │   │       │               └── <factor>
+│   │       │   │       │                   └── <variable>
+│   │       │   │       │                       ├── ident(classroom)
+│   │       │   │       │                       └── <component-variable>
+│   │       │   │       │                           ├── lbrack
+│   │       │   │       │                           ├── <index-list>
+│   │       │   │       │                           │   └── ident(i)
+│   │       │   │       │                           └── rbrack
+│   │       │   │       ├── rparent
+│   │       │   │       └── semicolon
+│   │       │   └── endsy
+│   │       └── semicolon
+│   └── endsy
+└── period
+
+=== ABSTRACT SYNTAX TREE (RAW) ===
+ProgramNode(name: 'SampleProgram')
+├── Declarations
+│   ├── ConstDecl(name: 'PASSINGGRADE', value: Num(60))
+│   ├── ConstDecl(name: 'MAXSTUDENTS', value: Num(3))
+│   ├── TypeDecl(name: 'Student', type: 'record')
+│   ├── VarDecl(name: 'classroom', type: 'array of Student')
+│   ├── VarDecl(name: 'i', type: 'integer')
+│   ├── VarDecl(name: 'buffer', type: 'string')
+│   ├── FunctionDecl(name: 'IsPassing', returnType: 'boolean')
+│   │   ├── Params
+│   │   │   └── Param(name: 'score', type: 'real')
+│   │   └── Body
+│   │       └── If(cond: BinOp(op: 'geq',
+│   │                 left: Var('score'),
+│   │                 right: Var('PASSINGGRADE')))
+│   │           ├── TrueBranch
+│   │           │   └── Assign(target: Var('IsPassing'),
+│   │           │              value: Var('true'))
+│   │           └── FalseBranch
+│   │               └── Assign(target: Var('IsPassing'),
+│   │                          value: Var('false'))
+│   └── ProcedureDecl(name: 'DisplayStudentDetails')
+│       ├── Params
+│       │   └── Param(name: 's', type: 'Student')
+│       └── Body
+│           ├── ProcedureCall(name: 'writeln',
+│           │                 args: [String('Name: '), Var('s.name'), String(' | Score: '), Var('s.score'), String(' | Status: ')])
+│           ├── If(cond: FunctionCall(name: 'IsPassing',
+│           │                args: [Var('s.score')]))
+│           │   ├── TrueBranch
+│           │   │   └── Assign(target: Var('buffer'),
+│           │   │              value: String('PASSED'))
+│           │   └── FalseBranch
+│           │       └── Assign(target: Var('buffer'),
+│           │                  value: String('FAILED'))
+│           └── ProcedureCall(name: 'writeln',
+│                             args: [Var('buffer')])
+└── Block
+    ├── ProcedureCall(name: 'writeln',
+    │                 args: [String('--- Populating Student Records ---')])
+    ├── Assign(target: Var('classroom[].name'),
+    │          value: String('Alice'))
+    ├── Assign(target: Var('classroom[].score'),
+    │          value: Num(85.5))
+    ├── Assign(target: Var('classroom[].name'),
+    │          value: String('Bob'))
+    ├── Assign(target: Var('classroom[].score'),
+    │          value: Num(42))
+    ├── Assign(target: Var('classroom[].name'),
+    │          value: String('Charlie'))
+    ├── Assign(target: Var('classroom[].score'),
+    │          value: Num(60))
+    ├── ProcedureCall(name: 'writeln',
+    │                 args: [String('--- Displaying Student Results ---')])
+    └── For(dir: 'to',
+            end: Var('MAXSTUDENTS'))
+        ├── Assign(target: Var('i'),
+        │          value: Num(1))
+        └── Body
+            └── ProcedureCall(name: 'DisplayStudentDetails',
+                              args: [Var('classroom[]')])
+
+=== DECORATED AST ===
+ProgramNode(name: 'SampleProgram') -> tab_index:38, lev:0
+├── Declarations
+│   ├── ConstDecls
+│   │   ├── ConstDecl(PASSINGGRADE) -> tab_index:39, type:real, lev:0, value:60.0
+│   │   └── ConstDecl(MAXSTUDENTS) -> tab_index:40, type:integer, lev:0, value:3
+│   ├── TypeDecls
+│   │   └── TypeDecl(Student) -> tab_index:43, type:record, ref:1, lev:0
+│   ├── VarDecls
+│   │   ├── VarDecl(classroom) -> tab_index:44, type:array, ref:0, lev:0
+│   │   ├── VarDecl(i) -> tab_index:45, type:integer, ref:0, lev:0
+│   │   └── VarDecl(buffer) -> tab_index:46, type:string, ref:0, lev:0
+│   ├── FunctionDecl(IsPassing) -> tab_index:47, block_index:2, lev:0, type:boolean
+│   │   ├── Parameters
+│   │   │   └── Param(score) -> tab_index:48, type:real, ref:0, lev:1
+│   │   └── Block -> block_index:2, lev:1
+│   │       ├── Declarations
+│   │       └── Compound
+│   │           └── Statements
+│   │               └── If
+│   │                   ├── BinOp(geq) -> type:boolean
+│   │                   │   ├── Var(score) -> tab_index:48, type:real, lev:1
+│   │                   │   └── Var(PASSINGGRADE) -> tab_index:39, type:real, lev:0
+│   │                   ├── Assign -> type:void
+│   │                   │   ├── Target
+│   │                   │   │   └── Var(IsPassing) -> tab_index:49, type:boolean, lev:1
+│   │                   │   └── Value
+│   │                   │       └── Var(true) -> tab_index:33, type:boolean, lev:0
+│   │                   └── Assign -> type:void
+│   │                       ├── Target
+│   │                       │   └── Var(IsPassing) -> tab_index:49, type:boolean, lev:1
+│   │                       └── Value
+│   │                           └── Var(false) -> tab_index:34, type:boolean, lev:0
+│   └── ProcedureDecl(DisplayStudentDetails) -> tab_index:50, block_index:3, lev:0, type:void
+│       ├── Parameters
+│       │   └── Param(s) -> tab_index:51, type:record, ref:1, lev:1
+│       └── Block -> block_index:3, lev:1
+│           ├── Declarations
+│           └── Compound
+│               └── Statements
+│                   ├── Call(writeln) -> tab_index:37, lev:1
+│                   │   └── Args
+│                   │       ├── String('Name: ') -> type:string, len:6
+│                   │       ├── Var(s).name -> tab_index:51, type:string, lev:1, ref:0
+│                   │       │   └── Field(name) -> field_tab_index:41, offset:0, type:string
+│                   │       ├── String(' | Score: ') -> type:string, len:10
+│                   │       ├── Var(s).score -> tab_index:51, type:real, lev:1, ref:0
+│                   │       │   └── Field(score) -> field_tab_index:42, offset:1, type:real
+│                   │       └── String(' | Status: ') -> type:string, len:11
+│                   ├── If
+│                   │   ├── Call(IsPassing) -> tab_index:47, lev:1
+│                   │   │   └── Args
+│                   │   │       └── Var(s).score -> tab_index:51, type:real, lev:1, ref:0
+│                   │   │           └── Field(score) -> field_tab_index:42, offset:1, type:real
+│                   │   ├── Assign -> type:void
+│                   │   │   ├── Target
+│                   │   │   │   └── Var(buffer) -> tab_index:46, type:string, lev:0
+│                   │   │   └── Value
+│                   │   │       └── String('PASSED') -> type:string, len:6
+│                   │   └── Assign -> type:void
+│                   │       ├── Target
+│                   │       │   └── Var(buffer) -> tab_index:46, type:string, lev:0
+│                   │       └── Value
+│                   │           └── String('FAILED') -> type:string, len:6
+│                   └── Call(writeln) -> tab_index:37, lev:1
+│                       └── Args
+│                           └── Var(buffer) -> tab_index:46, type:string, lev:0
+└── Compound -> block_index:4, lev:1
+    └── Statements
+        ├── Call(writeln) -> tab_index:37, lev:1
+        │   └── Args
+        │       └── String('--- Populating Student Records ---') -> type:string, len:34
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(classroom)[].name -> tab_index:44, type:string, lev:0, ref:0
+        │   │       ├── Index -> array_ref:0, low:1, high:3, elsz:2
+        │   │       │   └── Int(1) -> type:integer
+        │   │       └── Field(name) -> field_tab_index:41, offset:0, type:string
+        │   └── Value
+        │       └── String('Alice') -> type:string, len:5
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(classroom)[].score -> tab_index:44, type:real, lev:0, ref:0
+        │   │       ├── Index -> array_ref:0, low:1, high:3, elsz:2
+        │   │       │   └── Int(1) -> type:integer
+        │   │       └── Field(score) -> field_tab_index:42, offset:1, type:real
+        │   └── Value
+        │       └── Real(85.5) -> type:real
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(classroom)[].name -> tab_index:44, type:string, lev:0, ref:0
+        │   │       ├── Index -> array_ref:0, low:1, high:3, elsz:2
+        │   │       │   └── Int(2) -> type:integer
+        │   │       └── Field(name) -> field_tab_index:41, offset:0, type:string
+        │   └── Value
+        │       └── String('Bob') -> type:string, len:3
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(classroom)[].score -> tab_index:44, type:real, lev:0, ref:0
+        │   │       ├── Index -> array_ref:0, low:1, high:3, elsz:2
+        │   │       │   └── Int(2) -> type:integer
+        │   │       └── Field(score) -> field_tab_index:42, offset:1, type:real
+        │   └── Value
+        │       └── Real(42.0) -> type:real
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(classroom)[].name -> tab_index:44, type:string, lev:0, ref:0
+        │   │       ├── Index -> array_ref:0, low:1, high:3, elsz:2
+        │   │       │   └── Int(3) -> type:integer
+        │   │       └── Field(name) -> field_tab_index:41, offset:0, type:string
+        │   └── Value
+        │       └── String('Charlie') -> type:string, len:7
+        ├── Assign -> type:void
+        │   ├── Target
+        │   │   └── Var(classroom)[].score -> tab_index:44, type:real, lev:0, ref:0
+        │   │       ├── Index -> array_ref:0, low:1, high:3, elsz:2
+        │   │       │   └── Int(3) -> type:integer
+        │   │       └── Field(score) -> field_tab_index:42, offset:1, type:real
+        │   └── Value
+        │       └── Real(60.0) -> type:real
+        ├── Call(writeln) -> tab_index:37, lev:1
+        │   └── Args
+        │       └── String('--- Displaying Student Results ---') -> type:string, len:34
+        └── For -> direction:tosy
+            ├── Var(i) -> tab_index:45, type:integer, lev:0, warning:possibly_uninitialized
+            ├── Int(1) -> type:integer
+            ├── Var(MAXSTUDENTS) -> tab_index:40, type:integer, lev:0
+            └── Compound
+                └── Statements
+                    └── Call(DisplayStudentDetails) -> tab_index:50, lev:1
+                        └── Args
+                            └── Var(classroom)[] -> tab_index:44, type:record, lev:0, ref:1
+                                └── Index -> array_ref:0, low:1, high:3, elsz:2
+                                    └── Var(i) -> tab_index:45, type:integer, lev:0, warning:possibly_uninitialized
+
+=== SYMBOL TABLE: tab ===
+idx  identifier              obj             type        ref  nrm  lev  adr  link  init  params
+----------------------------------------------------------------------------
+  0  <none>                  sentinel        none          0    1    0    0     0   yes  
+  1  and                     reserved        unknown       0    1    0    0     0   yes  
+  2  array                   reserved        unknown       0    1    0    0     1   yes  
+  3  begin                   reserved        unknown       0    1    0    0     2   yes  
+  4  case                    reserved        unknown       0    1    0    0     3   yes  
+  5  const                   reserved        unknown       0    1    0    0     4   yes  
+  6  div                     reserved        unknown       0    1    0    0     5   yes  
+  7  downto                  reserved        unknown       0    1    0    0     6   yes  
+  8  do                      reserved        unknown       0    1    0    0     7   yes  
+  9  else                    reserved        unknown       0    1    0    0     8   yes  
+ 10  end                     reserved        unknown       0    1    0    0     9   yes  
+ 11  for                     reserved        unknown       0    1    0    0    10   yes  
+ 12  function                reserved        unknown       0    1    0    0    11   yes  
+ 13  if                      reserved        unknown       0    1    0    0    12   yes  
+ 14  mod                     reserved        unknown       0    1    0    0    13   yes  
+ 15  not                     reserved        unknown       0    1    0    0    14   yes  
+ 16  of                      reserved        unknown       0    1    0    0    15   yes  
+ 17  or                      reserved        unknown       0    1    0    0    16   yes  
+ 18  procedure               reserved        unknown       0    1    0    0    17   yes  
+ 19  program                 reserved        unknown       0    1    0    0    18   yes  
+ 20  record                  reserved        unknown       0    1    0    0    19   yes  
+ 21  repeat                  reserved        unknown       0    1    0    0    20   yes  
+ 22  then                    reserved        unknown       0    1    0    0    21   yes  
+ 23  to                      reserved        unknown       0    1    0    0    22   yes  
+ 24  type                    reserved        unknown       0    1    0    0    23   yes  
+ 25  until                   reserved        unknown       0    1    0    0    24   yes  
+ 26  var                     reserved        unknown       0    1    0    0    25   yes  
+ 27  while                   reserved        unknown       0    1    0    0    26   yes  
+ 28  real                    type            real          0    1    0    0    27   yes  
+ 29  integer                 type            integer       0    1    0    0    28   yes  
+ 30  char                    type            char          0    1    0    0    29   yes  
+ 31  boolean                 type            boolean       0    1    0    0    30   yes  
+ 32  string                  type            string        0    1    0    0    31   yes  
+ 33  true                    constant        boolean       0    1    0    1    32   yes  
+ 34  false                   constant        boolean       0    1    0    0    33   yes  
+ 35  readln                  procedure       void          0    1    0    0    34   yes  
+ 36  write                   procedure       void          0    1    0    0    35   yes  
+ 37  writeln                 procedure       void          0    1    0    0    36   yes  
+ 38  sampleprogram           program         void          0    1    0    0    37   yes  
+ 39  passinggrade            constant        real          0    1    0    0    38   yes  
+ 40  maxstudents             constant        integer       0    1    0    3    39   yes  
+ 41  name                    field           string        0    1    1    0     0   yes  
+ 42  score                   field           real          0    1    1    1    41   yes  
+ 43  student                 type            record        1    1    0    0    40   yes  
+ 44  classroom               variable        array         0    1    0    0    43   yes  
+ 45  i                       variable        integer       0    1    0    6    44    no  
+ 46  buffer                  variable        string        0    1    0    7    45   yes  
+ 47  ispassing               function        boolean       2    1    0    0    46   yes  real
+ 48  score                   parameter       real          0    1    1    0     0   yes  
+ 49  ispassing               function-result boolean       0    1    1    1    48   yes  
+ 50  displaystudentdetails   procedure       void          3    1    0    0    47   yes  record
+ 51  s                       parameter       record        1    1    1    0     0   yes  
+
+=== SYMBOL TABLE: btab ===
+idx  last  lpar  psze  vsze
+----------------------------
+  0    50     0     0     8
+  1    42     0     0     2
+  2    49    48     1     1
+  3    51    51     2     0
+  4     0     0     0     0
+
+=== SYMBOL TABLE: atab ===
+idx  xtyp       etyp       eref  low  high  elsz  size
+------------------------------------------------------
+  0  subrange  record       1    1     3     2     6
+
+=== SEMANTIC DIAGNOSTICS ===
+No semantic errors.
+
+=== INTERMEDIATE CODE ===
+0 JMP 0 43
+1 INT 0 5
+2 LOD 0 3
+3 LIT 0 0 ; real 60
+4 OPR 0 10
+5 JPC 0 9
+6 LIT 0 1
+7 STO 0 4
+8 JMP 0 11
+9 LIT 0 0
+10 STO 0 4
+11 RET
+12 INT 0 5
+13 LIT 0 0 ; string "Name: "
+14 OPR 0 13
+15 LDA 0 3
+16 LIT 0 0
+17 OPR 0 2
+18 LDI 0 0
+19 OPR 0 13
+20 LIT 0 0 ; string " | Score: "
+21 OPR 0 13
+22 LDA 0 3
+23 LIT 0 1
+24 OPR 0 2
+25 LDI 0 0
+26 OPR 0 13
+27 LIT 0 0 ; string " | Status: "
+28 OPR 0 14
+29 LDA 0 3
+30 LIT 0 1
+31 OPR 0 2
+32 LDI 0 0
+33 CAL 1 1
+34 JPC 0 38
+35 LIT 0 0 ; string "PASSED"
+36 STO 1 10
+37 JMP 0 40
+38 LIT 0 0 ; string "FAILED"
+39 STO 1 10
+40 LOD 1 10
+41 OPR 0 14
+42 RET
+43 INT 0 11
+44 LIT 0 0 ; string "--- Populating Student Records ---"
+45 OPR 0 14
+46 LDA 0 3
+47 LIT 0 1
+48 IDX 1 3 ; elsz 2
+49 OPR 0 2
+50 LIT 0 0
+51 OPR 0 2
+52 LIT 0 0 ; string "Alice"
+53 STI 0 0
+54 LDA 0 3
+55 LIT 0 1
+56 IDX 1 3 ; elsz 2
+57 OPR 0 2
+58 LIT 0 1
+59 OPR 0 2
+60 LIT 0 0 ; real 85.5
+61 STI 0 0
+62 LDA 0 3
+63 LIT 0 2
+64 IDX 1 3 ; elsz 2
+65 OPR 0 2
+66 LIT 0 0
+67 OPR 0 2
+68 LIT 0 0 ; string "Bob"
+69 STI 0 0
+70 LDA 0 3
+71 LIT 0 2
+72 IDX 1 3 ; elsz 2
+73 OPR 0 2
+74 LIT 0 1
+75 OPR 0 2
+76 LIT 0 0 ; real 42
+77 STI 0 0
+78 LDA 0 3
+79 LIT 0 3
+80 IDX 1 3 ; elsz 2
+81 OPR 0 2
+82 LIT 0 0
+83 OPR 0 2
+84 LIT 0 0 ; string "Charlie"
+85 STI 0 0
+86 LDA 0 3
+87 LIT 0 3
+88 IDX 1 3 ; elsz 2
+89 OPR 0 2
+90 LIT 0 1
+91 OPR 0 2
+92 LIT 0 0 ; real 60
+93 STI 0 0
+94 LIT 0 0 ; string "--- Displaying Student Results ---"
+95 OPR 0 14
+96 LIT 0 1
+97 STO 0 9
+98 LOD 0 9
+99 LIT 0 3
+100 OPR 0 12
+101 JPC 0 122
+102 LDA 0 3
+103 LOD 0 9
+104 IDX 1 3 ; elsz 2
+105 OPR 0 2
+106 LIT 0 0
+107 OPR 0 2
+108 LDI 0 0
+109 LDA 0 3
+110 LOD 0 9
+111 IDX 1 3 ; elsz 2
+112 OPR 0 2
+113 LIT 0 1
+114 OPR 0 2
+115 LDI 0 0
+116 CAL 0 12
+117 LOD 0 9
+118 LIT 0 1
+119 OPR 0 2
+120 STO 0 9
+121 JMP 0 98
+122 RET
+
+INTERPRETER OUTPUT
+--- Populating Student Records ---
+--- Displaying Student Results ---
+Name: Alice | Score: 85.5 | Status: 
+PASSED
+Name: Bob | Score: 42 | Status: 
+FAILED
+Name: Charlie | Score: 60 | Status: 
+PASSED

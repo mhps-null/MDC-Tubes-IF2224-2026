@@ -516,7 +516,16 @@ namespace
                 ExprInfo value = constantInfo(node->children[i + 2]);
                 int idx = declare(name, "constant", value.type, true);
                 if (value.constant)
+                {
                     result.tab[idx].adr = value.intValue;
+                    if (value.type.kind == TypeKind::Real && !value.stringValue.empty())
+                    {
+                        try { result.tab[idx].realValue = std::stod(value.stringValue); } catch (...) {}
+                        if (value.node)
+                            for (const auto &ann : value.node->annotations)
+                                if (ann == "unary:-") { result.tab[idx].realValue = -result.tab[idx].realValue; break; }
+                    }
+                }
                 auto c = makeNode("ConstDecl(" + name + ")");
                 c->annotations = {"tab_index:" + std::to_string(idx),
                                   "type:" + value.type.name,
@@ -655,7 +664,9 @@ namespace
                 for (const auto &name : names)
                 {
                     int idx = declare(name, "parameter", type, true);
-                    result.tab[idx].adr = result.btab[symbols.currentBlock()].psze++;
+                    int pSize = symbols.sizeOf(type);
+                    result.tab[idx].adr = result.btab[symbols.currentBlock()].psze;
+                    result.btab[symbols.currentBlock()].psze += pSize;
                     result.btab[symbols.currentBlock()].lpar = idx;
                     params.push_back({name, type, idx});
                     paramTypes.push_back(type.name);
@@ -1510,13 +1521,14 @@ namespace
 
         void refreshTypeAnnotation(const std::shared_ptr<SemanticNode> &node, const TypeInfo &type)
         {
+            bool foundType = false, foundRef = false;
             for (auto &annotation : node->annotations)
-                if (startsWith(annotation, "type:"))
-                {
-                    annotation = "type:" + type.name;
-                    return;
-                }
-            node->annotations.push_back("type:" + type.name);
+            {
+                if (startsWith(annotation, "type:")) { annotation = "type:" + type.name; foundType = true; }
+                else if (startsWith(annotation, "ref:")) { annotation = "ref:" + std::to_string(type.ref); foundRef = true; }
+            }
+            if (!foundType) node->annotations.push_back("type:" + type.name);
+            if (!foundRef) node->annotations.push_back("ref:" + std::to_string(type.ref));
         }
 
         std::vector<std::string> identifierList(const std::shared_ptr<ParseNode> &node)

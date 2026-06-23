@@ -799,10 +799,12 @@ static std::shared_ptr<ParseNode> parseParameterList()
 {
     auto node = std::make_shared<ParseNode>("<parameter-list>");
     node->children.push_back(parseExpression());
+    while (check(TOKEN_COLON)) { consume(); if (check(TOKEN_INTCON)) consume(); }
     while (check(TOKEN_COMMA))
     {
         node->children.push_back(consume());
         node->children.push_back(parseExpression());
+        while (check(TOKEN_COLON)) { consume(); if (check(TOKEN_INTCON)) consume(); }
     }
     return node;
 }

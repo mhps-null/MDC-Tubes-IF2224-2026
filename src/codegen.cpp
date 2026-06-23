@@ -458,7 +458,34 @@ private:
             {
                 for (const auto &arg : child->children)
                 {
-                    if (arg) { visitExpression(*arg); ++argCount; }
+                    if (!arg) continue;
+                    const std::string argType = getAnnotation(*arg, "type");
+                    if (argType == "record")
+                    {
+                        const int btabRef = getAnnotationInt(*arg, "ref");
+                        if (btabRef > 0 && btabRef < static_cast<int>(semantic.btab.size()))
+                        {
+                            const int vsze = semantic.btab[btabRef].vsze;
+                            for (int f = 0; f < vsze; ++f)
+                            {
+                                visitAddress(*arg);
+                                emitLitInt(f);
+                                emit("OPR", 0, opr::ADD);
+                                emit("LDI", 0, 0);
+                                ++argCount;
+                            }
+                        }
+                        else
+                        {
+                            visitExpression(*arg);
+                            ++argCount;
+                        }
+                    }
+                    else
+                    {
+                        visitExpression(*arg);
+                        ++argCount;
+                    }
                 }
             }
         }
@@ -599,7 +626,10 @@ private:
                 const TabEntry &entry = semantic.tab[tabIdx];
                 if (entry.obj == "constant")
                 {
-                    emitLitInt(entry.adr, entry.type);
+                    if (entry.type == "real")
+                        emitLitReal(entry.realValue);
+                    else
+                        emitLitInt(entry.adr, entry.type);
                 }
                 else if (hasSelectors(node))
                 {

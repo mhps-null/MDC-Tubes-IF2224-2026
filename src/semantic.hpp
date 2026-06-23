@@ -27,6 +27,7 @@ struct TabEntry
     int adr = 0;
     bool initialized = false;
     std::vector<std::string> params;
+    double realValue = 0.0;
 };
 
 struct BTabEntry
